@@ -1,6 +1,6 @@
 #include "ship.hpp"
 
-Ship::Ship(std::string name, float hull, float fuel) :
+Ship::Ship(std::string name, double hull, double fuel) :
 modules(std::vector<Module*>())
 {
     this->name = name;
@@ -25,7 +25,7 @@ Ship::~Ship()
 }
 
 
-void Ship::simulate(float delta_time)
+void Ship::simulate(double delta_time)
 {
     for(int i=0; i < this->modules.size(); i++)
     {
@@ -50,13 +50,13 @@ void Ship::addModule(Module *m)
 }
 
 
-float Ship::addEnergy(float energy)
+double Ship::addEnergy(double energy)
 {
     this->energy_cap += energy;
     
     if (this->energy_cap > this->max_energy_cap)
     {
-        float delta = this->max_energy_cap - this->energy_cap;
+        double delta = this->max_energy_cap - this->energy_cap;
         this->energy_cap = this->max_energy_cap;
         return energy + delta;
     } else {
@@ -65,13 +65,13 @@ float Ship::addEnergy(float energy)
 }
 
 
-float Ship::addFuel(float fuel)
+double Ship::addFuel(double fuel)
 {
     this->fuel += fuel;
     
     if (this->fuel > this->max_fuel)
     {
-        float delta = this->max_fuel - this->fuel;
+        double delta = this->max_fuel - this->fuel;
         this->fuel = this->max_fuel;
         return fuel + delta;
     } else {
@@ -79,13 +79,13 @@ float Ship::addFuel(float fuel)
     }
 }
 
-float Ship::useFuel(float fuel)
+double Ship::useFuel(double fuel)
 {
     this->fuel -= fuel;
     
     if (this->fuel < 0)
     {
-        float delta = this->fuel;
+        double delta = this->fuel;
         this->fuel = 0;
         return fuel + delta;
     } else {

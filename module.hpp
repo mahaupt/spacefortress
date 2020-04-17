@@ -10,9 +10,9 @@ public:
     
     bool enabled;
     
-    float hull;
-    float max_hull;
+    double hull;
+    double max_hull;
 
-    Module(std::string name, float hull);
-    virtual void simulate(float delta_time, Ship * ship) {};
+    Module(std::string name, double hull);
+    virtual void simulate(double delta_time, Ship * ship) {};
 };

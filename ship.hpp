@@ -9,32 +9,32 @@ class Ship
 private:
     std::string name;
     
-    float hull;
-    float shield;
-    float fuel;
-    float energy_cap;
-    float max_hull;
-    float max_shield;
-    float max_fuel;
-    float max_energy_cap;
+    double hull;
+    double shield;
+    double fuel;
+    double energy_cap;
+    double max_hull;
+    double max_shield;
+    double max_fuel;
+    double max_energy_cap;
     
     std::vector<Module*> modules;
     
 public:
-    Ship(std::string name, float hull, float fuel);
+    Ship(std::string name, double hull, double fuel);
     ~Ship();
-    void simulate(float delta_time);
+    void simulate(double delta_time);
     void info();
     
     void addModule(Module *m);
     
-    float getEnergy() { return energy_cap; }
-    float addEnergy(float energy);
-    //float useEnergy(float energy);
+    double getEnergy() { return energy_cap; }
+    double addEnergy(double energy);
+    //double useEnergy(double energy);
     
-    float addFuel(float fuel);
-    float getFuel() { return fuel; }
-    float useFuel(float fuel);
+    double addFuel(double fuel);
+    double getFuel() { return fuel; }
+    double useFuel(double fuel);
     
 };
 

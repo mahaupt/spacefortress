@@ -6,10 +6,10 @@
 class Generator : public Module
 {
 private:
-    float max_power_output;
-    float max_fuel_consumption;
+    double max_power_output;
+    double max_fuel_consumption;
     
 public:
-    Generator(std::string name, float hull, float power_output, float fuel_consumption);
-    void simulate(float delta_time, Ship * ship);
+    Generator(std::string name, double hull, double power_output, double fuel_consumption);
+    void simulate(double delta_time, Ship * ship);
 };
