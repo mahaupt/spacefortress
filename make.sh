@@ -1,0 +1,1 @@
+g++ main.cpp ship.cpp module.cpp modules/generator.cpp -o spacefortress
