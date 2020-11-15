@@ -8,6 +8,7 @@ SRC="\
     $ROOT/module.cpp \
     $ROOT/modules/generator.cpp \
     $ROOT/modules/capacitor.cpp \
+    $ROOT/modules/shieldgenerator.cpp \
 "
 
 $CXX $FLAGS $SRC $OUTPUT
