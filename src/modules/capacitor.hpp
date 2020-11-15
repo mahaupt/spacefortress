@@ -1,5 +1,7 @@
 #pragma once
-#include <iostream>
+
+#include <algorithm>
+
 #include "../module.hpp"
 #include "../ship.hpp"
 
@@ -10,7 +12,7 @@ private:
     double max_capacity;
     double max_power_input;
     double max_power_output;
-    
+
 public:
     Capacitor(std::string name, double hull, double max_capacity, double max_power_input, double max_power_output);
     void simulate(double delta_time, Ship * ship);
