@@ -7,9 +7,8 @@ class Generator : public Module
 {
 private:
     double max_power_output;
-    double max_fuel_consumption;
     
 public:
-    Generator(std::string name, double hull, double power_output, double fuel_consumption);
+    Generator(std::string name, double hull, double power_output);
     void simulate(double delta_time, Ship * ship);
 };

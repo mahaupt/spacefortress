@@ -7,9 +7,8 @@
 
 int main()
 {    
-    Ship s = Ship("Omega", 100, 100);
-    s.addFuel(100);
-    s.addModule(new Generator("Generator MKI", 10, 1, 1));
+    Ship s = Ship("Omega", 100);
+    s.addModule(new Generator("Generator MK I", 10, 1));
     
     std::string cmd = "";
     double simTime = 0.1; 
