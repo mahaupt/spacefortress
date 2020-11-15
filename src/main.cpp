@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "modules/capacitor.hpp"
+#include "modules/engine.hpp"
 #include "modules/generator.hpp"
 #include "modules/shieldgenerator.hpp"
 #include "ship.hpp"
@@ -11,6 +12,7 @@ int main() {
   Ship s = Ship("Omega", 100);
   s.addModule(new Generator("Generator MK I", 1, 1));
   s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
+  s.addModule(new ShieldGenerator("Engine MK I", 1, 1, 1));
   s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
 
   std::string cmd = "";
