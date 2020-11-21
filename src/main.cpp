@@ -9,7 +9,7 @@ bool p_running = true;
 MainState main_state = MAIN_MENU;
 
 /**
- * Ends program (callback)
+ * Callbacks
  */
 void endProgram(void) { p_running = false; }
 void startGame(void) { main_state = GAME; }
@@ -27,6 +27,14 @@ int main() {
   main_menu.addMenuEntry("Create Crew", &startGame);
   main_menu.addMenuEntry("Join Crew", &startGame);
   main_menu.addMenuEntry("Exit", &endProgram);
+  main_menu.addMenuBannerLine("   ____                 ____         __");
+  main_menu.addMenuBannerLine(
+      "  / _____ ___ ________ / _____  ____/ /________ ___ ___");
+  main_menu.addMenuBannerLine(
+      " _\\ \\/ _ / _ `/ __/ -_/ _// _ \\/ __/ __/ __/ -_(_-<(_-<");
+  main_menu.addMenuBannerLine(
+      "/___/ .__\\_,_/\\__/\\__/_/  \\___/_/  \\__/_/  \\__/___/___/");
+  main_menu.addMenuBannerLine("   /_/");
 
   Game game;
 

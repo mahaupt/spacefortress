@@ -1,6 +1,6 @@
 #include "menu.hpp"
 
-Menu::Menu() : selection(0) {}
+Menu::Menu() : selection(0), menu_banner_size(0) {}
 Menu::~Menu() {}
 
 void Menu::addMenuEntry(std::string name, void (*callback)(void)) {
@@ -10,8 +10,38 @@ void Menu::addMenuEntry(std::string name, void (*callback)(void)) {
   this->menu_entries.push_back(me);
 }
 
+void Menu::addMenuBannerLine(std::string line) {
+  this->menu_banner.push_back(line);
+
+  this->menu_banner_size = fmax(this->menu_banner_size, line.length());
+}
+
+/**
+ * Renders the menu screen
+ * @param key pressed Key to process user input
+ */
 void Menu::render(ConsoleKey key) {
   this->processInput(key);
+  this->renderMenuBanner();
+  this->renderMenuItems();
+}
+
+/**
+ * renders the menu banner
+ */
+void Menu::renderMenuBanner() {
+  int start_y = 2;
+  int start_x = round((COLS - this->menu_banner_size) / 2.0f);
+
+  for (int i = 0; i < this->menu_banner.size(); i++) {
+    mvprintw(start_y + i, start_x, this->menu_banner[i].c_str());
+  }
+}
+
+/**
+ * renders the menu items
+ */
+void Menu::renderMenuItems() {
   int start_y = round((LINES - this->menu_entries.size()) / 2.0f) - 1;
   int start_x = round(COLS / 2.0f);
 
@@ -26,6 +56,10 @@ void Menu::render(ConsoleKey key) {
   }
 }
 
+/**
+ * Processes user key input for the menu screen
+ * @param ConsoleKey key pressed user key
+ */
 void Menu::processInput(ConsoleKey key) {
   if (key == NONE) return;
 

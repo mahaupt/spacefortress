@@ -18,10 +18,17 @@ class Menu {
   Menu();
   ~Menu();
   void addMenuEntry(std::string name, void (*callback)(void) = 0);
+  void addMenuBannerLine(std::string line);
+
   void render(ConsoleKey cmd);
-  void processInput(ConsoleKey cmd);
 
  private:
   int selection;
+  int menu_banner_size;
   std::vector<MenuEntry> menu_entries;
+  std::vector<std::string> menu_banner;
+
+  void processInput(ConsoleKey cmd);
+  void renderMenuItems();
+  void renderMenuBanner();
 };
