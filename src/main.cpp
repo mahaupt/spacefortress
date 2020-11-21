@@ -1,33 +1,44 @@
 #include <chrono>
-#include <iostream>
 #include <thread>
 
-#include "modules/capacitor.hpp"
-#include "modules/engine.hpp"
-#include "modules/generator.hpp"
-#include "modules/shieldgenerator.hpp"
-#include "ship.hpp"
+#include "console.hpp"
+#include "logger.hpp"
+#include "ship/modules/capacitor.hpp"
+#include "ship/modules/engine.hpp"
+#include "ship/modules/generator.hpp"
+#include "ship/modules/shieldgenerator.hpp"
+#include "ship/ship.hpp"
 
 int main() {
+  Logger log(ALL);
+  log.log("start", DEBUG);
+  Console console;
+
   Ship s = Ship("Omega", 100);
   s.addModule(new Generator("Generator MK I", 1, 1));
   s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
   s.addModule(new ShieldGenerator("Engine MK I", 1, 1, 1));
   s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
 
-  std::string cmd = "";
+  int cmd;
   double simTime = 0.1;
 
+  noecho();
+
+  curs_set(0);
+
   while (true) {
+    clear();
     auto start_time = std::chrono::steady_clock::now();
 
-    std::cout << "\033c";
     s.simulate(simTime);
     s.info();
-    std::cout << "Simulating " << simTime << " seconds" << std::endl;
+    printw("Simulating %f seconds\n", simTime);
+    printw("\nPress q to exit...\n");
 
-    std::cin >> cmd;
-    if (cmd == "q") {
+    // non blocking getch
+    timeout(100);
+    if ((cmd = getch()) == 'q') {
       break;
     }
 

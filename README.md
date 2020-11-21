@@ -1,3 +1,10 @@
+       ____                 ____         __
+      / _____ ___ ________ / _____  ____/ /________ ___ ___
+     _\ \/ _ / _ `/ __/ -_/ _// _ \/ __/ __/ __/ -_(_-<(_-<
+    /___/ .__\_,_/\__/\__/_/  \___/_/  \__/_/  \__/___/___/
+       /_/
+
+
 # spacefortress
 Spacefortress is a science fiction command line space ship simulator.
 The main inspiration for this project comes from the dwarf fortress game.

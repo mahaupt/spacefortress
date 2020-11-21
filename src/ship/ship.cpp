@@ -16,13 +16,12 @@ Ship::~Ship() {
 }
 
 void Ship::info() {
-  std::cout << "Ship Info " << this->name << std::endl;
-  std::cout << "Hull: " << this->hull << "/" << this->max_hull << std::endl;
-  std::cout << "Shield: " << this->getShieldLevel() << "/"
-            << this->getShieldCapacity() << std::endl;
-  std::cout << "Energy: " << this->getEnergyLevel() << "/"
-            << this->getEnergyTotalCapacity() << std::endl;
-  std::cout << this->modules.size() << " Modules installed" << std::endl;
+  printw("Ship Info %s\n", this->name.c_str());
+  printw("Hull: %f/%f\n", this->hull, this->max_hull);
+  printw("Shield: %f/%f\n", this->getShieldLevel(), this->getShieldCapacity());
+  printw("Energy: %f/%f\n", this->getEnergyLevel(),
+         this->getEnergyTotalCapacity());
+  printw("%i Modules installed\n", this->modules.size());
 }
 
 void Ship::simulate(double delta_time) {

@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>
+#include <curses.h>
+
 #include <string>
 #include <vector>
 
