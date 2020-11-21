@@ -42,7 +42,7 @@ void Menu::renderMenuBanner() {
  * renders the menu items
  */
 void Menu::renderMenuItems() {
-  int start_y = round((LINES - this->menu_entries.size()) / 2.0f) - 1;
+  int start_y = round((LINES - this->menu_entries.size() - 1) / 2.0f);
   int start_x = round(COLS / 2.0f);
 
   for (int i = 0; i < this->menu_entries.size(); i++) {
