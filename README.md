@@ -3,6 +3,22 @@ Spacefortress is a science fiction command line space ship simulator.
 The main inspiration for this project comes from the dwarf fortress game.
 
 
+## Build Instructions
+make sure you have the requirements installed:
+```
+sudo apt install build-essentials cmake
+```
+clone the repository:
+```
+git clone https://github.com/cbacon93/spacefortress.git
+```
+build the project:
+```
+cmake .
+make
+```  
+
+
 ## Ships
 ### Modules
 Modules provide the main functionality for the space ship. Modules can be installed, removed,
