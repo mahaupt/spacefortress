@@ -2,6 +2,9 @@
 
 Console::Console() {
   initscr();
+  noecho();
+  curs_set(0);
+  keypad(stdscr, TRUE);
   clear();
   this->printBanner();
 }
@@ -9,8 +12,6 @@ Console::Console() {
 Console::~Console() { endwin(); }
 
 void Console::printBanner() {
-  noecho();
-  curs_set(0);
   printw("    ____                 ____         __\n");
   printw("   / _____ ___ ________ / _____  ____/ /________ ___ ___\n");
   printw("  _\\ \\/ _ / _ `/ __/ -_/ _// _ \\/ __/ __/ __/ -_(_-<(_-<\n");

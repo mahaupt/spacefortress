@@ -1,52 +1,56 @@
-#include <chrono>
-#include <thread>
-
 #include "console.hpp"
+#include "game.hpp"
 #include "logger.hpp"
-#include "ship/modules/capacitor.hpp"
-#include "ship/modules/engine.hpp"
-#include "ship/modules/generator.hpp"
-#include "ship/modules/shieldgenerator.hpp"
-#include "ship/ship.hpp"
+#include "menu.hpp"
 
+enum MainState { MAIN_MENU, SETTINGS, CONNECT, GAME };
+
+bool p_running = true;
+MainState main_state = MAIN_MENU;
+
+/**
+ * Ends program (callback)
+ */
+void endProgram(void) { p_running = false; }
+void startGame(void) { main_state = GAME; }
+
+/**
+ * This is the main state machine for the program
+ * @return 0
+ */
 int main() {
   Logger log(ALL);
   log.log("start", DEBUG);
   Console console;
 
-  Ship s = Ship("Omega", 100);
-  s.addModule(new Generator("Generator MK I", 1, 1));
-  s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
-  s.addModule(new ShieldGenerator("Engine MK I", 1, 1, 1));
-  s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
+  Menu main_menu;
+  main_menu.addMenuEntry("Create Crew", &startGame);
+  main_menu.addMenuEntry("Join Crew", &startGame);
+  main_menu.addMenuEntry("Exit", &endProgram);
 
-  int cmd;
-  double simTime = 0.1;
+  Game game;
 
-  noecho();
-
-  curs_set(0);
-
-  while (true) {
+  ConsoleKey key = NONE;
+  while (p_running) {
     clear();
-    auto start_time = std::chrono::steady_clock::now();
 
-    s.simulate(simTime);
-    s.info();
-    printw("Simulating %f seconds\n", simTime);
-    printw("\nPress q to exit...\n");
-
-    // non blocking getch
-    timeout(100);
-    if ((cmd = getch()) == 'q') {
-      break;
+    switch (main_state) {
+      case MAIN_MENU:
+        main_menu.render(key);
+        break;
+      case GAME:
+        game.render();
+        break;
     }
 
-    auto end_time = std::chrono::steady_clock::now();
-    simTime = std::chrono::duration_cast<std::chrono::milliseconds>(end_time -
-                                                                    start_time)
-                  .count() /
-              1000.0;
+    refresh();
+
+    timeout(100);
+    key = console.getKey();
+
+    if (key == KEY_Q) {
+      break;
+    }
   }
 
   return 0;

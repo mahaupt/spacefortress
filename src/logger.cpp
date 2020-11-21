@@ -1,15 +1,25 @@
 #include "logger.hpp"
 
+Logger* Logger::self = 0;
+
 Logger::Logger(LogLevel log_level) {
   this->log_level = log_level;
   if (log_level != OFF) {
     fs.open("log.txt", std::ios_base::out | std::ios_base::trunc);
   }
+  self = this;
 }
 
 Logger::~Logger() {
   if (fs.is_open()) {
     fs.close();
+  }
+  this->self = 0;
+}
+
+void Logger::slog(const char* msg, LogLevel level) {
+  if (Logger::self != 0) {
+    Logger::self->log(msg, level);
   }
 }
 

@@ -19,9 +19,11 @@ class Logger {
   ~Logger();
 
   void log(const char* msg, LogLevel level = INFO);
+  static void slog(const char* msg, LogLevel level = INFO);
   const char* getLogLevelStr(LogLevel level);
 
  private:
+  static Logger* self;
   std::fstream fs;
   LogLevel log_level;
 };
