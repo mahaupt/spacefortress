@@ -19,3 +19,21 @@ Current module ideas:
 
 ### Reactor (power generation)
 The reactor creates power for the ships modules.
+
+
+## Ideas
+Strategie - SciFi
+
+Person
+Schiff Kontroller
+- alleine - Multitasking
+- Gemeinsam - Effizienter
+
+Erde - Erde muss verlassen werden
+(Prototypschiff / Fehler / Fehler fixen)
+Planeten Treibstoff holen
+Ehemalige Zivilplaneten - Ressourcen
+Schiff upgraden - Wissenschaftscore
+Rätsel sammeln -> Verstorbenen Zivilisationen -> Koordinaten
+
+Systeme // Sprungantrieb
