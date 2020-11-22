@@ -7,8 +7,11 @@ set (CMAKE_CXX_STANDARD 17)
 
 #external packages
 find_package(Curses REQUIRED)
-include_directories(${CURSES_INCLUDE_DIR})
-add_subdirectory(rapidyaml ryml)
+add_subdirectory(yaml-cpp)
+include_directories(
+  ${CURSES_INCLUDE_DIR}
+  "yaml-cpp/include"
+)
 
 #build files
 file(GLOB_RECURSE SF_SRC
@@ -23,5 +26,5 @@ add_executable(
 target_link_libraries(
     spacefortress
     ${CURSES_LIBRARIES}
-    ryml
+    yaml-cpp
 )

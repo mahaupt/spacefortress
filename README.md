@@ -18,6 +18,8 @@ sudo apt install build-essentials cmake libncurses-dev
 clone the repository:
 ```
 git clone https://github.com/cbacon93/spacefortress.git
+cd spacefortress
+git submodule  update --init --recursive
 ```
 build the project:
 ```

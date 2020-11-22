@@ -1,7 +1,8 @@
 #include "game.hpp"
 #include "menu.hpp"
+#include "tools/config.hpp"
 #include "tools/console.hpp"
-#include "tools/logger.hpp"
+#include "tools/log.hpp"
 
 enum MainState { MAIN_MENU, SETTINGS, CONNECT, GAME };
 
@@ -19,8 +20,9 @@ void startGame(void) { main_state = GAME; }
  * @return 0
  */
 int main() {
-  Logger log(ALL);
-  log.log("start", DEBUG);
+  Log log(ALL);
+  Log::info("start");
+  Config config;
   Console console;
 
   Menu main_menu;

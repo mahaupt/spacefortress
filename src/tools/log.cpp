@@ -1,8 +1,8 @@
-#include "logger.hpp"
+#include "log.hpp"
 
-Logger* Logger::self = 0;
+Log* Log::self = 0;
 
-Logger::Logger(LogLevel log_level) {
+Log::Log(LogLevel log_level) {
   this->log_level = log_level;
   if (log_level != OFF) {
     fs.open("log.txt", std::ios_base::out | std::ios_base::trunc);
@@ -10,20 +10,21 @@ Logger::Logger(LogLevel log_level) {
   self = this;
 }
 
-Logger::~Logger() {
+Log::~Log() {
   if (fs.is_open()) {
     fs.close();
   }
   this->self = 0;
 }
 
-void Logger::slog(const char* msg, LogLevel level) {
-  if (Logger::self != 0) {
-    Logger::self->log(msg, level);
+void Log::log(std::string msg, LogLevel level) {
+  if (Log::self == 0) {
+    return;
   }
+  Log::self->olog(msg, level);
 }
 
-void Logger::log(const char* msg, LogLevel level) {
+void Log::olog(std::string msg, LogLevel level) {
   // check error levels
   if (level > this->log_level || this->log_level == OFF) {
     return;
@@ -48,7 +49,7 @@ void Logger::log(const char* msg, LogLevel level) {
   fs.flush();
 }
 
-const char* Logger::getLogLevelStr(LogLevel level) {
+const char* Log::getLogLevelStr(LogLevel level) {
   switch (level) {
     case (FATAL):
       return "FATAL";

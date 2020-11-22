@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "tools/console.hpp"
-#include "tools/logger.hpp"
 
 struct MenuEntry {
   std::string name;
