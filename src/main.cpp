@@ -44,21 +44,25 @@ int main() {
   main_menu.addSelectable(&main_menu_3);
 
   Menu create_menu;
-  auto create_menu_1 = InputText(-5, -2, "Username: ");
-  auto create_menu_2 = InputText(-5, -1, "Server: ");
-  auto create_menu_3 = MenuItem(0, 1, "Create Crew", &startGame);
-  auto create_menu_4 = MenuItem(0, 2, "<< Back", &backToMenu);
+  auto create_menu_1 = InputText(-5, -2, Lang::get("general_username") + ": ");
+  auto create_menu_2 = InputText(-5, -1, Lang::get("general_server") + ": ");
+  auto create_menu_3 =
+      MenuItem(0, 1, Lang::get("menu_create_crew"), &startGame);
+  auto create_menu_4 =
+      MenuItem(0, 2, "<< " + Lang::get("general_back"), &backToMenu);
   create_menu.addSelectable(&create_menu_1);
   create_menu.addSelectable(&create_menu_2);
   create_menu.addSelectable(&create_menu_3);
   create_menu.addSelectable(&create_menu_4);
 
   Menu join_menu;
-  auto join_menu_1 = InputText(-5, -2, "Username: ");
-  auto join_menu_2 = InputText(-5, -1, "Server: ");
-  auto join_menu_3 = InputText(-5, 0, "Crew Code: ");
-  auto join_menu_4 = MenuItem(0, 2, "Start Game", &startGame);
-  auto join_menu_5 = MenuItem(0, 3, "<< Back", &backToMenu);
+  auto join_menu_1 = InputText(-5, -2, Lang::get("general_username") + ": ");
+  auto join_menu_2 = InputText(-5, -1, Lang::get("general_server") + ": ");
+  auto join_menu_3 = InputText(-5, 0, Lang::get("general_crew_code") + ": ");
+  auto join_menu_4 =
+      MenuItem(0, 2, Lang::get("general_start_game"), &startGame);
+  auto join_menu_5 =
+      MenuItem(0, 3, "<< " + Lang::get("general_back"), &backToMenu);
   join_menu.addSelectable(&join_menu_1);
   join_menu.addSelectable(&join_menu_2);
   join_menu.addSelectable(&join_menu_3);

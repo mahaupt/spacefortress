@@ -8,6 +8,8 @@ Log::Log(LogLevel log_level) {
     fs.open("log.txt", std::ios_base::out | std::ios_base::trunc);
   }
   self = this;
+
+  Log::info("log module ready");
 }
 
 Log::~Log() {

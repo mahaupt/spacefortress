@@ -10,6 +10,9 @@ Console::Console() {
   curs_set(0);
   keypad(stdscr, TRUE);
   clear();
+
+  Log::info("console module loaded");
+
   this->printBanner();
 }
 

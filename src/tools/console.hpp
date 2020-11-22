@@ -2,6 +2,7 @@
 #include <curses.h>
 
 #include "lang.hpp"
+#include "log.hpp"
 
 enum ConsoleKey {
   NONE = -1,

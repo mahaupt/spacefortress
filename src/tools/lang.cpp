@@ -5,14 +5,18 @@ Lang::Lang() {
   std::string lang = Config::getStr("lang", "en");
   Log::debug("Language: " + lang);
 
-  this->db = YAML::LoadFile("lang/" + lang + ".yaml");
+  try {
+    this->db = YAML::LoadFile("lang/" + lang + ".yaml");
+  } catch (...) {
+    Log::error("could not open language file");
+  }
   Lang::self = this;
 
   // test
   if (Lang::get("lang") == lang) {
-    Log::debug("Lang module loaded");
+    Log::info("language module loaded");
   } else {
-    Log::debug("Error loading language");
+    Log::error("error loading language");
   }
 }
 

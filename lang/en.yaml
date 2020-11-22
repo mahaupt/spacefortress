@@ -8,3 +8,9 @@ menu_press_key: Press any key to continue...
 menu_create_crew: Create Crew
 menu_join_crew: Join Crew
 menu_exit: Exit
+
+general_username: Username
+general_server: Server
+general_back: Back
+general_crew_code: Crew Code
+general_start_game: Start Game

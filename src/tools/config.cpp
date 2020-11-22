@@ -3,10 +3,14 @@
 Config* Config::self = 0;
 
 Config::Config() {
-  this->config = YAML::LoadFile("config.yaml");
+  try {
+    this->config = YAML::LoadFile("config.yaml");
+  } catch (...) {
+    Log::error("could not open config file");
+  }
 
   Config::self = this;
-  Log::debug("Config module loaded");
+  Log::info("config module loaded");
 
   for (YAML::const_iterator it = this->config.begin(); it != this->config.end();
        ++it) {
