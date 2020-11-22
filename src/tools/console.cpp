@@ -18,14 +18,10 @@ void Console::printBanner() {
   printw("/___/ .__\\_,_/\\__/\\__/_/  \\___/_/  \\__/_/  \\__/___/___/\n");
   printw("   /_/\n");
   printw("#########################################################\n\n");
-  printw(
-      "Spacefortress is a science fiction command line space ship\n"
-      "simulator. The main inspiration for this project comes from the\n"
-      "dwarf fortress game. The Project is open source and was created\n"
-      "by Marcel Haupt to learn advanced C++ programming.\n\n");
+  printw(Lang::get("menu_intro").c_str());
 
-  printw("GitHub: https://github.com/cbacon93/spacefortress\n\n");
-  printw("Press any key to continue...");
+  printw("\nGitHub: https://github.com/cbacon93/spacefortress\n\n");
+  printw(Lang::get("menu_press_key").c_str());
   refresh();
 
   // wait for enter

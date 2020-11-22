@@ -3,10 +3,18 @@
 Config* Config::self = 0;
 
 Config::Config() {
-  config = YAML::LoadFile("config.yaml");
+  this->config = YAML::LoadFile("config.yaml");
 
   Config::self = this;
   Log::debug("Config module loaded");
+
+  for (YAML::const_iterator it = this->config.begin(); it != this->config.end();
+       ++it) {
+    if (it->second.IsScalar()) {
+      Log::debug("conf " + it->first.as<std::string>() + ": " +
+                 it->second.as<std::string>());
+    }
+  }
 }
 
 bool Config::hasKey(std::string key) {

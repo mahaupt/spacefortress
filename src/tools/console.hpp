@@ -1,6 +1,8 @@
 #pragma once
 #include <curses.h>
 
+#include "lang.hpp"
+
 enum ConsoleKey {
   NONE = -1,
   ENTER = 10,

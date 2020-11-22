@@ -1,0 +1,10 @@
+lang: de
+menu_intro: |
+  Spacefortress ist ein Science Fiction Raumschiffsimulator für
+  das Terminal. Inspiriert wurde es von Dwarf Fortress. Dieses
+  Projekt ist Open Source und wurde von Marcel Haupt als C++
+  Lernprojekt gegründet.
+menu_press_key: Drücke eine beliebige Taste...
+menu_create_crew: Crew Gründen
+menu_join_crew: Crew Beitreten
+menu_exit: Verlassen

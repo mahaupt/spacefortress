@@ -2,6 +2,7 @@
 #include "menu.hpp"
 #include "tools/config.hpp"
 #include "tools/console.hpp"
+#include "tools/lang.hpp"
 #include "tools/log.hpp"
 
 enum MainState { MAIN_MENU, SETTINGS, CONNECT, GAME };
@@ -23,12 +24,13 @@ int main() {
   Log log(ALL);
   Log::info("start");
   Config config;
+  Lang lang;
   Console console;
 
   Menu main_menu;
-  main_menu.addMenuEntry("Create Crew", &startGame);
-  main_menu.addMenuEntry("Join Crew", &startGame);
-  main_menu.addMenuEntry("Exit", &endProgram);
+  main_menu.addMenuEntry(Lang::get("menu_create_crew"), &startGame);
+  main_menu.addMenuEntry(Lang::get("menu_join_crew"), &startGame);
+  main_menu.addMenuEntry(Lang::get("menu_exit"), &endProgram);
   main_menu.addMenuBannerLine("   ____                 ____         __");
   main_menu.addMenuBannerLine(
       "  / _____ ___ ________ / _____  ____/ /________ ___ ___");

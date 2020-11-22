@@ -1,0 +1,10 @@
+lang: en
+menu_intro: |
+  Spacefortress is a science fiction command line space ship
+  simulator. The main inspiration for this project comes from the
+  dwarf fortress game. The Project is open source and was created
+  by Marcel Haupt to learn advanced C++ programming.
+menu_press_key: Press any key to continue...
+menu_create_crew: Create Crew
+menu_join_crew: Join Crew
+menu_exit: Exit

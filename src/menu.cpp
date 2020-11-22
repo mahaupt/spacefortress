@@ -42,7 +42,7 @@ void Menu::renderMenuBanner() {
  * renders the menu items
  */
 void Menu::renderMenuItems() {
-  int start_y = round((LINES - this->menu_entries.size() - 1) / 2.0f);
+  int start_y = round(LINES / 2.0f - this->menu_entries.size() / 2.0f);
   int start_x = round(COLS / 2.0f);
 
   for (int i = 0; i < this->menu_entries.size(); i++) {
@@ -50,7 +50,7 @@ void Menu::renderMenuItems() {
       attrset(A_BOLD);
     }
 
-    int dx = round(this->menu_entries[i].name.length() / 2.0f) + 1;
+    int dx = floor(this->menu_entries[i].name.length() / 2.0f);
     mvprintw(start_y + i, start_x - dx, this->menu_entries[i].name.c_str());
     attrset(A_NORMAL);
   }
