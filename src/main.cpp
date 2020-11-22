@@ -5,6 +5,7 @@
 #include "tools/log.hpp"
 #include "ui/inputtext.hpp"
 #include "ui/menu.hpp"
+#include "ui/menuitem.hpp"
 #include "ui/text.hpp"
 
 enum MainState { MAIN_MENU, CREW_CREATE, CREW_JOIN, GAME };
@@ -33,22 +34,36 @@ int main() {
   Console console;
 
   Menu main_menu;
-  main_menu.addMenuEntry(Lang::get("menu_create_crew"), &startCrewCreate);
-  main_menu.addMenuEntry(Lang::get("menu_join_crew"), &startCrewJoin);
-  main_menu.addMenuEntry(Lang::get("menu_exit"), &endProgram);
+  auto main_menu_1 =
+      MenuItem(0, -1, Lang::get("menu_create_crew"), &startCrewCreate);
+  auto main_menu_2 =
+      MenuItem(0, 0, Lang::get("menu_join_crew"), &startCrewJoin);
+  auto main_menu_3 = MenuItem(0, 1, Lang::get("menu_exit"), &endProgram);
+  main_menu.addSelectable(&main_menu_1);
+  main_menu.addSelectable(&main_menu_2);
+  main_menu.addSelectable(&main_menu_3);
 
   Menu create_menu;
-  create_menu.addMenuEntry("Username", &startGame);
-  create_menu.addMenuEntry("Server", &startGame);
-  create_menu.addMenuEntry("Create Crew", &startGame);
-  create_menu.addMenuEntry("<< Back", &backToMenu);
+  auto create_menu_1 = InputText(-5, -2, "Username: ");
+  auto create_menu_2 = InputText(-5, -1, "Server: ");
+  auto create_menu_3 = MenuItem(0, 1, "Create Crew", &startGame);
+  auto create_menu_4 = MenuItem(0, 2, "<< Back", &backToMenu);
+  create_menu.addSelectable(&create_menu_1);
+  create_menu.addSelectable(&create_menu_2);
+  create_menu.addSelectable(&create_menu_3);
+  create_menu.addSelectable(&create_menu_4);
 
   Menu join_menu;
-  join_menu.addMenuEntry("Username", &startGame);
-  join_menu.addMenuEntry("Server", &startGame);
-  join_menu.addMenuEntry("Crew Code", &startGame);
-  join_menu.addMenuEntry("Start Game", &startGame);
-  join_menu.addMenuEntry("<< Back", &backToMenu);
+  auto join_menu_1 = InputText(-5, -2, "Username: ");
+  auto join_menu_2 = InputText(-5, -1, "Server: ");
+  auto join_menu_3 = InputText(-5, 0, "Crew Code: ");
+  auto join_menu_4 = MenuItem(0, 2, "Start Game", &startGame);
+  auto join_menu_5 = MenuItem(0, 3, "<< Back", &backToMenu);
+  join_menu.addSelectable(&join_menu_1);
+  join_menu.addSelectable(&join_menu_2);
+  join_menu.addSelectable(&join_menu_3);
+  join_menu.addSelectable(&join_menu_4);
+  join_menu.addSelectable(&join_menu_5);
 
   Text sf_banner(0, 2, MIDDLE, TOP, LEFT);
   sf_banner.addTextLine("   ____                 ____         __");
@@ -59,7 +74,9 @@ int main() {
   sf_banner.addTextLine(
       "/___/ .__\\_,_/\\__/\\__/_/  \\___/_/  \\__/_/  \\__/___/___/");
   sf_banner.addTextLine("   /_/");
-  main_menu.addMenuText(sf_banner);
+  main_menu.addNonSelectable(&sf_banner);
+  create_menu.addNonSelectable(&sf_banner);
+  join_menu.addNonSelectable(&sf_banner);
 
   Game game;
 
@@ -83,6 +100,7 @@ int main() {
     }
 
     refresh();
+    Console::renderCursor();
 
     timeout(100);
     key = console.getKey();

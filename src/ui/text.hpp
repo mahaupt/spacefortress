@@ -5,25 +5,25 @@
 #include <string>
 #include <vector>
 
-enum DisplayAlignment { TOP, MIDDLE, BOTTOM, LEFT, RIGHT };
+#include "uielement.hpp"
 
 /**
  * Class to display text or banners of text on screen
  */
-class Text {
+class Text : public UiElement {
  public:
-  Text(int x, int y, DisplayAlignment align_x, DisplayAlignment align_y,
-       DisplayAlignment align_text);
-  void setPosition(int x, int y, DisplayAlignment align_x,
-                   DisplayAlignment align_y, DisplayAlignment align_text);
+  Text(int x, int y, UiAlignment align_x, UiAlignment align_y,
+       UiAlignment align_text);
+  using UiElement::setPosition;
+  void setPosition(int x, int y, UiAlignment align_x, UiAlignment align_y,
+                   UiAlignment align_text);
   void addTextLine(std::string line);
-  void render();
+  void render(ConsoleKey key);
 
  private:
   std::vector<std::string> textlines;
-  DisplayAlignment align_x;
-  DisplayAlignment align_y;
-  DisplayAlignment align_text;
-  int x, y;
+  UiAlignment align_text;
   int text_size;
+
+  using UiElement::calcDrawOffset;
 };

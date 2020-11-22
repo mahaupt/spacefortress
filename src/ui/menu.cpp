@@ -1,16 +1,15 @@
 #include "menu.hpp"
 
-Menu::Menu() : selection(0), menu_banner_size(0) {}
+Menu::Menu() : selection(-1) {}
 Menu::~Menu() {}
 
-void Menu::addMenuEntry(std::string name, void (*callback)(void)) {
-  MenuEntry me;
-  me.name = name;
-  me.callback = callback;
-  this->menu_entries.push_back(me);
+void Menu::addSelectable(UiElement *element) {
+  this->menu_items.push_back(element);
 }
 
-void Menu::addMenuText(Text text) { this->menu_text.push_back(text); }
+void Menu::addNonSelectable(UiElement *element) {
+  this->menu_text.push_back(element);
+}
 
 /**
  * Renders the menu screen
@@ -18,34 +17,21 @@ void Menu::addMenuText(Text text) { this->menu_text.push_back(text); }
  */
 void Menu::render(ConsoleKey key) {
   this->processInput(key);
-  this->renderMenuText();
-  this->renderMenuItems();
-}
 
-/**
- * renders the menu banner
- */
-void Menu::renderMenuText() {
-  for (int i = 0; i < this->menu_text.size(); i++) {
-    menu_text[i].render();
+  // init selection
+  if (this->selection < 0) {
+    this->selection = 0;
+    this->menu_items[0]->beforeFocus();
   }
-}
 
-/**
- * renders the menu items
- */
-void Menu::renderMenuItems() {
-  int start_y = round(LINES / 2.0f - this->menu_entries.size() / 2.0f);
-  int start_x = round(COLS / 2.0f);
+  // render text
+  for (int i = 0; i < this->menu_text.size(); i++) {
+    menu_text[i]->render(key);
+  }
 
-  for (int i = 0; i < this->menu_entries.size(); i++) {
-    if (this->selection == i) {
-      attrset(A_BOLD);
-    }
-
-    int dx = floor(this->menu_entries[i].name.length() / 2.0f);
-    mvprintw(start_y + i, start_x - dx, this->menu_entries[i].name.c_str());
-    attrset(A_NORMAL);
+  // render selectable items
+  for (int i = 0; i < this->menu_items.size(); i++) {
+    menu_items[i]->render(key);
   }
 }
 
@@ -58,22 +44,19 @@ void Menu::processInput(ConsoleKey key) {
 
   switch (key) {
     case ARROW_UP:
-      this->selection--;
-      if (this->selection < 0) {
-        this->selection = 0;
+      if (this->selection > 0) {
+        this->menu_items[this->selection]->afterFocus();
+        this->menu_items[--this->selection]->beforeFocus();
       }
       break;
     case ARROW_DOWN:
-      this->selection++;
-      if (this->selection > this->menu_entries.size() - 1) {
-        this->selection = this->menu_entries.size() - 1;
+      if (this->selection < this->menu_items.size() - 1) {
+        this->menu_items[this->selection]->afterFocus();
+        this->menu_items[++this->selection]->beforeFocus();
       }
       break;
     case ENTER:
-      void (*cb)(void) = this->menu_entries[this->selection].callback;
-      if (cb != 0) {
-        cb();
-      }
+      this->menu_items[this->selection]->onSelection();
       break;
   }
 }

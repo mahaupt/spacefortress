@@ -28,5 +28,11 @@ class Console {
   // getch wrapper
   ConsoleKey getKey() { return (ConsoleKey)getch(); }
 
+  static void setCursorPos(int x, int y);
+  static void renderCursor();
+
  private:
+  int cursor_x;
+  int cursor_y;
+  static Console* self;
 };

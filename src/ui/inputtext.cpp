@@ -1,17 +1,28 @@
 #include "inputtext.hpp"
 
-InputText::InputText() : cursor_pos(0), width(20), label("Username::") {}
+InputText::InputText(int x, int y, std::string label)
+    : UiElement(x, y, MIDDLE, MIDDLE),
+      cursor_pos(0),
+      selected(false),
+      width(20),
+      label(label) {}
 
 void InputText::render(ConsoleKey key) {
-  this->processInput(key);
-
   // calc start positions
-  int start_x = round(COLS / 2.0f - this->width / 2.0f);
-  int start_y = LINES - 1;
+  int start_x, start_y;
+  this->calcDrawOffset(start_x, start_y);
   start_x -= this->label.length();
 
+  // interactions
+  if (this->selected) {
+    this->processInput(key);
+    // move cursor
+    Console::setCursorPos(start_y,
+                          start_x + this->label.length() + this->cursor_pos);
+  }
+
   // format output str
-  std::string output = value;
+  std::string output = this->value;
   while (output.length() < this->width) {
     output += "_";
   }
@@ -19,8 +30,6 @@ void InputText::render(ConsoleKey key) {
 
   // render
   mvprintw(start_y, start_x, output.c_str());
-  curs_set(1);
-  move(start_y, start_x + this->label.length() + this->cursor_pos);
 }
 
 void InputText::processInput(ConsoleKey key) {
