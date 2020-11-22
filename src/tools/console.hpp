@@ -10,6 +10,8 @@ enum ConsoleKey {
   ARROW_DOWN = 258,
   ARROW_LEFT = 260,
   ARROW_RIGHT = 261,
+  BACKSPACE = 263,
+  DELETE = 330,
   KEY_Q = 113
 };
 

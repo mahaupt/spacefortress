@@ -3,6 +3,7 @@
 #include <string>
 
 #include "../tools/console.hpp"
+#include "../tools/log.hpp"
 
 /**
  * [render description]
@@ -13,6 +14,7 @@ class InputText {
   void render(ConsoleKey key);
 
  private:
+  std::string label;
   std::string value;
 
   int cursor_pos;

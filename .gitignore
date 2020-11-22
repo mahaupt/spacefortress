@@ -10,4 +10,4 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 
 #submodules
-libyaml
+yaml-cpp
