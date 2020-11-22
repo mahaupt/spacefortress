@@ -6,6 +6,8 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 log.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
 
 #submodules
 ryml
