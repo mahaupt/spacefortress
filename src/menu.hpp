@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "console.hpp"
-#include "logger.hpp"
+#include "tools/console.hpp"
+#include "tools/logger.hpp"
 
 struct MenuEntry {
   std::string name;

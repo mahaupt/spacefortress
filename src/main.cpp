@@ -1,7 +1,7 @@
-#include "console.hpp"
 #include "game.hpp"
-#include "logger.hpp"
 #include "menu.hpp"
+#include "tools/console.hpp"
+#include "tools/logger.hpp"
 
 enum MainState { MAIN_MENU, SETTINGS, CONNECT, GAME };
 

@@ -1,3 +1,4 @@
+#own project folders
 spacefortress
 .DS_Store
 CMakeFiles
@@ -5,3 +6,6 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 log.txt
+
+#submodules
+ryml

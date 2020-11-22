@@ -13,7 +13,7 @@ The main inspiration for this project comes from the dwarf fortress game.
 ## Build Instructions
 make sure you have the requirements installed:
 ```
-sudo apt install build-essentials cmake
+sudo apt install build-essentials cmake libncurses-dev
 ```
 clone the repository:
 ```
