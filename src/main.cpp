@@ -7,7 +7,7 @@
 #include "ui/menu.hpp"
 #include "ui/text.hpp"
 
-enum MainState { MAIN_MENU, SETTINGS, CONNECT, GAME };
+enum MainState { MAIN_MENU, CREW_CREATE, CREW_JOIN, GAME };
 
 bool p_running = true;
 MainState main_state = MAIN_MENU;
@@ -16,7 +16,10 @@ MainState main_state = MAIN_MENU;
  * Callbacks
  */
 void endProgram(void) { p_running = false; }
+void startCrewCreate(void) { main_state = CREW_CREATE; }
+void startCrewJoin(void) { main_state = CREW_JOIN; }
 void startGame(void) { main_state = GAME; }
+void backToMenu(void) { main_state = MAIN_MENU; }
 
 /**
  * This is the main state machine for the program
@@ -30,9 +33,22 @@ int main() {
   Console console;
 
   Menu main_menu;
-  main_menu.addMenuEntry(Lang::get("menu_create_crew"), &startGame);
-  main_menu.addMenuEntry(Lang::get("menu_join_crew"), &startGame);
+  main_menu.addMenuEntry(Lang::get("menu_create_crew"), &startCrewCreate);
+  main_menu.addMenuEntry(Lang::get("menu_join_crew"), &startCrewJoin);
   main_menu.addMenuEntry(Lang::get("menu_exit"), &endProgram);
+
+  Menu create_menu;
+  create_menu.addMenuEntry("Username", &startGame);
+  create_menu.addMenuEntry("Server", &startGame);
+  create_menu.addMenuEntry("Create Crew", &startGame);
+  create_menu.addMenuEntry("<< Back", &backToMenu);
+
+  Menu join_menu;
+  join_menu.addMenuEntry("Username", &startGame);
+  join_menu.addMenuEntry("Server", &startGame);
+  join_menu.addMenuEntry("Crew Code", &startGame);
+  join_menu.addMenuEntry("Start Game", &startGame);
+  join_menu.addMenuEntry("<< Back", &backToMenu);
 
   Text sf_banner(0, 2, MIDDLE, TOP, LEFT);
   sf_banner.addTextLine("   ____                 ____         __");
@@ -45,8 +61,6 @@ int main() {
   sf_banner.addTextLine("   /_/");
   main_menu.addMenuText(sf_banner);
 
-  InputText itext;
-
   Game game;
 
   ConsoleKey key = NONE;
@@ -57,12 +71,16 @@ int main() {
       case MAIN_MENU:
         main_menu.render(key);
         break;
+      case CREW_CREATE:
+        create_menu.render(key);
+        break;
+      case CREW_JOIN:
+        join_menu.render(key);
+        break;
       case GAME:
         game.render();
         break;
     }
-
-    itext.render(key);
 
     refresh();
 
