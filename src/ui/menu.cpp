@@ -10,11 +10,7 @@ void Menu::addMenuEntry(std::string name, void (*callback)(void)) {
   this->menu_entries.push_back(me);
 }
 
-void Menu::addMenuBannerLine(std::string line) {
-  this->menu_banner.push_back(line);
-
-  this->menu_banner_size = fmax(this->menu_banner_size, line.length());
-}
+void Menu::addMenuText(Text text) { this->menu_text.push_back(text); }
 
 /**
  * Renders the menu screen
@@ -22,19 +18,16 @@ void Menu::addMenuBannerLine(std::string line) {
  */
 void Menu::render(ConsoleKey key) {
   this->processInput(key);
-  this->renderMenuBanner();
+  this->renderMenuText();
   this->renderMenuItems();
 }
 
 /**
  * renders the menu banner
  */
-void Menu::renderMenuBanner() {
-  int start_y = 2;
-  int start_x = round((COLS - this->menu_banner_size) / 2.0f);
-
-  for (int i = 0; i < this->menu_banner.size(); i++) {
-    mvprintw(start_y + i, start_x, this->menu_banner[i].c_str());
+void Menu::renderMenuText() {
+  for (int i = 0; i < this->menu_text.size(); i++) {
+    menu_text[i].render();
   }
 }
 

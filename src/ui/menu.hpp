@@ -5,7 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "tools/console.hpp"
+#include "../tools/console.hpp"
+#include "text.hpp"
 
 struct MenuEntry {
   std::string name;
@@ -17,7 +18,7 @@ class Menu {
   Menu();
   ~Menu();
   void addMenuEntry(std::string name, void (*callback)(void) = 0);
-  void addMenuBannerLine(std::string line);
+  void addMenuText(Text text);
 
   void render(ConsoleKey cmd);
 
@@ -25,9 +26,9 @@ class Menu {
   int selection;
   int menu_banner_size;
   std::vector<MenuEntry> menu_entries;
-  std::vector<std::string> menu_banner;
+  std::vector<Text> menu_text;
 
   void processInput(ConsoleKey cmd);
   void renderMenuItems();
-  void renderMenuBanner();
+  void renderMenuText();
 };

@@ -1,9 +1,11 @@
 #include "game.hpp"
-#include "menu.hpp"
 #include "tools/config.hpp"
 #include "tools/console.hpp"
 #include "tools/lang.hpp"
 #include "tools/log.hpp"
+#include "ui/inputtext.hpp"
+#include "ui/menu.hpp"
+#include "ui/text.hpp"
 
 enum MainState { MAIN_MENU, SETTINGS, CONNECT, GAME };
 
@@ -31,14 +33,19 @@ int main() {
   main_menu.addMenuEntry(Lang::get("menu_create_crew"), &startGame);
   main_menu.addMenuEntry(Lang::get("menu_join_crew"), &startGame);
   main_menu.addMenuEntry(Lang::get("menu_exit"), &endProgram);
-  main_menu.addMenuBannerLine("   ____                 ____         __");
-  main_menu.addMenuBannerLine(
+
+  Text sf_banner(0, 2, MIDDLE, TOP, LEFT);
+  sf_banner.addTextLine("   ____                 ____         __");
+  sf_banner.addTextLine(
       "  / _____ ___ ________ / _____  ____/ /________ ___ ___");
-  main_menu.addMenuBannerLine(
+  sf_banner.addTextLine(
       " _\\ \\/ _ / _ `/ __/ -_/ _// _ \\/ __/ __/ __/ -_(_-<(_-<");
-  main_menu.addMenuBannerLine(
+  sf_banner.addTextLine(
       "/___/ .__\\_,_/\\__/\\__/_/  \\___/_/  \\__/_/  \\__/___/___/");
-  main_menu.addMenuBannerLine("   /_/");
+  sf_banner.addTextLine("   /_/");
+  main_menu.addMenuText(sf_banner);
+
+  InputText itext;
 
   Game game;
 
@@ -54,6 +61,8 @@ int main() {
         game.render();
         break;
     }
+
+    itext.render(key);
 
     refresh();
 
