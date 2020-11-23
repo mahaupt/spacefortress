@@ -29,8 +29,8 @@ class Console {
   // getch wrapper
   ConsoleKey getKey() { return (ConsoleKey)getch(); }
 
-  static inline void clear() { clear(); }
-  static inline void refresh() { refresh(); }
+  static void sclear() { clear(); }
+  static void srefresh() { refresh(); }
   static void setCursorPos(int x, int y);
   static void renderCursor();
   static void showCursor(bool show);

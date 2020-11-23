@@ -3,7 +3,8 @@ project (spacefortress)
 
 #set variables
 set (CMAKE_CXX_STANDARD 17)
-set(CMAKE_BUILD_TYPE debug)
+set (CMAKE_BUILD_TYPE debug)
+set (DCMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 #external packages
 find_package(Curses REQUIRED)

@@ -86,7 +86,7 @@ int main() {
 
   ConsoleKey key = NONE;
   while (p_running) {
-    Console::clear();
+    Console::sclear();
 
     switch (main_state) {
       case MAIN_MENU:
@@ -99,11 +99,11 @@ int main() {
         join_menu.render(key);
         break;
       case GAME:
-        game.render();
+        game.render(key);
         break;
     }
 
-    Console::refresh();
+    Console::srefresh();
     Console::renderCursor();
 
     timeout(100);

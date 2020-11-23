@@ -8,3 +8,4 @@ Makefile
 log.txt
 CPackConfig.cmake
 CPackSourceConfig.cmake
+compile_commands.json

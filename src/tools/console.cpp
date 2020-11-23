@@ -8,8 +8,8 @@ Console::Console() {
   initscr();
   noecho();
   keypad(stdscr, TRUE);
-  Console::showCursor(false);
-  Console::clear();
+  this->showCursor(false);
+  this->sclear();
 
   Log::info("console module loaded");
 

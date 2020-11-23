@@ -8,11 +8,12 @@
 #include "ship/modules/generator.hpp"
 #include "ship/modules/shieldgenerator.hpp"
 #include "ship/ship.hpp"
+#include "tools/console.hpp"
 
 class Game {
  public:
   Game();
-  void render();
+  void render(ConsoleKey key);
 
  private:
   Ship s;

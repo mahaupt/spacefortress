@@ -7,27 +7,17 @@ Game::Game() : s("Omega", 100) {
   this->s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
 }
 
-void Game::render() {
-  static double simTime = 0.1;
-
+void Game::render(ConsoleKey key) {
+  static auto last_start_time = std::chrono::steady_clock::now();
   auto start_time = std::chrono::steady_clock::now();
+  double simTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+                       start_time - last_start_time)
+                       .count() /
+                   1000.0;
+  last_start_time = start_time;
 
   this->s.simulate(simTime);
   this->s.info();
   printw("Simulating %f seconds\n", simTime);
   printw("\nPress q to exit...\n");
-  refresh();
-
-  // non blocking getch
-  timeout(100);
-  int cmd;
-  if ((cmd = getch()) == 'q') {
-    // break;
-  }
-
-  auto end_time = std::chrono::steady_clock::now();
-  simTime = std::chrono::duration_cast<std::chrono::milliseconds>(end_time -
-                                                                  start_time)
-                .count() /
-            1000.0;
 }
