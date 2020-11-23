@@ -8,3 +8,9 @@ menu_press_key: Drücke eine beliebige Taste...
 menu_create_crew: Crew Gründen
 menu_join_crew: Crew Beitreten
 menu_exit: Verlassen
+
+general_username: Benutzername
+general_server: Server
+general_back: Zurück
+general_crew_code: Crew Code
+general_start_game: Spiel Starten
