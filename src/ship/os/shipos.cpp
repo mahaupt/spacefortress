@@ -1,15 +1,27 @@
 #include "shipos.hpp"
 
-ShipOs::ShipOs() : state(ShipOsState::OFF) {}
+ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {
+  this->testmon = 0;
+}
+
+ShipOs::~ShipOs() {
+  if (this->testmon != 0) {
+    delete this->testmon;
+  }
+}
 
 void ShipOs::boot() {
   this->state = ShipOsState::BOOTING;
   this->boot_time = std::chrono::steady_clock::now();
+  this->testmon = new shipos::StatusMonitor(stdscr, this->ship);
 }
 
 void ShipOs::render(ConsoleKey key) {
   if (this->state == ShipOsState::BOOTING) {
     this->renderBoot();
+  }
+  if (this->state == ShipOsState::RUNNING) {
+    this->testmon->render(key);
   }
 }
 
@@ -49,8 +61,9 @@ void ShipOs::renderBoot() {
     if (uptime > 3.6) printw(".");
   }
   if (uptime > 4.0 && uptime < 9.9) {
-    if (uptime > 4.0) printw("OMEGON (C) 2218 Systems Inc.\n");
-    if (uptime > 4.1) printw("ShipOs Date 20-11-13 Ver.: 0.1.1\n");
+    if (uptime > 4.0) printw("ShipOs " SHIPOS_VERSION "\n");
+    if (uptime > 4.1)
+      printw("Welcome to ShipOs " SHIPOS_VER " (" SHIPOS_NAME ")!\n");
     if (uptime > 4.2) printw("\n");
 
     if (uptime > 4.5) printw("Entering non-interactive startup\n");

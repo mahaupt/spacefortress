@@ -12,7 +12,7 @@ void ShieldGenerator::simulate(double delta_time, Ship *ship) {
     return;
   }
 
-  double free_shield = ship->getShieldCapacity() - ship->getShieldLevel();
+  double free_shield = ship->getMaxShield() - ship->getShield();
   if (free_shield <= 0) {
     return;
   }

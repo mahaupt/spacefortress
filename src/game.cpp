@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game() : s("Omega", 100) {
+Game::Game() : s("Omega", 100), os(&s) {
   this->s.addModule(new Generator("Generator MK I", 1, 1));
   this->s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
   this->s.addModule(new ShieldGenerator("Engine MK I", 1, 1, 1));
@@ -20,11 +20,11 @@ void Game::render(ConsoleKey key) {
 
   this->os.render(key);
 
-  if (this->os.getState() == ShipOsState::RUNNING) {
+  /*if (this->os.getState() == ShipOsState::RUNNING) {
     this->s.info();
     printw("Simulating %f seconds\n", sim_time);
     printw("\nPress q to exit...\n");
-  }
+  }*/
 }
 
 void Game::renderWin(ConsoleKey key) { this->os.renderWin(key); }

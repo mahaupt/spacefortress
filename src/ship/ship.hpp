@@ -7,6 +7,28 @@
 #include "module.hpp"
 
 class Ship {
+ public:
+  Ship(std::string name, double hull);
+  ~Ship();
+
+  // info functions
+  std::string getName() { return this->name; }
+  double getHull() { return this->hull; }
+  double getMaxHull() { return this->max_hull; }
+  double getShield() { return this->shield; }
+  double getMaxShield() { return this->max_shield; }
+  size_t getModuleCount() { return this->modules.size(); }
+  double getEnergyLevel();
+  double getEnergyTotalCapacity();
+
+  // management functions
+  void simulate(double delta_time);
+  void addModule(Module *m);
+
+  // module functions
+  double getEnergy(double energy_needed);
+  void addShield(double shield);
+
  private:
   std::string name;
 
@@ -16,21 +38,4 @@ class Ship {
   double max_shield;
 
   std::vector<Module *> modules;
-
- public:
-  Ship(std::string name, double hull);
-  ~Ship();
-
-  // management functions
-  void info();
-  void simulate(double delta_time);
-  void addModule(Module *m);
-
-  // module functions
-  double getEnergy(double energy_needed);
-  double getEnergyLevel();
-  double getEnergyTotalCapacity();
-  double getShieldCapacity() { return this->max_shield; }
-  double getShieldLevel() { return this->shield; }
-  void addShield(double shield);
 };

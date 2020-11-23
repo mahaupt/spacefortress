@@ -5,6 +5,14 @@
 #include <vector>
 
 #include "../../tools/console.hpp"
+#include "../../ui/window.hpp"
+#include "../ship.hpp"
+#include "program.hpp"
+#include "statusmonitor.hpp"
+
+#define SHIPOS_VERSION "v0.1.1"
+#define SHIPOS_VER "1"
+#define SHIPOS_NAME "Rusty Leopard"
 
 enum class ShipOsState { OFF, BOOTING, RUNNING, SHUTDOWN };
 
@@ -13,7 +21,8 @@ enum class ShipOsState { OFF, BOOTING, RUNNING, SHUTDOWN };
  */
 class ShipOs {
  public:
-  ShipOs();
+  ShipOs(Ship *ship);
+  ~ShipOs();
   void boot();
   void render(ConsoleKey key);
   void renderWin(ConsoleKey key);
@@ -21,8 +30,15 @@ class ShipOs {
   ShipOsState getState() { return this->state; }
 
  private:
+  Ship *ship;
   ShipOsState state;
+
   std::chrono::time_point<std::chrono::steady_clock> boot_time;
+
+  shipos::Program *testmon;
+
+  /*std::vector<Window *> v_windows;
+  std::vector<shipos::Program *> v_programs;*/
 
   void renderBoot();
 };

@@ -100,6 +100,7 @@ int main() {
   //////////////////////////////////////////////
   // MAIN RENDERING LOOP
   ConsoleKey key = ConsoleKey::NONE;
+  Console::sclear();
   while (p_running) {
     // clear window
     Console::sclear();

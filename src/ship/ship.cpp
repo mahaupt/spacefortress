@@ -15,15 +15,6 @@ Ship::~Ship() {
   }
 }
 
-void Ship::info() {
-  printw("Ship Info %s\n", this->name.c_str());
-  printw("Hull: %f/%f\n", this->hull, this->max_hull);
-  printw("Shield: %f/%f\n", this->getShieldLevel(), this->getShieldCapacity());
-  printw("Energy: %f/%f\n", this->getEnergyLevel(),
-         this->getEnergyTotalCapacity());
-  printw("%i Modules installed\n", this->modules.size());
-}
-
 void Ship::simulate(double delta_time) {
   for (int i = 0; i < this->modules.size(); i++) {
     this->modules[i]->simulate(delta_time, this);
