@@ -2,6 +2,9 @@
 
 ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {}
 
+/**
+ * removing all remaining dynamic classes from memory
+ */
 ShipOs::~ShipOs() {
   for (size_t i = 0; i < this->v_programs.size(); i++) {
     delete v_programs[i];
@@ -29,9 +32,18 @@ void ShipOs::boot() {
   this->addProgram(new shipos::StatusMonitor(w2->getWin(), this->ship));
 }
 
+/**
+ * Render the main window - (Terminal)
+ * @param key Console Key
+ */
 void ShipOs::render(ConsoleKey key) {
   if (this->state == ShipOsState::BOOTING) {
     this->renderBoot();
+  }
+  if (this->state == ShipOsState::RUNNING) {
+    mvprintw(0, 0, "ShipOS running...");
+    mvprintw(1, 0, "Processes: %i", v_programs.size());
+    mvprintw(2, 0, "Windows: %i", v_windows.size());
   }
 }
 
@@ -40,14 +52,41 @@ void ShipOs::render(ConsoleKey key) {
  * @param key [description]
  */
 void ShipOs::renderWin(ConsoleKey key) {
+  // render programs
   if (this->state == ShipOsState::RUNNING) {
     for (size_t i = 0; i < this->v_programs.size(); i++) {
-      v_programs[i]->render(key);
+      if (v_programs[i]->getState() == shipos::ProgramState::RUN) {
+        v_programs[i]->render(key);
+      }
+
+      if ((char)key == 'c') {
+        v_programs[i]->setState(shipos::ProgramState::RUN);
+      }
+      if ((char)key == 'd') {
+        v_programs[i]->setState(shipos::ProgramState::HALT);
+      }
+      if ((char)key == 'e') {
+        v_programs[i]->setState(shipos::ProgramState::TERM);
+      }
     }
+
+    // render windows
     for (size_t i = 0; i < this->v_windows.size(); i++) {
-      v_windows[i]->render(key);
+      if (v_windows[i]->getState() == WindowState::VISIBLE) {
+        v_windows[i]->render(key);
+      }
+
+      if ((char)key == 'a') {
+        v_windows[i]->setState(WindowState::VISIBLE);
+      }
+      if ((char)key == 'b') {
+        v_windows[i]->setState(WindowState::HIDDEN);
+      }
     }
   }
+
+  // at the end
+  this->garbageCollector();
 }
 
 /**
@@ -111,4 +150,39 @@ void ShipOs::renderBoot() {
 
   // finish boot sequence
   if (uptime > 10.0) this->state = ShipOsState::RUNNING;
+}
+
+/**
+ * Collects terminated programs and removes them from Memory
+ * Also closes empty windows
+ */
+void ShipOs::garbageCollector() {
+  for (size_t i = 0; i < this->v_programs.size(); i++) {
+    // terminated program
+    if (v_programs[i]->getState() == shipos::ProgramState::TERM) {
+      WINDOW *win = v_programs[i]->getWin();
+
+      // try to close window
+      if (win > 0 && win != stdscr) {
+        delete v_programs[i];
+        v_programs.erase(v_programs.begin() + i);
+        this->closeWindow(win);
+        return;  // return to avoid screwing with the iteration
+      }
+    }
+  }
+}
+
+/**
+ * searches through window vector and deletes windows
+ * @param win WINDOW pointer
+ */
+void ShipOs::closeWindow(WINDOW *win) {
+  for (size_t i = 0; i < this->v_windows.size(); i++) {
+    if (this->v_windows[i]->getWin() == win) {
+      delete this->v_windows[i];
+      v_windows.erase(v_windows.begin() + i);
+      return;
+    }
+  }
 }

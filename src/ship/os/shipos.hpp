@@ -10,7 +10,7 @@
 #include "program.hpp"
 #include "statusmonitor.hpp"
 
-#define SHIPOS_VERSION "v0.1.1"
+#define SHIPOS_VERSION "v0.1.4"
 #define SHIPOS_VER "1"
 #define SHIPOS_NAME "Rusty Leopard"
 
@@ -41,4 +41,6 @@ class ShipOs {
   std::vector<shipos::Program *> v_programs;
 
   void renderBoot();
+  void garbageCollector();
+  void closeWindow(WINDOW *win);
 };

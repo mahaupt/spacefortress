@@ -1,7 +1,7 @@
 #include "window.hpp"
 
 Window::Window(WindowAlignment alignment, double size)
-    : win(0), alignment(alignment), size(size) {
+    : win(0), alignment(alignment), state(WindowState::VISIBLE), size(size) {
   this->calcWindowSize(this->x, this->y, this->width, this->height);
   this->win = newwin(this->height, this->width, this->y, this->x);
   this->cols_save = COLS;

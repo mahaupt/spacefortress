@@ -44,13 +44,12 @@ int main() {
   //////////////////////////////////////////////
   // MENU SETUP
   Menu main_menu;
-  auto main_menu_1 =
-      MenuItem(0, -1, Lang::get("menu_create_crew"), &startCrewCreate);
-  auto main_menu_2 =
-      MenuItem(0, 0, Lang::get("menu_join_crew"), &startCrewJoin);
+  auto main_menu_1 = MenuItem(0, 0, Lang::get("menu_create_crew"), &startGame);
+  // auto main_menu_2 = MenuItem(0, 0, Lang::get("menu_join_crew"),
+  // &startCrewJoin);
   auto main_menu_3 = MenuItem(0, 1, Lang::get("menu_exit"), &endProgram);
   main_menu.addSelectable(&main_menu_1);
-  main_menu.addSelectable(&main_menu_2);
+  // main_menu.addSelectable(&main_menu_2);
   main_menu.addSelectable(&main_menu_3);
 
   Menu create_menu;
