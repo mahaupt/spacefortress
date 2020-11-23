@@ -17,6 +17,8 @@ class InputText : public UiElement {
   void render(ConsoleKey key);
   void setFiller(std::string f) { this->filler = f; }
   void setSelected(bool s) { this->selected = s; }
+  std::string getValue() { return this->value; }
+  void setValue(std::string s);
   void beforeFocus() {
     this->selected = true;
     Console::showCursor(true);

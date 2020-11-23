@@ -134,11 +134,6 @@ int main() {
     // keyboard actions
     timeout(100);
     key = console.getKey();
-
-    // abort condition
-    if (key == ConsoleKey::KEY_Q) {
-      endProgram();
-    }
   }
 
   return 0;

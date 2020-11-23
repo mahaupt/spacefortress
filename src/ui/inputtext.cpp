@@ -78,3 +78,8 @@ void InputText::processInput(ConsoleKey key) {
     }
   }
 }
+
+void InputText::setValue(std::string s) {
+  this->value = s;
+  this->cursor_pos = s.length();
+}

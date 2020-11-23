@@ -32,7 +32,7 @@ void ShipOs::autostart() {
   this->addProgram(new shipos::StatusMonitor(w1->getWin(), this->ship));
 
   Window *w2 = new Window(WindowAlignment::LEFT, 0.7);
-  w2->setTitle("ShipOs Terminal");
+  w2->setTitle("ShipOS Terminal");
   this->addWindow(w2);
   this->addProgram(new shipos::Terminal(w2->getWin(), this->ship));
 }
@@ -64,13 +64,13 @@ void ShipOs::renderWin(ConsoleKey key) {
         v_programs[i]->render(key);
       }
 
-      if ((char)key == 'w' || (char)key == 'a') {
+      if ((char)key == '3' || (char)key == '1') {
         v_programs[i]->setState(shipos::ProgramState::RUN);
       }
-      if ((char)key == 's' || (char)key == 'y') {
+      if ((char)key == '4' || (char)key == '2') {
         v_programs[i]->setState(shipos::ProgramState::HALT);
       }
-      if ((char)key == 'x') {
+      if ((char)key == '5') {
         v_programs[i]->setState(shipos::ProgramState::TERM);
       }
     }
@@ -81,12 +81,16 @@ void ShipOs::renderWin(ConsoleKey key) {
         v_windows[i]->render(key);
       }
 
-      if ((char)key == 'a') {
+      if ((char)key == '1') {
         v_windows[i]->setState(WindowState::VISIBLE);
       }
-      if ((char)key == 'y') {
+      if ((char)key == '2') {
         v_windows[i]->setState(WindowState::HIDDEN);
       }
+    }
+
+    if ((char)key == '6') {
+      this->autostart();
     }
   }
 
