@@ -1,31 +1,54 @@
 #include "shipos.hpp"
 
-ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {
-  this->testmon = 0;
-}
+ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {}
 
 ShipOs::~ShipOs() {
-  if (this->testmon != 0) {
-    delete this->testmon;
+  for (size_t i = 0; i < this->v_programs.size(); i++) {
+    delete v_programs[i];
   }
+  v_programs.clear();
+
+  for (size_t i = 0; i < this->v_windows.size(); i++) {
+    delete v_windows[i];
+  }
+  v_windows.clear();
 }
 
 void ShipOs::boot() {
   this->state = ShipOsState::BOOTING;
   this->boot_time = std::chrono::steady_clock::now();
-  this->testmon = new shipos::StatusMonitor(stdscr, this->ship);
+
+  Window *w1 = new Window(WindowAlignment::RIGHT, 0.3);
+  w1->setTitle("Ship status: Omega");
+  this->addWindow(w1);
+  this->addProgram(new shipos::StatusMonitor(w1->getWin(), this->ship));
+
+  Window *w2 = new Window(WindowAlignment::LEFT, 0.7);
+  w2->setTitle("Ship status: Omega");
+  this->addWindow(w2);
+  this->addProgram(new shipos::StatusMonitor(w2->getWin(), this->ship));
 }
 
 void ShipOs::render(ConsoleKey key) {
   if (this->state == ShipOsState::BOOTING) {
     this->renderBoot();
   }
-  if (this->state == ShipOsState::RUNNING) {
-    this->testmon->render(key);
-  }
 }
 
-void ShipOs::renderWin(ConsoleKey key) {}
+/**
+ * Render all OS Programs and windows
+ * @param key [description]
+ */
+void ShipOs::renderWin(ConsoleKey key) {
+  if (this->state == ShipOsState::RUNNING) {
+    for (size_t i = 0; i < this->v_programs.size(); i++) {
+      v_programs[i]->render(key);
+    }
+    for (size_t i = 0; i < this->v_windows.size(); i++) {
+      v_windows[i]->render(key);
+    }
+  }
+}
 
 /**
  * Gets uptime of shipos system in seconds

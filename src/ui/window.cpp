@@ -1,6 +1,14 @@
 #include "window.hpp"
 
-Window::Window() : win(0) { this->win = newwin(5, 10, 10, 30); }
+Window::Window(WindowAlignment alignment, double size)
+    : win(0), alignment(alignment), size(size) {
+  this->calcWindowSize(this->x, this->y, this->width, this->height);
+  this->win = newwin(this->height, this->width, this->y, this->x);
+  this->cols_save = COLS;
+  this->lines_save = LINES;
+
+  this->window_border = true;
+}
 
 Window::~Window() {
   if (this->win != 0) {
@@ -8,8 +16,48 @@ Window::~Window() {
   }
 }
 
+/**
+ * renders and refreshes the window, call this function after you drawn on the
+ * window
+ *
+ * @param key Console key
+ */
 void Window::render(ConsoleKey key) {
-  box(this->win, 0, 0);
+  if (this->window_border) {
+    box(this->win, 0, 0);
+  }
+  if (this->window_title.length() > 0) {
+    size_t start_x =
+        round(this->width / 2.0f - this->window_title.length() / 2.0f);
+    mvwprintw(this->win, 0, start_x, this->window_title.c_str());
+  }
 
   wrefresh(this->win);
+  this->resizeWindow();
+}
+
+void Window::calcWindowSize(int &x, int &y, int &width, int &height) {
+  x = 0;
+  y = 0;
+
+  width = round(COLS * this->size);
+  height = round(LINES);
+
+  if (this->alignment == WindowAlignment::RIGHT) {
+    x = COLS - width;
+  }
+}
+
+/**
+ * resizes Window if console window changed
+ */
+void Window::resizeWindow() {
+  if (this->cols_save == COLS && this->lines_save == LINES) return;
+
+  this->calcWindowSize(this->x, this->y, this->width, this->height);
+  wresize(this->win, this->height, this->width);
+  mvwin(this->win, this->y, this->x);
+  this->cols_save = COLS;
+  this->lines_save = LINES;
+  wclear(this->win);
 }

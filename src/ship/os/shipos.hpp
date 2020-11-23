@@ -28,6 +28,8 @@ class ShipOs {
   void renderWin(ConsoleKey key);
   double getUptime();
   ShipOsState getState() { return this->state; }
+  void addWindow(Window *win) { this->v_windows.push_back(win); }
+  void addProgram(shipos::Program *prog) { this->v_programs.push_back(prog); }
 
  private:
   Ship *ship;
@@ -35,10 +37,8 @@ class ShipOs {
 
   std::chrono::time_point<std::chrono::steady_clock> boot_time;
 
-  shipos::Program *testmon;
-
-  /*std::vector<Window *> v_windows;
-  std::vector<shipos::Program *> v_programs;*/
+  std::vector<Window *> v_windows;
+  std::vector<shipos::Program *> v_programs;
 
   void renderBoot();
 };
