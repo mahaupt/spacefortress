@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 
+#include "../tools/console.hpp"
 #include "../tools/log.hpp"
 #include "uielement.hpp"
 
@@ -15,10 +16,11 @@ class InputText : public UiElement {
   void beforeFocus() {
     this->selected = true;
     curs_set(1);
+    Console::showCursor(true);
   }
   void afterFocus() {
     this->selected = false;
-    curs_set(0);
+    Console::showCursor(false);
   }
 
  private:

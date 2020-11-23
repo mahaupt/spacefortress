@@ -7,9 +7,9 @@ Console::Console() {
 
   initscr();
   noecho();
-  curs_set(0);
   keypad(stdscr, TRUE);
-  clear();
+  Console::showCursor(false);
+  Console::clear();
 
   Log::info("console module loaded");
 
@@ -28,6 +28,7 @@ void Console::printBanner() {
   printw(Lang::get("menu_intro").c_str());
 
   printw("\nGitHub: https://github.com/cbacon93/spacefortress\n\n");
+  printw("MIT License - Copyright (c) 2020 Marcel Haupt\n\n");
   printw(Lang::get("menu_press_key").c_str());
   refresh();
 
@@ -48,5 +49,16 @@ void Console::setCursorPos(int x, int y) {
 
 void Console::renderCursor() {
   if (Console::self == 0) return;
+  if (!Console::self->show_cursor) return;
   move(Console::self->cursor_x, Console::self->cursor_y);
 }
+
+void Console::showCursor(bool show) {
+  if (Console::self == 0) return;
+  Console::self->show_cursor = show;
+  if (show) {
+    curs_set(1);
+  } else {
+    curs_set(0);
+  }
+};

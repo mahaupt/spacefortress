@@ -86,7 +86,7 @@ int main() {
 
   ConsoleKey key = NONE;
   while (p_running) {
-    clear();
+    Console::clear();
 
     switch (main_state) {
       case MAIN_MENU:
@@ -103,7 +103,7 @@ int main() {
         break;
     }
 
-    refresh();
+    Console::refresh();
     Console::renderCursor();
 
     timeout(100);
