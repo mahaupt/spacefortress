@@ -1,7 +1,7 @@
 #include "uielement.hpp"
 
 UiElement::UiElement(int x, int y, UiAlignment align_x, UiAlignment align_y)
-    : x(x), y(y), align_x(align_x), align_y(align_y) {}
+    : win(stdscr), x(x), y(y), align_x(align_x), align_y(align_y) {}
 
 void UiElement::setPosition(int x, int y, UiAlignment align_x,
                             UiAlignment align_y) {
@@ -9,6 +9,11 @@ void UiElement::setPosition(int x, int y, UiAlignment align_x,
   this->y = y;
   this->align_x = align_x;
   this->align_y = align_y;
+}
+
+void UiElement::setPosition(int x, int y) {
+  this->x = x;
+  this->y = y;
 }
 
 void UiElement::calcDrawOffset(int& dx, int& dy) {

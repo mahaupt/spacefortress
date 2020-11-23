@@ -20,16 +20,21 @@ ShipOs::~ShipOs() {
 void ShipOs::boot() {
   this->state = ShipOsState::BOOTING;
   this->boot_time = std::chrono::steady_clock::now();
+}
 
+/**
+ * Autostarts default programs
+ */
+void ShipOs::autostart() {
   Window *w1 = new Window(WindowAlignment::RIGHT, 0.3);
-  w1->setTitle("Ship status: Omega");
+  w1->setTitle("Status Monitor");
   this->addWindow(w1);
   this->addProgram(new shipos::StatusMonitor(w1->getWin(), this->ship));
 
   Window *w2 = new Window(WindowAlignment::LEFT, 0.7);
-  w2->setTitle("Ship status: Omega");
+  w2->setTitle("ShipOs Terminal");
   this->addWindow(w2);
-  this->addProgram(new shipos::StatusMonitor(w2->getWin(), this->ship));
+  this->addProgram(new shipos::Terminal(w2->getWin(), this->ship));
 }
 
 /**
@@ -59,13 +64,13 @@ void ShipOs::renderWin(ConsoleKey key) {
         v_programs[i]->render(key);
       }
 
-      if ((char)key == 'c') {
+      if ((char)key == 'w' || (char)key == 'a') {
         v_programs[i]->setState(shipos::ProgramState::RUN);
       }
-      if ((char)key == 'd') {
+      if ((char)key == 's' || (char)key == 'y') {
         v_programs[i]->setState(shipos::ProgramState::HALT);
       }
-      if ((char)key == 'e') {
+      if ((char)key == 'x') {
         v_programs[i]->setState(shipos::ProgramState::TERM);
       }
     }
@@ -79,7 +84,7 @@ void ShipOs::renderWin(ConsoleKey key) {
       if ((char)key == 'a') {
         v_windows[i]->setState(WindowState::VISIBLE);
       }
-      if ((char)key == 'b') {
+      if ((char)key == 'y') {
         v_windows[i]->setState(WindowState::HIDDEN);
       }
     }
@@ -149,7 +154,10 @@ void ShipOs::renderBoot() {
   }
 
   // finish boot sequence
-  if (uptime > 10.0) this->state = ShipOsState::RUNNING;
+  if (uptime > 10.0) {
+    this->state = ShipOsState::RUNNING;
+    this->autostart();
+  }
 }
 
 /**

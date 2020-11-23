@@ -5,7 +5,8 @@ InputText::InputText(int x, int y, std::string label)
       selected(false),
       cursor_pos(0),
       width(20),
-      label(label) {}
+      label(label),
+      filler("_") {}
 
 void InputText::render(ConsoleKey key) {
   // calc start positions
@@ -23,13 +24,13 @@ void InputText::render(ConsoleKey key) {
 
   // format output str
   std::string output = this->value;
-  while (output.length() < this->width) {
-    output += "_";
+  while (output.length() < this->width && this->filler.length() > 0) {
+    output += filler;
   }
   output = this->label + output;
 
   // render
-  mvprintw(start_y, start_x, output.c_str());
+  mvwprintw(this->win, start_y, start_x, output.c_str());
 }
 
 void InputText::processInput(ConsoleKey key) {

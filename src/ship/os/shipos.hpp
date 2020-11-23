@@ -9,6 +9,7 @@
 #include "../ship.hpp"
 #include "program.hpp"
 #include "statusmonitor.hpp"
+#include "terminal.hpp"
 
 #define SHIPOS_VERSION "v0.1.4"
 #define SHIPOS_VER "1"
@@ -24,6 +25,7 @@ class ShipOs {
   ShipOs(Ship *ship);
   ~ShipOs();
   void boot();
+  void autostart();
   void render(ConsoleKey key);
   void renderWin(ConsoleKey key);
   double getUptime();

@@ -18,7 +18,7 @@ class Program {
   virtual ~Program() {}
   virtual void render(ConsoleKey key) {}
   ProgramState getState() { return this->state; }
-  void setState(ProgramState s) { this->state = s; }
+  virtual void setState(ProgramState s) { this->state = s; }
   WINDOW* getWin() { return this->win; }
 
  protected:
