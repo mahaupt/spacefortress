@@ -40,22 +40,22 @@ void Menu::render(ConsoleKey key) {
  * @param ConsoleKey key pressed user key
  */
 void Menu::processInput(ConsoleKey key) {
-  if (key == NONE) return;
+  if (key == ConsoleKey::NONE) return;
 
   switch (key) {
-    case ARROW_UP:
+    case ConsoleKey::ARROW_UP:
       if (this->selection > 0) {
         this->menu_items[this->selection]->afterFocus();
         this->menu_items[--this->selection]->beforeFocus();
       }
       break;
-    case ARROW_DOWN:
+    case ConsoleKey::ARROW_DOWN:
       if (this->selection < this->menu_items.size() - 1) {
         this->menu_items[this->selection]->afterFocus();
         this->menu_items[++this->selection]->beforeFocus();
       }
       break;
-    case ENTER:
+    case ConsoleKey::ENTER:
       this->menu_items[this->selection]->onSelection();
       break;
   }

@@ -24,12 +24,12 @@ class InputText : public UiElement {
   }
 
  private:
-  std::string label;
-  std::string value;
-
   bool selected;
   int cursor_pos;
-  int width;
+  size_t width;
+
+  std::string label;
+  std::string value;
 
   void processInput(ConsoleKey key);
   using UiElement::calcDrawOffset;

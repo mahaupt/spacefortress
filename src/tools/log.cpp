@@ -4,7 +4,7 @@ Log* Log::self = 0;
 
 Log::Log(LogLevel log_level) {
   this->log_level = log_level;
-  if (log_level != OFF) {
+  if (log_level != LogLevel::OFF) {
     fs.open("log.txt", std::ios_base::out | std::ios_base::trunc);
   }
   self = this;
@@ -28,7 +28,7 @@ void Log::log(std::string msg, LogLevel level) {
 
 void Log::olog(std::string msg, LogLevel level) {
   // check error levels
-  if (level > this->log_level || this->log_level == OFF) {
+  if (level > this->log_level || this->log_level == LogLevel::OFF) {
     return;
   }
   // check fstream open
@@ -53,19 +53,21 @@ void Log::olog(std::string msg, LogLevel level) {
 
 const char* Log::getLogLevelStr(LogLevel level) {
   switch (level) {
-    case (FATAL):
+    case (LogLevel::FATAL):
       return "FATAL";
-    case (ERROR):
+    case (LogLevel::ERROR):
       return "ERROR";
-    case (WARN):
+    case (LogLevel::WARN):
       return "WARN";
-    case (INFO):
+    case (LogLevel::INFO):
       return "INFO";
-    case (DEBUG):
+    case (LogLevel::DEBUG):
       return "DEBUG";
-    case (TRACE):
+    case (LogLevel::TRACE):
       return "TRACE";
-    case (ALL):
+    case (LogLevel::ALL):
+      return "ALL";
+    case (LogLevel::OFF):
       return "ALL";
   }
   return "NONE";

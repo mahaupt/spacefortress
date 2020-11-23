@@ -10,6 +10,7 @@
 
 enum MainState { MAIN_MENU, CREW_CREATE, CREW_JOIN, GAME };
 
+Game* pgame = 0;
 bool p_running = true;
 MainState main_state = MAIN_MENU;
 
@@ -19,7 +20,12 @@ MainState main_state = MAIN_MENU;
 void endProgram(void) { p_running = false; }
 void startCrewCreate(void) { main_state = CREW_CREATE; }
 void startCrewJoin(void) { main_state = CREW_JOIN; }
-void startGame(void) { main_state = GAME; }
+void startGame(void) {
+  main_state = GAME;
+  if (pgame != 0) {
+    pgame->start();
+  }
+}
 void backToMenu(void) { main_state = MAIN_MENU; }
 
 /**
@@ -27,12 +33,16 @@ void backToMenu(void) { main_state = MAIN_MENU; }
  * @return 0
  */
 int main() {
-  Log log(ALL);
+  //////////////////////////////////////////////
+  // MODULE LOADING
+  Log log(LogLevel::ALL);
   Log::info("start");
   Config config;
   Lang lang;
   Console console;
 
+  //////////////////////////////////////////////
+  // MENU SETUP
   Menu main_menu;
   auto main_menu_1 =
       MenuItem(0, -1, Lang::get("menu_create_crew"), &startCrewCreate);
@@ -82,12 +92,19 @@ int main() {
   create_menu.addNonSelectable(&sf_banner);
   join_menu.addNonSelectable(&sf_banner);
 
+  //////////////////////////////////////////////
+  // GAME SETUP
   Game game;
+  pgame = &game;
 
-  ConsoleKey key = NONE;
+  //////////////////////////////////////////////
+  // MAIN RENDERING LOOP
+  ConsoleKey key = ConsoleKey::NONE;
   while (p_running) {
+    // clear window
     Console::sclear();
 
+    // render main console
     switch (main_state) {
       case MAIN_MENU:
         main_menu.render(key);
@@ -103,14 +120,24 @@ int main() {
         break;
     }
 
+    // draw main console
     Console::srefresh();
+
+    // render and draw windows
+    if (main_state == GAME) {
+      game.renderWin(key);
+    }
+
+    // render cursor on top
     Console::renderCursor();
 
+    // keyboard actions
     timeout(100);
     key = console.getKey();
 
-    if (key == KEY_Q) {
-      break;
+    // abort condition
+    if (key == ConsoleKey::KEY_Q) {
+      endProgram();
     }
   }
 

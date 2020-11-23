@@ -4,7 +4,7 @@
 #include "lang.hpp"
 #include "log.hpp"
 
-enum ConsoleKey {
+enum class ConsoleKey {
   NONE = -1,
   ENTER = 10,
   ARROW_UP = 259,
