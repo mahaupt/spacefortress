@@ -9,12 +9,12 @@ shipos::Terminal::Terminal(Ship* ship, WindowAlignment alignment_x,
                            double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
       input_field(0, 0, "") {
-  this->window->setTitle("Terminal");
+  this->window->setTitle(Lang::get("program_terminal"));
   this->setup();
 }
 
 void shipos::Terminal::setup() {
-  terminal_lines.push_back("ShipOS Terminal");
+  terminal_lines.push_back("ShipOS " + Lang::get("program_terminal"));
 
   this->input_field.setWin(win);
   this->input_field.setPosition(0, 0, TOP, LEFT);
@@ -72,19 +72,19 @@ void shipos::Terminal::processCmd(std::string cmd) {
     // process command
     switch (str2int(cmd.c_str())) {
       case str2int("help"):
-        terminal_lines.push_back("following commands available:");
+        terminal_lines.push_back(Lang::get("program_terminal_help"));
         terminal_lines.push_back("help, exit");
         break;
       case str2int("exit"):
         if (this->win != stdscr) {
           this->setState(ProgramState::TERM);
         } else {
-          terminal_lines.push_back(
-              "ERROR: exit only works for windowed applications");
+          terminal_lines.push_back(Lang::get("program_terminal_exit"));
         }
         break;
       default:
-        terminal_lines.push_back(cmd + ": command not found");
+        terminal_lines.push_back(cmd + ": " +
+                                 Lang::get("program_terminal_notfound"));
         break;
     }
   }

@@ -5,7 +5,7 @@ shipos::Helm::Helm(Ship* ship) : Program(ship) {}
 shipos::Helm::Helm(Ship* ship, WindowAlignment alignment_x,
                    WindowAlignment alignment_y, double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y) {
-  this->window->setTitle("Helm Control");
+  this->window->setTitle(Lang::get("program_helm"));
 }
 
 void shipos::Helm::render(ConsoleKey key) {
@@ -60,7 +60,7 @@ void shipos::Helm::render(ConsoleKey key) {
   }
 
   // draw eng power
-  std::string pwr = "ENG: [";
+  std::string pwr = Lang::get("program_helm_eng") + ": [";
   int nsymb = this->wwidth - 3 - pwr.length();
   for (int i = 0; i < nsymb - 2; i++) {
     pwr += "#";
@@ -72,8 +72,11 @@ void shipos::Helm::render(ConsoleKey key) {
   wattroff(this->win, A_BOLD);
 
   // draw instructions
-  mvwprintw(this->win, this->wheight - 3, 1, "a: left - b: right");
-  mvwprintw(this->win, this->wheight - 2, 1, "w: fwd");
+  std::string line1 = "a: " + Lang::get("program_helm_left") +
+                      " - b: " + Lang::get("program_helm_right");
+  mvwprintw(this->win, this->wheight - 3, 1, line1.c_str());
+  std::string line2 = "w: " + Lang::get("program_helm_fwd");
+  mvwprintw(this->win, this->wheight - 2, 1, line2.c_str());
 
   // apply rotation
   this->ship->setRot(this->rot);

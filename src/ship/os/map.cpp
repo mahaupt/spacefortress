@@ -5,7 +5,7 @@ shipos::Map::Map(Ship* ship) : Program(ship) {}
 shipos::Map::Map(Ship* ship, WindowAlignment alignment_x,
                  WindowAlignment alignment_y, double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y) {
-  this->window->setTitle("Map");
+  this->window->setTitle(Lang::get("program_map"));
 }
 
 void shipos::Map::render(ConsoleKey key) {

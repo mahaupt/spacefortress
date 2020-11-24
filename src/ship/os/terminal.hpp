@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../../tools/console.hpp"
+#include "../../tools/lang.hpp"
 #include "../../ui/inputtext.hpp"
 #include "program.hpp"
 

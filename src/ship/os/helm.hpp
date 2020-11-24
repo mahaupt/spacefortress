@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../../tools/console.hpp"
+#include "../../tools/lang.hpp"
 #include "../ship.hpp"
 #include "program.hpp"
 

@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "../../tools/lang.hpp"
 #include "program.hpp"
 
 namespace shipos {

@@ -14,3 +14,24 @@ general_server: Server
 general_back: Back
 general_crew_code: Crew Code
 general_start_game: Start Game
+
+program_helm: Helm Control
+program_helm_eng: ENG
+program_helm_left: left
+program_helm_right: right
+program_helm_fwd: fwd
+
+program_map: Map
+
+program_terminal: Terminal
+program_terminal_notfound: command not found
+program_terminal_help: "following commands available:"
+program_terminal_exit: "ERROR: exit only works for windowed applications"
+
+program_smon: Status Monitor
+program_smon_reg: REG
+program_smon_hul: HUL
+program_smon_sld: SLH
+program_smon_enr: ENR
+program_smon_mod: MOD
+program_smon_installed: installed

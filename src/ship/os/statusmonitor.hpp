@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../tools/console.hpp"
+#include "../../tools/lang.hpp"
 #include "program.hpp"
 
 namespace shipos {
