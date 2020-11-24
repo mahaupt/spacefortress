@@ -36,6 +36,9 @@ void Text::render(ConsoleKey key) {
       case (RIGHT):
         dx = -this->textlines[i].length();
         break;
+      default:
+        // do nothing
+	break;
     }
 
     mvprintw(start_y + i, start_x + dx, this->textlines[i].c_str());

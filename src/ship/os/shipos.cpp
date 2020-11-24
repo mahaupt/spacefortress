@@ -175,7 +175,7 @@ void ShipOs::garbageCollector() {
       WINDOW *win = v_programs[i]->getWin();
 
       // try to close window
-      if (win > 0 && win != stdscr) {
+      if ((size_t)win > 0 && win != stdscr) {
         delete v_programs[i];
         v_programs.erase(v_programs.begin() + i);
         this->closeWindow(win);
