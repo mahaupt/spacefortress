@@ -6,12 +6,13 @@
 
 #include "../tools/console.hpp"
 
-enum class WindowAlignment { LEFT, RIGHT };
+enum class WindowAlignment { LEFT, RIGHT, MIDDLE, TOP, BOTTOM };
 enum class WindowState { VISIBLE, HIDDEN };
 
 class Window {
  public:
-  Window(WindowAlignment alignment, double size);
+  Window(WindowAlignment alignment_x, WindowAlignment alignment_y,
+         double size_x, double size_y);
   ~Window();
 
   void render(ConsoleKey key);
@@ -23,9 +24,11 @@ class Window {
 
  private:
   WINDOW *win;
-  WindowAlignment alignment;
+  WindowAlignment alignment_x;
+  WindowAlignment alignment_y;
   WindowState state;
-  double size;
+  double size_x;
+  double size_y;
   bool window_border;
   std::string window_title;
 

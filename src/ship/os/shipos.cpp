@@ -26,15 +26,25 @@ void ShipOs::boot() {
  * Autostarts default programs
  */
 void ShipOs::autostart() {
-  Window *w1 = new Window(WindowAlignment::RIGHT, 0.3);
-  w1->setTitle("Status Monitor");
-  this->addWindow(w1);
-  this->addProgram(new shipos::StatusMonitor(w1->getWin(), this->ship));
+  Console::sclear();
 
-  Window *w2 = new Window(WindowAlignment::LEFT, 0.7);
-  w2->setTitle("ShipOS Terminal");
+  Window *w1 =
+      new Window(WindowAlignment::LEFT, WindowAlignment::TOP, 0.7, 1.0);
+  w1->setTitle("Map");
+  this->addWindow(w1);
+  this->addProgram(new shipos::Map(w1->getWin(), this->ship));
+
+  Window *w2 =
+      new Window(WindowAlignment::RIGHT, WindowAlignment::TOP, 0.3, 0.5);
+  w2->setTitle("Status Monitor");
   this->addWindow(w2);
-  this->addProgram(new shipos::Terminal(w2->getWin(), this->ship));
+  this->addProgram(new shipos::StatusMonitor(w2->getWin(), this->ship));
+
+  Window *w3 =
+      new Window(WindowAlignment::RIGHT, WindowAlignment::BOTTOM, 0.3, 0.5);
+  w3->setTitle("Helm Control");
+  this->addWindow(w3);
+  this->addProgram(new shipos::Helm(w3->getWin(), this->ship));
 }
 
 /**
@@ -86,6 +96,7 @@ void ShipOs::renderWin(ConsoleKey key) {
       }
       if ((char)key == '2') {
         v_windows[i]->setState(WindowState::HIDDEN);
+        Console::sclear();
       }
     }
 

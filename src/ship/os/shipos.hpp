@@ -7,11 +7,13 @@
 #include "../../tools/console.hpp"
 #include "../../ui/window.hpp"
 #include "../ship.hpp"
+#include "helm.hpp"
+#include "map.hpp"
 #include "program.hpp"
 #include "statusmonitor.hpp"
 #include "terminal.hpp"
 
-#define SHIPOS_VERSION "v0.1.4"
+#define SHIPOS_VERSION "v0.1.9"
 #define SHIPOS_VER "1"
 #define SHIPOS_NAME "Rusty Leopard"
 

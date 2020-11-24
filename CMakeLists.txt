@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.9)
 project (spacefortress)
 
 #set variables
+set (CMAKE_PROJECT_VERSION 0.0.9)
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_BUILD_TYPE debug)
 set (DCMAKE_EXPORT_COMPILE_COMMANDS 1)
