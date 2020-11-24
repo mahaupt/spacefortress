@@ -26,6 +26,9 @@ void UiElement::calcDrawOffset(int& dx, int& dy) {
     case (RIGHT):
       dx = COLS;
       break;
+    default:
+      //nothing
+      break;
   }
 
   // calculate anchor y pos
@@ -36,6 +39,9 @@ void UiElement::calcDrawOffset(int& dx, int& dy) {
       break;
     case (BOTTOM):
       dy = LINES + this->y;
+      break;
+    default:
+      // nothing
       break;
   }
 }

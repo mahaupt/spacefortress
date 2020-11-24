@@ -58,5 +58,8 @@ void Menu::processInput(ConsoleKey key) {
     case ConsoleKey::ENTER:
       this->menu_items[this->selection]->onSelection();
       break;
+    default:
+      // do nothing
+      break;
   }
 }
