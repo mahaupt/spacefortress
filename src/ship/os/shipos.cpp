@@ -1,6 +1,8 @@
 #include "shipos.hpp"
 
-ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {}
+ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {
+  this->main_terminal = 0;
+}
 
 /**
  * removing all remaining dynamic classes from memory
@@ -15,6 +17,12 @@ ShipOs::~ShipOs() {
     delete v_windows[i];
   }
   v_windows.clear();
+
+  // main terminal
+  if (this->main_terminal != 0) {
+    delete this->main_terminal;
+    this->main_terminal = 0;
+  }
 }
 
 void ShipOs::boot() {
@@ -28,6 +36,11 @@ void ShipOs::boot() {
 void ShipOs::autostart() {
   Console::sclear();
 
+  // background terminal
+  this->main_terminal = new shipos::Terminal(stdscr, this->ship);
+  this->main_terminal->setState(shipos::ProgramState::HALT);
+
+  // windowed programs
   Window *w1 =
       new Window(WindowAlignment::LEFT, WindowAlignment::TOP, 0.7, 1.0);
   w1->setTitle("Map");
@@ -45,6 +58,8 @@ void ShipOs::autostart() {
   w3->setTitle("Helm Control");
   this->addWindow(w3);
   this->addProgram(new shipos::Helm(w3->getWin(), this->ship));
+
+  this->windows_tabbed = false;
 }
 
 /**
@@ -53,12 +68,12 @@ void ShipOs::autostart() {
  */
 void ShipOs::render(ConsoleKey key) {
   if (this->state == ShipOsState::BOOTING) {
-    this->renderBoot();
+    this->renderBoot(key);
   }
   if (this->state == ShipOsState::RUNNING) {
-    mvprintw(0, 0, "ShipOS running...");
-    mvprintw(1, 0, "Processes: %i", v_programs.size());
-    mvprintw(2, 0, "Windows: %i", v_windows.size());
+    if (this->main_terminal != 0) {
+      this->main_terminal->render(key);
+    }
   }
 }
 
@@ -73,16 +88,6 @@ void ShipOs::renderWin(ConsoleKey key) {
       if (v_programs[i]->getState() == shipos::ProgramState::RUN) {
         v_programs[i]->render(key);
       }
-
-      if ((char)key == '3' || (char)key == '1') {
-        v_programs[i]->setState(shipos::ProgramState::RUN);
-      }
-      if ((char)key == '4' || (char)key == '2') {
-        v_programs[i]->setState(shipos::ProgramState::HALT);
-      }
-      if ((char)key == '5') {
-        v_programs[i]->setState(shipos::ProgramState::TERM);
-      }
     }
 
     // render windows
@@ -90,18 +95,15 @@ void ShipOs::renderWin(ConsoleKey key) {
       if (v_windows[i]->getState() == WindowState::VISIBLE) {
         v_windows[i]->render(key);
       }
-
-      if ((char)key == '1') {
-        v_windows[i]->setState(WindowState::VISIBLE);
-      }
-      if ((char)key == '2') {
-        v_windows[i]->setState(WindowState::HIDDEN);
-        Console::sclear();
-      }
     }
+  }
 
-    if ((char)key == '6') {
-      this->autostart();
+  // tab control
+  if (key == ConsoleKey::KEY_Q) {
+    if (this->windows_tabbed) {
+      // restore windows
+    } else {
+      // tab windows to console
     }
   }
 
@@ -122,11 +124,11 @@ double ShipOs::getUptime() {
   return uptime;
 }
 
-void ShipOs::renderBoot() {
+void ShipOs::renderBoot(ConsoleKey key) {
   double uptime = this->getUptime();
   static size_t drawline = 0;
   static double lastuptime = uptime;
-  if (uptime - lastuptime >= 0.1) {
+  if (uptime - lastuptime >= 0.1 || key == ConsoleKey::SPACE) {
     drawline++;
     lastuptime = uptime;
   } else {
@@ -174,7 +176,7 @@ void ShipOs::renderBoot() {
   if (drawline == 90) printw(".");
 
   // finish boot sequence
-  if (drawline == 100) {
+  if (drawline == 100 || key == ConsoleKey::SPACE) {
     this->state = ShipOsState::RUNNING;
     this->autostart();
   }

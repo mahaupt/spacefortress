@@ -16,6 +16,7 @@ Ship::~Ship() {
 }
 
 void Ship::simulate(double delta_time) {
+  GameObject::simulate(delta_time);
   for (int i = 0; i < this->modules.size(); i++) {
     this->modules[i]->simulate(delta_time, this);
   }
