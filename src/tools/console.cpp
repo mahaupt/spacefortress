@@ -8,10 +8,16 @@ Console::Console() {
   initscr();
   noecho();
   keypad(stdscr, TRUE);
+  start_color();
   this->showCursor(false);
   this->sclear();
 
   Log::info("console module loaded");
+  if (has_colors()) {
+    Log::info("console supports colors");
+  } else {
+    Log::warn("console has no color support");
+  }
 
   this->printBanner();
 }
@@ -62,3 +68,8 @@ void Console::showCursor(bool show) {
     curs_set(0);
   }
 };
+
+void Console::initColors() {
+  init_pair((short int)ConsoleColor::YELLOW, COLOR_YELLOW, COLOR_BLACK);
+  init_pair((short int)ConsoleColor::RED, COLOR_RED, COLOR_BLACK);
+}

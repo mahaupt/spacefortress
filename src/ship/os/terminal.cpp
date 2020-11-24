@@ -57,7 +57,12 @@ void shipos::Terminal::processCmd(std::string cmd) {
     switch (str2int(cmd.c_str())) {
       case str2int("help"):
         terminal_lines.push_back("following commands available:");
-        terminal_lines.push_back("help");
+        terminal_lines.push_back("help, exit");
+        break;
+      case str2int("exit"):
+        if (this->win != stdscr) {
+          this->setState(ProgramState::TERM);
+        }
         break;
       default:
         terminal_lines.push_back(cmd + ": command not found");

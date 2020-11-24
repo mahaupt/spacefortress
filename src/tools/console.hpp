@@ -16,6 +16,8 @@ enum class ConsoleKey {
   KEY_Q = 113
 };
 
+enum class ConsoleColor { YELLOW = 1, RED = 1 };
+
 /**
  * ncurses warpper
  */
@@ -40,4 +42,6 @@ class Console {
   int cursor_x;
   int cursor_y;
   static Console* self;
+
+  void initColors();
 };

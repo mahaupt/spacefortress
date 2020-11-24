@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "../gameobject.hpp"
 #include "module.hpp"
 
-class Ship {
+class Ship : public GameObject {
  public:
   Ship(std::string name, double hull);
   ~Ship();
