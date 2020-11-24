@@ -101,9 +101,6 @@ int main() {
   ConsoleKey key = ConsoleKey::NONE;
   Console::sclear();
   while (p_running) {
-    // clear window
-    Console::sclear();
-
     // render main console
     switch (main_state) {
       case MAIN_MENU:

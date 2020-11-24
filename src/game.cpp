@@ -19,12 +19,6 @@ void Game::render(ConsoleKey key) {
   this->s.simulate(sim_time);
 
   this->os.render(key);
-
-  /*if (this->os.getState() == ShipOsState::RUNNING) {
-    this->s.info();
-    printw("Simulating %f seconds\n", sim_time);
-    printw("\nPress q to exit...\n");
-  }*/
 }
 
 void Game::renderWin(ConsoleKey key) { this->os.renderWin(key); }
