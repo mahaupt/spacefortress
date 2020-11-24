@@ -12,6 +12,7 @@ enum class ConsoleKey {
   ARROW_LEFT = 260,
   ARROW_RIGHT = 261,
   BACKSPACE = 263,
+  BACKSPACE2 = 127,
   SPACE = 32,
   DELETE = 330,
   TAB = 9,

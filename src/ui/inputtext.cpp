@@ -54,7 +54,8 @@ void InputText::processInput(ConsoleKey key) {
 
   // delete characters
   if (this->value.length() > 0) {
-    if (key == ConsoleKey::BACKSPACE && this->cursor_pos > 0) {
+    if ((key == ConsoleKey::BACKSPACE || key == ConsoleKey::BACKSPACE2) &&
+        this->cursor_pos > 0) {
       this->value = this->value.substr(0, this->cursor_pos - 1) +
                     this->value.substr(this->cursor_pos);
       this->cursor_pos--;
