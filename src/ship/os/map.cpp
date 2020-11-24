@@ -1,6 +1,12 @@
 #include "map.hpp"
 
-shipos::Map::Map(WINDOW* win, Ship* ship) : Program(win, ship) {}
+shipos::Map::Map(Ship* ship) : Program(ship) {}
+
+shipos::Map::Map(Ship* ship, WindowAlignment alignment_x,
+                 WindowAlignment alignment_y, double size_x, double size_y)
+    : Program(ship, alignment_x, alignment_y, size_x, size_y) {
+  this->window->setTitle("Map");
+}
 
 void shipos::Map::render(ConsoleKey key) {
   this->getWindowSize();
@@ -38,6 +44,9 @@ void shipos::Map::render(ConsoleKey key) {
   mvwprintw(this->win, 1, 2, "%.1f / %.1f", sx, sy);
   mvwprintw(this->win, this->wheight - 3, 1, "y");
   mvwprintw(this->win, this->wheight - 2, 2, "x");
+
+  // render window
+  Program::render(key);
 }
 
 /**

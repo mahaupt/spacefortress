@@ -13,11 +13,6 @@ ShipOs::~ShipOs() {
   }
   v_programs.clear();
 
-  for (size_t i = 0; i < this->v_windows.size(); i++) {
-    delete v_windows[i];
-  }
-  v_windows.clear();
-
   // main terminal
   if (this->main_terminal != 0) {
     delete this->main_terminal;
@@ -37,27 +32,16 @@ void ShipOs::autostart() {
   Console::sclear();
 
   // background terminal
-  this->main_terminal = new shipos::Terminal(stdscr, this->ship);
+  this->main_terminal = new shipos::Terminal(this->ship);
   this->main_terminal->setState(shipos::ProgramState::HALT);
 
   // windowed programs
-  Window *w1 =
-      new Window(WindowAlignment::LEFT, WindowAlignment::TOP, 0.7, 1.0);
-  w1->setTitle("Map");
-  this->addWindow(w1);
-  this->addProgram(new shipos::Map(w1->getWin(), this->ship));
-
-  Window *w2 =
-      new Window(WindowAlignment::RIGHT, WindowAlignment::TOP, 0.3, 0.5);
-  w2->setTitle("Status Monitor");
-  this->addWindow(w2);
-  this->addProgram(new shipos::StatusMonitor(w2->getWin(), this->ship));
-
-  Window *w3 =
-      new Window(WindowAlignment::RIGHT, WindowAlignment::BOTTOM, 0.3, 0.5);
-  w3->setTitle("Helm Control");
-  this->addWindow(w3);
-  this->addProgram(new shipos::Helm(w3->getWin(), this->ship));
+  this->addProgram(new shipos::Map(this->ship, WindowAlignment::LEFT,
+                                   WindowAlignment::TOP, 0.7, 1.0));
+  this->addProgram(new shipos::StatusMonitor(this->ship, WindowAlignment::RIGHT,
+                                             WindowAlignment::TOP, 0.3, 0.5));
+  this->addProgram(new shipos::Helm(this->ship, WindowAlignment::RIGHT,
+                                    WindowAlignment::BOTTOM, 0.3, 0.5));
 
   this->windows_tabbed = false;
 }
@@ -89,23 +73,31 @@ void ShipOs::renderWin(ConsoleKey key) {
         v_programs[i]->render(key);
       }
     }
-
-    // render windows
-    for (size_t i = 0; i < this->v_windows.size(); i++) {
-      if (v_windows[i]->getState() == WindowState::VISIBLE) {
-        v_windows[i]->render(key);
-      }
-    }
   }
 
-  // tab control
-  if (key == ConsoleKey::KEY_Q) {
+  // tab control - hide and show programs
+  if (key == ConsoleKey::TAB) {
+    auto pstate = shipos::ProgramState::HALT;
+    auto wstate = WindowState::HIDDEN;
     if (this->windows_tabbed) {
-      // restore windows
+      // restore windows, block background terminal
+      pstate = shipos::ProgramState::RUN;
+      wstate = WindowState::VISIBLE;
+      this->main_terminal->setState(shipos::ProgramState::HALT);
+      this->windows_tabbed = false;
     } else {
-      // tab windows to console
+      // hide windows, run terminal
+      this->main_terminal->setState(shipos::ProgramState::RUN);
+      this->windows_tabbed = true;
+      Console::sclear();
+    }
+    for (size_t i = 0; i < this->v_programs.size(); i++) {
+      this->v_programs[i]->setState(pstate);
+      this->v_programs[i]->setWinState(wstate);
     }
   }
+
+  if (key != ConsoleKey::NONE) Log::info("Key: " + std::to_string((int)key));
 
   // at the end
   this->garbageCollector();
@@ -196,24 +188,9 @@ void ShipOs::garbageCollector() {
       if ((size_t)win > 0 && win != stdscr) {
         delete v_programs[i];
         v_programs.erase(v_programs.begin() + i);
-        this->closeWindow(win);
         Console::sclear();
         return;  // return to avoid screwing with the iteration
       }
-    }
-  }
-}
-
-/**
- * searches through window vector and deletes windows
- * @param win WINDOW pointer
- */
-void ShipOs::closeWindow(WINDOW *win) {
-  for (size_t i = 0; i < this->v_windows.size(); i++) {
-    if (this->v_windows[i]->getWin() == win) {
-      delete this->v_windows[i];
-      v_windows.erase(v_windows.begin() + i);
-      return;
     }
   }
 }

@@ -13,7 +13,9 @@ constexpr unsigned int str2int(const char* str, int h = 0) {
 
 class Terminal : public Program {
  public:
-  Terminal(WINDOW* win, Ship* ship);
+  Terminal(Ship* ship);
+  Terminal(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
+           double size_x, double size_y);
   void setState(ProgramState s);
   void render(ConsoleKey key);
   void processCmd(std::string cmd);
@@ -21,5 +23,7 @@ class Terminal : public Program {
  private:
   std::vector<std::string> terminal_lines;
   InputText input_field;
+
+  void setup();
 };
 }  // namespace shipos

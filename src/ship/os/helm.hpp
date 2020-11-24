@@ -11,7 +11,9 @@
 namespace shipos {
 class Helm : public Program {
  public:
-  Helm(WINDOW* win, Ship* ship);
+  Helm(Ship* ship);
+  Helm(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
+       double size_x, double size_y);
   void render(ConsoleKey key);
 
  private:

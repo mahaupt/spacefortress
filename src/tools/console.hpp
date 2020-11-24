@@ -14,6 +14,7 @@ enum class ConsoleKey {
   BACKSPACE = 263,
   SPACE = 32,
   DELETE = 330,
+  TAB = 9,
   KEY_Q = 113
 };
 

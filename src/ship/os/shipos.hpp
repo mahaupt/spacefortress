@@ -32,7 +32,6 @@ class ShipOs {
   void renderWin(ConsoleKey key);
   double getUptime();
   ShipOsState getState() { return this->state; }
-  void addWindow(Window *win) { this->v_windows.push_back(win); }
   void addProgram(shipos::Program *prog) { this->v_programs.push_back(prog); }
 
  private:
@@ -41,12 +40,10 @@ class ShipOs {
 
   std::chrono::time_point<std::chrono::steady_clock> boot_time;
 
-  std::vector<Window *> v_windows;
   std::vector<shipos::Program *> v_programs;
   shipos::Program *main_terminal;
   bool windows_tabbed;
 
   void renderBoot(ConsoleKey key);
   void garbageCollector();
-  void closeWindow(WINDOW *win);
 };

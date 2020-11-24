@@ -1,12 +1,25 @@
 #include "terminal.hpp"
 
-shipos::Terminal::Terminal(WINDOW* win, Ship* ship)
-    : Program(win, ship), input_field(0, 0, "") {
+shipos::Terminal::Terminal(Ship* ship) : Program(ship), input_field(0, 0, "") {
+  this->setup();
+}
+
+shipos::Terminal::Terminal(Ship* ship, WindowAlignment alignment_x,
+                           WindowAlignment alignment_y, double size_x,
+                           double size_y)
+    : Program(ship, alignment_x, alignment_y, size_x, size_y),
+      input_field(0, 0, "") {
+  this->window->setTitle("Terminal");
+  this->setup();
+}
+
+void shipos::Terminal::setup() {
   terminal_lines.push_back("ShipOS Terminal");
-  input_field.setWin(win);
-  input_field.setPosition(0, 0, TOP, LEFT);
-  input_field.setFiller("");
-  input_field.setSelected(true);
+
+  this->input_field.setWin(win);
+  this->input_field.setPosition(0, 0, TOP, LEFT);
+  this->input_field.setFiller("");
+  this->input_field.setSelected(true);
 
   // activate right away
   Console::showCursor(true);
@@ -32,6 +45,9 @@ void shipos::Terminal::render(ConsoleKey key) {
   mvwprintw(this->win, 1 + i, 1, "$ ");
   input_field.setPosition(3, i + 1);
   input_field.render(key);
+
+  // render window
+  Program::render(key);
 }
 
 /**
@@ -62,6 +78,9 @@ void shipos::Terminal::processCmd(std::string cmd) {
       case str2int("exit"):
         if (this->win != stdscr) {
           this->setState(ProgramState::TERM);
+        } else {
+          terminal_lines.push_back(
+              "ERROR: exit only works for windowed applications");
         }
         break;
       default:

@@ -1,7 +1,12 @@
 #include "statusmonitor.hpp"
 
-shipos::StatusMonitor::StatusMonitor(WINDOW* win, Ship* ship)
-    : Program(win, ship) {}
+shipos::StatusMonitor::StatusMonitor(Ship* ship) : Program(ship) {}
+shipos::StatusMonitor::StatusMonitor(Ship* ship, WindowAlignment alignment_x,
+                                     WindowAlignment alignment_y, double size_x,
+                                     double size_y)
+    : Program(ship, alignment_x, alignment_y, size_x, size_y) {
+  this->window->setTitle("Status Monitor");
+}
 
 void shipos::StatusMonitor::render(ConsoleKey key) {
   mvwprintw(this->win, 1, 1, "REG: %s", this->ship->getName().c_str());
@@ -56,4 +61,7 @@ void shipos::StatusMonitor::render(ConsoleKey key) {
   }
 
   mvwprintw(this->win, 5, 1, "MOD: %i installed", this->ship->getModuleCount());
+
+  // render window
+  Program::render(key);
 }

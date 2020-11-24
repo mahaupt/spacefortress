@@ -1,7 +1,11 @@
 #include "helm.hpp"
 
-shipos::Helm::Helm(WINDOW* win, Ship* ship) : Program(win, ship) {
-  this->rot = 0;
+shipos::Helm::Helm(Ship* ship) : Program(ship) {}
+
+shipos::Helm::Helm(Ship* ship, WindowAlignment alignment_x,
+                   WindowAlignment alignment_y, double size_x, double size_y)
+    : Program(ship, alignment_x, alignment_y, size_x, size_y) {
+  this->window->setTitle("Helm Control");
 }
 
 void shipos::Helm::render(ConsoleKey key) {
@@ -73,6 +77,9 @@ void shipos::Helm::render(ConsoleKey key) {
 
   // apply rotation
   this->ship->setRot(this->rot);
+
+  // render window
+  Program::render(key);
 }
 
 /**
