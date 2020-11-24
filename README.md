@@ -7,8 +7,8 @@
 
 # spacefortress
 Spacefortress is a science fiction command line space ship simulator.
-The main inspiration for this project comes from the dwarf fortress game.
-
+The main inspiration for this project comes from the dwarf fortress game.  
+![image](https://user-images.githubusercontent.com/4532320/100129593-076ad480-2e82-11eb-8e4b-226d3bd80598.png)
 
 ## Build Instructions
 make sure you have the requirements installed:
