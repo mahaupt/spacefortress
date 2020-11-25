@@ -1,10 +1,13 @@
 #include "map.hpp"
 
-shipos::Map::Map(Ship* ship) : Program(ship) {}
+shipos::Map::Map(Ship* ship, std::vector<GameObject*>* game_objects)
+    : Program(ship), game_objects(game_objects) {}
 
-shipos::Map::Map(Ship* ship, WindowAlignment alignment_x,
-                 WindowAlignment alignment_y, double size_x, double size_y)
-    : Program(ship, alignment_x, alignment_y, size_x, size_y) {
+shipos::Map::Map(Ship* ship, std::vector<GameObject*>* game_objects,
+                 WindowAlignment alignment_x, WindowAlignment alignment_y,
+                 double size_x, double size_y)
+    : Program(ship, alignment_x, alignment_y, size_x, size_y),
+      game_objects(game_objects) {
   this->window->setTitle(Lang::get("program_map"));
 }
 
@@ -21,26 +24,26 @@ void shipos::Map::render(ConsoleKey key) {
   this->ship->getPos(sx, sy);
 
   // draw objects
-  for (int spx = 1; spx < this->wwidth - 2; spx++) {
-    for (int spy = 1; spy < this->wheight - 2; spy++) {
-      // calc game positions
-      int gpx = round(sx) + spx - cx;
-      int gpy = round(sy) - spy + cy;
+  for (size_t i = 0; i < this->game_objects->size(); i++) {
+    // get position of object
+    double gpx;
+    double gpy;
+    (*this->game_objects)[i]->getPos(gpx, gpy);
 
-      // test object at 3/3
-      if (gpx == 3 && gpy == 3) {
-        mvwprintw(this->win, spy, spx, ".");
-      }
+    // calc screen position
+    double spx = cx + gpx - sx;
+    double spy = cy - gpy + sy;
 
-      // test object at -3/-3
-      if (gpx == -3 && gpy == 3) {
-        mvwprintw(this->win, spy, spx, "+");
-      }
+    // object is in map screen
+    if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
+        spy < this->wheight - 2) {
+      mvwprintw(this->win, round(spy), round(spx),
+                (*this->game_objects)[i]->getSymbol().c_str());
     }
   }
 
   // draw ship and pos info
-  mvwprintw(this->win, cy, cx, "\U0001F680");
+  mvwprintw(this->win, cy, cx, this->ship->getSymbol().c_str());
   mvwprintw(this->win, 1, 2, "%.1f / %.1f", sx, sy);
   mvwprintw(this->win, this->wheight - 3, 1, "y");
   mvwprintw(this->win, this->wheight - 2, 1, "└x");

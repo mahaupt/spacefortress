@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "../../gameobject.hpp"
 #include "../../tools/console.hpp"
 #include "../../ui/window.hpp"
 #include "../ship.hpp"
@@ -24,7 +25,7 @@ enum class ShipOsState { OFF, BOOTING, RUNNING, SHUTDOWN };
  */
 class ShipOs {
  public:
-  ShipOs(Ship *ship);
+  ShipOs(Ship *ship, std::vector<GameObject *> *game_objects);
   ~ShipOs();
   void boot();
   void autostart();
@@ -36,6 +37,7 @@ class ShipOs {
 
  private:
   Ship *ship;
+  std::vector<GameObject *> *game_objects;
   ShipOsState state;
 
   std::chrono::time_point<std::chrono::steady_clock> boot_time;

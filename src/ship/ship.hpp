@@ -13,7 +13,6 @@ class Ship : public GameObject {
   ~Ship();
 
   // info functions
-  std::string getName() { return this->name; }
   double getHull() { return this->hull; }
   double getMaxHull() { return this->max_hull; }
   double getShield() { return this->shield; }
@@ -31,8 +30,6 @@ class Ship : public GameObject {
   void addShield(double shield);
 
  private:
-  std::string name;
-
   double hull;
   double shield;
   double max_hull;

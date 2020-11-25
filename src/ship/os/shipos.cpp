@@ -1,6 +1,7 @@
 #include "shipos.hpp"
 
-ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {
+ShipOs::ShipOs(Ship *ship, std::vector<GameObject *> *game_objects)
+    : ship(ship), state(ShipOsState::OFF), game_objects(game_objects) {
   this->main_terminal = 0;
 }
 
@@ -36,8 +37,9 @@ void ShipOs::autostart() {
   this->main_terminal->setState(shipos::ProgramState::HALT);
 
   // windowed programs
-  this->addProgram(new shipos::Map(this->ship, WindowAlignment::LEFT,
-                                   WindowAlignment::TOP, 0.7, 1.0));
+  this->addProgram(new shipos::Map(this->ship, this->game_objects,
+                                   WindowAlignment::LEFT, WindowAlignment::TOP,
+                                   0.7, 1.0));
   this->addProgram(new shipos::StatusMonitor(this->ship, WindowAlignment::RIGHT,
                                              WindowAlignment::TOP, 0.3, 0.5));
   this->addProgram(new shipos::Helm(this->ship, WindowAlignment::RIGHT,
