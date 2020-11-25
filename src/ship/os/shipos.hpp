@@ -13,7 +13,7 @@
 #include "statusmonitor.hpp"
 #include "terminal.hpp"
 
-#define SHIPOS_VERSION "v0.1.9"
+#define SHIPOS_VERSION "v0.2.1"
 #define SHIPOS_VER "1"
 #define SHIPOS_NAME "Rusty Leopard"
 

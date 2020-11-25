@@ -64,7 +64,7 @@ void shipos::StatusMonitor::render(ConsoleKey key) {
     wattroff(this->win, A_BOLD);
   }
 
-  std::string modstr = Lang::get("program_smon_mod") + ": %i" +
+  std::string modstr = Lang::get("program_smon_mod") + ": %i " +
                        Lang::get("program_smon_installed");
   mvwprintw(this->win, 5, 1, modstr.c_str(), this->ship->getModuleCount());
 

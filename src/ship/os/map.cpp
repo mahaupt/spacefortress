@@ -40,10 +40,10 @@ void shipos::Map::render(ConsoleKey key) {
   }
 
   // draw ship and pos info
-  mvwprintw(this->win, cy, cx, "O");
+  mvwprintw(this->win, cy, cx, "\U0001F680");
   mvwprintw(this->win, 1, 2, "%.1f / %.1f", sx, sy);
   mvwprintw(this->win, this->wheight - 3, 1, "y");
-  mvwprintw(this->win, this->wheight - 2, 2, "x");
+  mvwprintw(this->win, this->wheight - 2, 1, "└x");
 
   // render window
   Program::render(key);

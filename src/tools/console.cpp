@@ -5,6 +5,7 @@ Console* Console::self = 0;
 Console::Console() {
   Console::self = this;
 
+  setlocale(LC_ALL, "");
   initscr();
   noecho();
   keypad(stdscr, TRUE);

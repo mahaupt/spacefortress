@@ -1,5 +1,5 @@
 #pragma once
-#include <curses.h>
+#include <ncurses.h>
 
 #include "lang.hpp"
 #include "log.hpp"
