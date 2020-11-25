@@ -57,7 +57,7 @@ void ShipOs::render(ConsoleKey key) {
     this->renderBoot(key);
   }
   if (this->state == ShipOsState::RUNNING) {
-    if (this->main_terminal != 0) {
+    if (this->main_terminal != 0 && this->windows_tabbed) {
       this->main_terminal->render(key);
     }
   }
