@@ -4,9 +4,11 @@ Game::Game() : s("Omega", 100), os(&s, &game_objects) {
   // add player ship
   this->s.setPos(-1, 0.1);
   this->s.addModule(new Generator("Generator MK I", 1, 1));
+  this->s.addModule(new Lifesupport("LifeSupport", 1, 3));
   this->s.addModule(new Engine("Engine MK I", 1, 1, 2));
   this->s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
   this->s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
+  this->s.addModule(new Cargo("Cargo hold", 1, 1000));
 
   // add planets
   this->game_objects.push_back(new go::Planet("Rix", 1, 1));

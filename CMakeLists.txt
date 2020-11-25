@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 project (spacefortress)
 
 #set variables
@@ -6,11 +6,13 @@ set (CMAKE_PROJECT_VERSION 0.0.9)
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_BUILD_TYPE debug)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CURSES_NEED_NCURSES TRUE)
 set(CURSES_NEED_WIDE TRUE)
 
 #external packages
 find_package(Curses REQUIRED)
+find_package(Threads REQUIRED)
 add_subdirectory(yaml-cpp)
 include_directories(
   ${CURSES_INCLUDE_DIR}
@@ -35,4 +37,5 @@ target_link_libraries(
     spacefortress
     ${CURSES_LIBRARIES}
     yaml-cpp
+    Threads::Threads
 )

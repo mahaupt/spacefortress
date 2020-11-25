@@ -8,7 +8,7 @@ Ship::Ship(std::string name, double hull) : modules(std::vector<Module *>()) {
   this->max_hull = hull;
   this->max_shield = 10;
 
-  this->symbol = '@';
+  this->symbol = "\u2206";
 }
 
 Ship::~Ship() {

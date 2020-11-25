@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <future>
 #include <thread>
 #include <vector>
 
@@ -8,8 +9,10 @@
 #include "objects/star.hpp"
 #include "objects/station.hpp"
 #include "ship/modules/capacitor.hpp"
+#include "ship/modules/cargo.hpp"
 #include "ship/modules/engine.hpp"
 #include "ship/modules/generator.hpp"
+#include "ship/modules/lifesupport.hpp"
 #include "ship/modules/shieldgenerator.hpp"
 #include "ship/os/shipos.hpp"
 #include "ship/ship.hpp"
