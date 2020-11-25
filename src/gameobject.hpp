@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <string>
 
 class GameObject {
@@ -17,6 +18,11 @@ class GameObject {
   void setName(std::string name) { this->name = name; }
   std::string getName() { return this->name; }
   std::string getSymbol() { return this->symbol; }
+  double getVelAbs() { return sqrt(vel_x * vel_x + vel_y * vel_y); }
+  void getVel(double &vx, double &vy) {
+    vx = this->vel_x;
+    vy = this->vel_y;
+  }
 
   // simulation
   void applyForce(double fx, double fy);

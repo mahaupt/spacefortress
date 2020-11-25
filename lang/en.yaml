@@ -32,6 +32,6 @@ program_smon: Status Monitor
 program_smon_reg: REG
 program_smon_hul: HUL
 program_smon_sld: "\U0001F6E1 "
-program_smon_enr: "\U0001F50B "
+program_smon_enr: "\U0001F50B"
 program_smon_mod: MOD
 program_smon_installed: installed

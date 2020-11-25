@@ -21,6 +21,7 @@ class Helm : public Program {
   double rot;
   int wwidth;
   int wheight;
+  bool autopilot;
 
   void getWindowSize();
 };

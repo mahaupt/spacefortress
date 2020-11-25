@@ -19,6 +19,7 @@ class Map : public Program {
  private:
   int wwidth;
   int wheight;
+  int zoom;
   std::vector<GameObject*>* game_objects;
 
   void getWindowSize();

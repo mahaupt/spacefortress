@@ -2,23 +2,24 @@
 
 Game::Game() : s("Omega", 100), os(&s, &game_objects) {
   // add player ship
+  this->s.setPos(-1, 0.1);
   this->s.addModule(new Generator("Generator MK I", 1, 1));
   this->s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
   this->s.addModule(new ShieldGenerator("Engine MK I", 1, 1, 1));
   this->s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
 
   // add planets
-  this->game_objects.push_back(new go::Planet("Rix", 5, 5));
-  this->game_objects.push_back(new go::Planet("Lira", 0, 4));
-  this->game_objects.push_back(new go::Planet("Omecron", -3, 1));
-  this->game_objects.push_back(new go::Planet("Deca", -5, 0));
-  this->game_objects.push_back(new go::Planet("Zyppr", 8, 2));
+  this->game_objects.push_back(new go::Planet("Rix", 1, 1));
+  this->game_objects.push_back(new go::Planet("Lira", 2, -1));
+  this->game_objects.push_back(new go::Planet("Omecron", -3, 0));
+  this->game_objects.push_back(new go::Planet("Deca", -4, -2));
+  this->game_objects.push_back(new go::Planet("Zyppr", 5, 2));
 
   // add star
-  this->game_objects.push_back(new go::Star("Mycra", -2, -2));
+  this->game_objects.push_back(new go::Star("Mycra", 0, 0));
 
   // add Station
-  this->game_objects.push_back(new go::Station("Mycra Outpost", 8, -2));
+  this->game_objects.push_back(new go::Station("Mycra Outpost", -1, 0));
 
   Log::info("game module loaded");
 }

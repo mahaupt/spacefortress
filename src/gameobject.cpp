@@ -31,8 +31,16 @@ void GameObject::simulate(double delta_time) {
   if (this->is_fixed) return;
 
   // apply velocity from force @todo consider mass
-  this->vel_x += this->force_x * delta_time;
-  this->vel_y += this->force_y * delta_time;
+  this->vel_x += this->force_x * delta_time / 1000.0;
+  this->vel_y += this->force_y * delta_time / 1000.0;
+
+  // set maximum speed
+  double vel = this->getVelAbs() * 1000.0;
+  if (vel > 10.0) {
+    double red = 10.0 / vel;
+    this->vel_x *= red;
+    this->vel_y *= red;
+  }
 
   // reset tick force
   this->force_x = 0;
