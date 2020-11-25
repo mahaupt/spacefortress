@@ -4,8 +4,8 @@ Game::Game() : s("Omega", 100), os(&s, &game_objects) {
   // add player ship
   this->s.setPos(-1, 0.1);
   this->s.addModule(new Generator("Generator MK I", 1, 1));
+  this->s.addModule(new Engine("Engine MK I", 1, 1, 2));
   this->s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
-  this->s.addModule(new ShieldGenerator("Engine MK I", 1, 1, 1));
   this->s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
 
   // add planets
@@ -28,9 +28,8 @@ Game::Game() : s("Omega", 100), os(&s, &game_objects) {
  * free all game objects
  */
 Game::~Game() {
-  for (size_t i = 0; i < this->game_objects.size(); i++) {
-    delete this->game_objects[i];
-    this->game_objects[i] = 0;
+  for (const auto &gobject : this->game_objects) {
+    delete gobject;
   }
   this->game_objects.clear();
 }

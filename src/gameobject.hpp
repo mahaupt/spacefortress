@@ -23,6 +23,14 @@ class GameObject {
     vx = this->vel_x;
     vy = this->vel_y;
   }
+  void getForce(double &fx, double &fy) {
+    fx = this->force_x;
+    fy = this->force_y;
+  }
+  void setForce(double fx, double fy) {
+    this->force_x = fx;
+    this->force_y = fy;
+  }
 
   // simulation
   void applyForce(double fx, double fy);

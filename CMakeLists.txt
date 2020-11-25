@@ -5,7 +5,7 @@ project (spacefortress)
 set (CMAKE_PROJECT_VERSION 0.0.9)
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_BUILD_TYPE debug)
-set (DCMAKE_EXPORT_COMPILE_COMMANDS 1)
+set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CURSES_NEED_NCURSES TRUE)
 set(CURSES_NEED_WIDE TRUE)
 
@@ -17,6 +17,7 @@ include_directories(
   "yaml-cpp/include"
 )
 
+#check ncursesw
 message(STATUS "CURSES_LIBRARIES: ${CURSES_LIBRARIES}")
 message(STATUS "CURSES_INCLUDE: ${CURSES_INCLUDE_DIR}")
 

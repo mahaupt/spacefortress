@@ -23,6 +23,7 @@ class Module {
   double energy_needed;
 
   Module(std::string name, double hull, ModuleType type);
+  virtual ~Module() {}
   virtual void simulate(double delta_time, Ship *ship){};
 
   double getEnergy(double energy_needed);

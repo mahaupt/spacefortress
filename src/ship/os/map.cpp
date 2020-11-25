@@ -33,11 +33,11 @@ void shipos::Map::render(ConsoleKey key) {
   this->ship->getPos(sx, sy);
 
   // draw objects
-  for (size_t i = 0; i < this->game_objects->size(); i++) {
+  for (const auto& gobject : (*this->game_objects)) {
     // get position of object
     double gpx;
     double gpy;
-    (*this->game_objects)[i]->getPos(gpx, gpy);
+    gobject->getPos(gpx, gpy);
 
     // calc screen position
     double spx = cx + (gpx - sx) * this->zoom;
@@ -47,7 +47,7 @@ void shipos::Map::render(ConsoleKey key) {
     if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
         spy < this->wheight - 2) {
       mvwprintw(this->win, round(spy), round(spx),
-                (*this->game_objects)[i]->getSymbol().c_str());
+                gobject->getSymbol().c_str());
     }
   }
 

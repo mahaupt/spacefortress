@@ -70,10 +70,11 @@ void shipos::Helm::render(ConsoleKey key) {
     this->rot += avec;
 
     mvwprintw(this->win, 2, 1, "%.0f", ang / 3.1416 * 180.0);
+    mvwprintw(this->win, 3, 1, "%.0f", avec * 1000.0);
 
     // thrust
-    if (abs(ang - this->rot) <= 3.1416 / 180.0 / 5.0) {
-      double velabs = this->ship->getVelAbs() * 1000.0 * 5;
+    if (fabs(avec) < 0.001) {
+      double velabs = this->ship->getVelAbs() * 1000.0;
       velabs = fmin(velabs, 1.0);
       double thr_x = sin(this->rot) * velabs;
       double thr_y = cos(this->rot) * velabs;

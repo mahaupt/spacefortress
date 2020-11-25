@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "../module.hpp"
 #include "../ship.hpp"
 

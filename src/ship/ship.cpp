@@ -12,16 +12,19 @@ Ship::Ship(std::string name, double hull) : modules(std::vector<Module *>()) {
 }
 
 Ship::~Ship() {
-  for (int i = 0; i < this->modules.size(); i++) {
-    delete this->modules[i];
+  for (const auto &module : this->modules) {
+    delete module;
   }
+  this->modules.clear();
 }
 
 void Ship::simulate(double delta_time) {
-  GameObject::simulate(delta_time);
-  for (int i = 0; i < this->modules.size(); i++) {
-    this->modules[i]->simulate(delta_time, this);
+  for (const auto &module : this->modules) {
+    module->simulate(delta_time, this);
   }
+
+  // simulate game object moving
+  GameObject::simulate(delta_time);
 }
 
 void Ship::addModule(Module *m) { this->modules.push_back(m); }
@@ -30,9 +33,9 @@ double Ship::getEnergy(double energy_needed) {
   double energy_drawn = 0;
 
   // search
-  for (int i = 0; i < this->modules.size(); i++) {
-    if (this->modules[i]->energy_available >= 0) {
-      energy_drawn += this->modules[i]->getEnergy(energy_needed - energy_drawn);
+  for (const auto &module : this->modules) {
+    if (module->energy_available >= 0) {
+      energy_drawn += module->getEnergy(energy_needed - energy_drawn);
       if (energy_drawn == energy_needed) {
         return energy_needed;
       }
@@ -44,9 +47,9 @@ double Ship::getEnergy(double energy_needed) {
 double Ship::getEnergyLevel() {
   double total_energy_avbl = 0;
 
-  for (int i = 0; i < this->modules.size(); i++) {
-    if (this->modules[i]->type != GENERATOR) {
-      total_energy_avbl += this->modules[i]->energy_available;
+  for (const auto &module : this->modules) {
+    if (module->type != GENERATOR) {
+      total_energy_avbl += module->energy_available;
     }
   }
 
@@ -56,9 +59,9 @@ double Ship::getEnergyLevel() {
 double Ship::getEnergyTotalCapacity() {
   double capacity = 0;
 
-  for (int i = 0; i < this->modules.size(); i++) {
-    if (this->modules[i]->max_capacity > 0) {
-      capacity += this->modules[i]->max_capacity;
+  for (const auto &module : this->modules) {
+    if (module->max_capacity > 0) {
+      capacity += module->max_capacity;
     }
   }
 

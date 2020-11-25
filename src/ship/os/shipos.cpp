@@ -9,8 +9,8 @@ ShipOs::ShipOs(Ship *ship, std::vector<GameObject *> *game_objects)
  * removing all remaining dynamic classes from memory
  */
 ShipOs::~ShipOs() {
-  for (size_t i = 0; i < this->v_programs.size(); i++) {
-    delete v_programs[i];
+  for (const auto &program : this->v_programs) {
+    delete program;
   }
   v_programs.clear();
 
@@ -70,9 +70,9 @@ void ShipOs::render(ConsoleKey key) {
 void ShipOs::renderWin(ConsoleKey key) {
   // render programs
   if (this->state == ShipOsState::RUNNING) {
-    for (size_t i = 0; i < this->v_programs.size(); i++) {
-      if (v_programs[i]->getState() == shipos::ProgramState::RUN) {
-        v_programs[i]->render(key);
+    for (const auto &program : this->v_programs) {
+      if (program->getState() == shipos::ProgramState::RUN) {
+        program->render(key);
       }
     }
   }
