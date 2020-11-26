@@ -35,22 +35,32 @@ void shipos::Map::render(ConsoleKey key) {
 
   // draw objects with sensor
   if (this->ptr_sensor != 0) {
-    for (const auto& gobject : *(this->ptr_sensor->getScannedObjects())) {
-      // get position of object
-      double gpx;
-      double gpy;
-      gobject->getPos(gpx, gpy);
+    auto gobjects = this->ptr_sensor->getScannedObjects();
+    if (gobjects != 0) {
+      for (const auto& gobject : *gobjects) {
+        // get position of object
+        double gpx;
+        double gpy;
+        gobject->getPos(gpx, gpy);
 
-      // calc screen position
-      double spx = cx + (gpx - sx) * this->zoom;
-      double spy = cy - (gpy - sy) * this->zoom;
+        // calc screen position
+        double spx = cx + (gpx - sx) * this->zoom;
+        double spy = cy - (gpy - sy) * this->zoom;
 
-      // object is in map screen
-      if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
-          spy < this->wheight - 2) {
-        mvwprintw(this->win, round(spy), round(spx),
-                  gobject->getSymbol().c_str());
+        // object is in map screen
+        if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
+            spy < this->wheight - 2) {
+          mvwprintw(this->win, round(spy), round(spx),
+                    gobject->getSymbol().c_str());
+        }
       }
+    } else {
+      // display sensor offline
+      wattron(this->win, A_BLINK | A_BOLD);
+      std::string error = Lang::get("program_map_sensoroffline");
+      int err_x = round((this->wwidth - error.length()) / 2.0);
+      mvwprintw(this->win, this->wheight - 5, err_x, error.c_str());
+      wattroff(this->win, A_BLINK | A_BOLD);
     }
   } else {
     // display no sensor blinking

@@ -20,10 +20,11 @@ program_helm_eng: ENG
 program_helm_left: left
 program_helm_right: right
 program_helm_fwd: fwd
-program_helm_noengine: "ERROR: no engine"
+program_helm_noengine: "ERROR: NO ENGINE"
 
 program_map: Map
 program_map_nosensor: "ERROR: NO ACTIVE SENSOR"
+program_map_sensoroffline: "ERROR: SENSOR OFFLINE"
 
 program_terminal: Terminal
 program_terminal_notfound: command not found
