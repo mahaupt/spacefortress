@@ -25,6 +25,21 @@ Game::Game() : s("Omega", 100, &game_objects), os(&s) {
   // add Station
   this->game_objects.push_back(new go::Station("Mycra Outpost", -1, 0));
 
+  // add other ships
+  Ship *friendly_ship = new Ship("Camera", 100, &game_objects);
+  friendly_ship->setPos(-1, 1);
+  friendly_ship->addModule(new Generator("Generator MK I", 1, 1));
+  friendly_ship->addModule(new ShipAi("Ship AI", 1));
+  friendly_ship->addModule(new Lifesupport("LifeSupport", 1, 3));
+  friendly_ship->addModule(new Dockingport("Docking port", 1));
+  friendly_ship->addModule(new Sensor("SR Sensor 2.7", 1));
+  friendly_ship->addModule(new Cargo("Cargo hold", 1, 1000));
+  friendly_ship->addModule(
+      new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
+  friendly_ship->addModule(new Engine("Engine MK I", 1, 1, 2));
+  friendly_ship->addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
+  this->game_objects.push_back(friendly_ship);
+
   Log::info("game module loaded");
 }
 

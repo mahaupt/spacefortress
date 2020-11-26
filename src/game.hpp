@@ -16,6 +16,7 @@
 #include "ship/modules/lifesupport.hpp"
 #include "ship/modules/sensor.hpp"
 #include "ship/modules/shieldgenerator.hpp"
+#include "ship/modules/shipai.hpp"
 #include "ship/os/shipos.hpp"
 #include "ship/ship.hpp"
 #include "tools/console.hpp"

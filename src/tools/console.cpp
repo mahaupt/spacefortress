@@ -23,7 +23,12 @@ Console::Console() {
   this->printBanner();
 }
 
-Console::~Console() { endwin(); }
+Console::~Console() {
+  this->sclear();
+  this->srefresh();
+  endwin();
+  delwin(stdscr);
+}
 
 void Console::printBanner() {
   printw("   ____                 ____         __\n");

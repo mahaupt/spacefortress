@@ -132,6 +132,5 @@ int main() {
     timeout(100);
     key = console.getKey();
   }
-
   return 0;
 }
