@@ -62,8 +62,8 @@ double Ship::getEnergyTotalCapacity() {
   double capacity = 0;
 
   for (const auto &module : this->modules) {
-    if (module->getMaxCapacity() > 0) {
-      capacity += module->getMaxCapacity();
+    if (module->getType() == "Capacitor") {
+        capacity += ((Capacitor*)module)->getMaxCapacity();
     }
   }
 

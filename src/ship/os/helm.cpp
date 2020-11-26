@@ -1,15 +1,20 @@
 #include "helm.hpp"
 
-shipos::Helm::Helm(Ship* ship) : Program(ship), autopilot(false) {}
+using namespace shipos;
 
-shipos::Helm::Helm(Ship* ship, WindowAlignment alignment_x,
-                   WindowAlignment alignment_y, double size_x, double size_y)
+Helm::Helm(Ship* ship) : Program(ship), autopilot(false), ptr_engine(0) {}
+
+Helm::Helm(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
+           double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
-      autopilot(false) {
+      autopilot(false),
+      ptr_engine(0) {
   this->window->setTitle(Lang::get("program_helm"));
 }
 
-void shipos::Helm::render(ConsoleKey key) {
+void Helm::render(ConsoleKey key) {
+  this->findShipEngine();
+
   werase(this->win);
   this->getWindowSize();
 
@@ -29,7 +34,7 @@ void shipos::Helm::render(ConsoleKey key) {
     // fire engines
     double thr_x = sin(this->rot);
     double thr_y = cos(this->rot);
-    this->ship->applyForce(thr_x, thr_y);
+    this->setThrust(thr_x, thr_y);
     this->autopilot = false;
   }
   if ((char)key == 'y') {
@@ -80,10 +85,10 @@ void shipos::Helm::render(ConsoleKey key) {
       double thr_y = cos(this->rot) * velabs;
 
       // turn ap off when stopped
-      if (velabs <= 0.0001) {
+      if (velabs <= 0.001) {
         this->autopilot = false;
       } else {
-        this->ship->applyForce(thr_x, thr_y);
+        this->setThrust(thr_x, thr_y);
       }
     }
   }
@@ -114,16 +119,25 @@ void shipos::Helm::render(ConsoleKey key) {
   }
 
   // draw eng power
-  std::string pwr = Lang::get("program_helm_eng") + ": [";
-  int nsymb = this->wwidth - 3 - pwr.length();
-  for (int i = 0; i < nsymb - 2; i++) {
-    pwr += "#";
+  if (this->ptr_engine != 0) {
+    std::string pwr = Lang::get("program_helm_eng") + ": [";
+    int nsymb = this->wwidth - 3 - pwr.length();
+    for (int i = 0; i < nsymb - 2; i++) {
+      pwr += "#";
+    }
+    pwr += "__]";
+    mvwprintw(this->win, this->wheight - 4, 1, pwr.c_str());
+    wattron(this->win, A_BOLD);
+    mvwprintw(this->win, this->wheight - 4, cx + 1, "80%%");
+    wattroff(this->win, A_BOLD);
+  } else {
+    // print error if engine does not exist
+    std::string error = Lang::get("program_helm_noengine");
+    int error_x = round((this->wwidth - error.length()) / 2.0);
+    wattron(this->win, A_BLINK | A_BOLD);
+    mvwprintw(this->win, this->wheight - 4, error_x, error.c_str());
+    wattroff(this->win, A_BLINK | A_BOLD);
   }
-  pwr += "__]";
-  mvwprintw(this->win, this->wheight - 4, 1, pwr.c_str());
-  wattron(this->win, A_BOLD);
-  mvwprintw(this->win, this->wheight - 4, cx + 1, "80%%");
-  wattroff(this->win, A_BOLD);
 
   // draw instructions
   std::string line1 = "a: " + Lang::get("program_helm_left") +
@@ -143,6 +157,20 @@ void shipos::Helm::render(ConsoleKey key) {
  * saves window dimensions
  * window class clears window for us if resized
  */
-void shipos::Helm::getWindowSize() {
-  getmaxyx(this->win, this->wheight, this->wwidth);
+void Helm::getWindowSize() { getmaxyx(this->win, this->wheight, this->wwidth); }
+
+void Helm::findShipEngine() {
+  if (this->ptr_engine != 0) return;
+
+  for (const auto& module : *(this->ship->getModules())) {
+    if (module->getType() == "Engine") {
+      this->ptr_engine = (Engine*)module;
+      return;
+    }
+  }
+}
+
+void Helm::setThrust(double x, double y) {
+  if (this->ptr_engine == 0) return;
+  this->ptr_engine->setThrust(x, y);
 }

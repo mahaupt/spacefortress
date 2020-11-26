@@ -6,7 +6,6 @@ Module::Module(std::string name, std::string type, double hull)
       type(type),
       hull(hull),
       max_hull(hull),
-      max_capacity(0),
       energy_available(0),
       energy_needed(0) {}
 

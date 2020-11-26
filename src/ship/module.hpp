@@ -10,7 +10,6 @@ class Module {
 
   // info funcitons
   std::string getType() { return this->type; }
-  double getMaxCapacity() { return this->max_capacity; }
   double getEnergyAvbl() { return this->energy_available; }
 
   // manipulation
@@ -25,7 +24,6 @@ class Module {
   double hull;
   double max_hull;
 
-  double max_capacity;
   double energy_available;
   double energy_needed;
 };

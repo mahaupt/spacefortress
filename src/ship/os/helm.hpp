@@ -6,6 +6,7 @@
 
 #include "../../tools/console.hpp"
 #include "../../tools/lang.hpp"
+#include "../modules/engine.hpp"
 #include "../ship.hpp"
 #include "program.hpp"
 
@@ -23,6 +24,10 @@ class Helm : public Program {
   int wheight;
   bool autopilot;
 
+  Engine* ptr_engine;
+
   void getWindowSize();
+  void findShipEngine();
+  void setThrust(double x, double y);
 };
 }  // namespace shipos

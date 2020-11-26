@@ -55,7 +55,7 @@ void shipos::Map::render(ConsoleKey key) {
   } else {
     // display no sensor blinking
     wattron(this->win, A_BLINK | A_BOLD);
-    std::string error = "ERROR: NO ACTIVE SENSOR";
+    std::string error = Lang::get("program_map_nosensor");
     int err_x = round((this->wwidth - error.length()) / 2.0);
     mvwprintw(this->win, this->wheight - 5, err_x, error.c_str());
     wattroff(this->win, A_BLINK | A_BOLD);

@@ -13,19 +13,19 @@ Engine::Engine(std::string name, double hull, double max_thrust,
  * force vectors to the actual force
  */
 void Engine::simulate(double delta_time, Ship *ship) {
-  // take force from object and draw in energy
-  double fx;
-  double fy;
-  ship->getForce(fx, fy);
-  double fabs = sqrt(fx * fx + fy * fy);
+  if (!this->online) return;
+
+  // take thrust command
+  double fabs = sqrt(this->thr_cmd_x * this->thr_cmd_x +
+                     this->thr_cmd_y * this->thr_cmd_y);
 
   // skip if fabs to small
   if (fabs == 0) return;
 
   // limit force vector to 1
   if (fabs > 1.0) {
-    fx /= fabs;
-    fy /= fabs;
+    this->thr_cmd_x /= fabs;
+    this->thr_cmd_y /= fabs;
     fabs = 1.0;
   }
 
@@ -42,7 +42,21 @@ void Engine::simulate(double delta_time, Ship *ship) {
   }
 
   // apply thrust
-  fx *= eng_thrust;
-  fy *= eng_thrust;
-  ship->setForce(fx, fy);
+  this->thr_cmd_x *= eng_thrust;
+  this->thr_cmd_y *= eng_thrust;
+  ship->applyForce(this->thr_cmd_x, this->thr_cmd_y);
+
+  // reset thrust
+  this->thr_cmd_x = 0;
+  this->thr_cmd_y = 0;
+}
+
+/**
+ * Sets engine thrust, must be a vector of magnitude 1
+ * @param x Thrust in X direction
+ * @param y Thrust in Y direction
+ */
+void Engine::setThrust(double x, double y) {
+  this->thr_cmd_x = x;
+  this->thr_cmd_y = y;
 }

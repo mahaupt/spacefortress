@@ -6,13 +6,16 @@
 #include "../ship.hpp"
 
 class Capacitor : public Module {
+public:
+ Capacitor(std::string name, double hull, double max_capacity,
+           double max_power_input, double max_power_output);
+ void simulate(double delta_time, Ship *ship);
+ 
+ double getMaxCapacity() { return this->max_capacity; }
+ 
  private:
   double energy;
   double max_power_input;
   double max_power_output;
-
- public:
-  Capacitor(std::string name, double hull, double max_capacity,
-            double max_power_input, double max_power_output);
-  void simulate(double delta_time, Ship *ship);
+  double max_capacity;
 };

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../gameobject.hpp"
+#include "modules/capacitor.hpp"
 #include "module.hpp"
 
 class Ship : public GameObject {
