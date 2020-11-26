@@ -74,7 +74,8 @@ void shipos::Terminal::processCmd(std::string cmd) {
       case str2int("help"): {
         terminal_lines.push_back(Lang::get("program_terminal_help"));
         terminal_lines.push_back(
-            "help, exit, dock, modules, clear, online, offline, killall, nav");
+            "help, exit, dock, undock, modules, clear, online, offline, "
+            "killall, nav");
         break;
       }
       case str2int("exit"): {
@@ -101,6 +102,29 @@ void shipos::Terminal::processCmd(std::string cmd) {
           } else {
             terminal_lines.push_back(
                 Lang::get("program_terminal_dockingerror"));
+          }
+        } else {
+          terminal_lines.push_back(
+              Lang::get("program_terminal_nodockingmodule"));
+        }
+
+        break;
+      }
+      case str2int("undock"): {
+        // get dock module
+        Dockingport* ptr_dp = 0;
+        for (const auto& module : *(this->ship->getModules())) {
+          if (module->getType() == "Dockingport") {
+            ptr_dp = (Dockingport*)module;
+            break;
+          }
+        }
+        if (ptr_dp != 0) {
+          if (ptr_dp->undock()) {
+            terminal_lines.push_back(Lang::get("program_terminal_undocking"));
+          } else {
+            terminal_lines.push_back(
+                Lang::get("program_terminal_undockingerror"));
           }
         } else {
           terminal_lines.push_back(

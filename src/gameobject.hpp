@@ -21,6 +21,7 @@ class GameObject {
   std::string getType() { return this->type; }
   std::string getSymbol() { return this->symbol; }
   bool isDockable() { return this->is_dockable; }
+  void setFixed(bool f) { this->is_fixed = f; }
   double getVelAbs() { return sqrt(vel_x * vel_x + vel_y * vel_y); }
   void getVel(double &vx, double &vy) {
     vx = this->vel_x;

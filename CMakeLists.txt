@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project (spacefortress)
+project (sf)
 
 #set variables
 set (CMAKE_PROJECT_VERSION 0.0.9)
@@ -30,12 +30,12 @@ file(GLOB_RECURSE SF_SRC
 )
 
 add_executable(
-    spacefortress
+    sf
     ${SF_SRC}
 )
 
 target_link_libraries(
-    spacefortress
+    sf
     ${CURSES_LIBRARIES}
     yaml-cpp
     Threads::Threads

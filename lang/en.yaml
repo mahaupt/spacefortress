@@ -29,8 +29,10 @@ program_terminal: Terminal
 program_terminal_notfound: command not found
 program_terminal_help: "following commands available:"
 program_terminal_exit: "ERROR: exit only works for windowed applications"
-program_terminal_docking: "docking..."
+program_terminal_docking: "docking... done..."
 program_terminal_dockingerror: "error: can not initiate docking sequence"
+program_terminal_undocking: "undocking... done.."
+program_terminal_undockingerror: "error: can not initiate undocking sequence"
 program_terminal_nodockingmodule: "Docking module not available"
 program_terminal_turnonline: "starting all modules..."
 program_terminal_turnoffline: "shutting down all modules..."
@@ -42,3 +44,4 @@ program_smon_sld: "S"
 program_smon_enr: "E"
 program_smon_mod: "M"
 program_smon_installed: installed
+program_smon_docked: "**docked**"

@@ -31,7 +31,13 @@ void GameObject::getPos(double &x, double &y) {
 
 void GameObject::simulate(double delta_time) {
   // skip movement simulation on fixed object
-  if (this->is_fixed) return;
+  if (this->is_fixed) {
+    this->vel_x = 0;
+    this->vel_y = 0;
+    this->force_x = 0;
+    this->force_y = 0;
+    return;
+  }
 
   // apply velocity from force @todo consider mass
   this->vel_x += this->force_x * delta_time / 1000.0;

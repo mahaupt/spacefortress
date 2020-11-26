@@ -19,6 +19,9 @@ void Helm::render(ConsoleKey key) {
   werase(this->win);
   this->getWindowSize();
 
+  // disable keyboard control when docked
+  if (this->ship->isDocked()) key = ConsoleKey::NONE;
+
   // get rotation from ship
   this->rot = this->ship->getRot();
 

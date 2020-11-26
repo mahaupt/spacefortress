@@ -4,18 +4,22 @@
 #include <vector>
 
 #include "../../gameobject.hpp"
+#include "../../tools/log.hpp"
 #include "../module.hpp"
 #include "../ship.hpp"
 
 class Dockingport : public Module {
  public:
   Dockingport(std::string name, double hull);
-  void simulate(Ship* ship, double delta_time);
+  void simulate(double delta_time, Ship* ship);
 
   bool canDock() { return this->can_dock; }
   bool dock();
+  bool undock();
 
  private:
+  Ship* ownship;
+  bool docked;
   bool can_dock;
   GameObject* dockable_object;
 };

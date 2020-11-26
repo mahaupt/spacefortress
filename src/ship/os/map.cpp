@@ -19,7 +19,7 @@ void shipos::Map::render(ConsoleKey key) {
   if ((char)key == '-' && zoom > 1) {
     zoom--;
   }
-  if ((char)key == '+' && zoom < 9) {
+  if ((char)key == '+' && zoom < 20) {
     zoom++;
   }
 
@@ -77,7 +77,7 @@ void shipos::Map::render(ConsoleKey key) {
             (this->ship->getVelAbs() * 1000.0f));
   mvwprintw(this->win, this->wheight - 3, 1, "y");
   mvwprintw(this->win, this->wheight - 2, 1, "└x");
-  mvwprintw(this->win, this->wheight - 2, this->wwidth - 3, "x%i", this->zoom);
+  mvwprintw(this->win, this->wheight - 2, this->wwidth - 4, "x%i", this->zoom);
 
   // render window
   Program::render(key);

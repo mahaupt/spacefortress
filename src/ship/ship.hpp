@@ -23,6 +23,7 @@ class Ship : public GameObject {
   double getEnergyTotalCapacity();
   std::vector<GameObject *> *getGameObjects() { return this->ptr_gobjects; }
   std::vector<Module *> *getModules() { return &(this->modules); }
+  bool isDocked() { return this->is_fixed; }
 
   // management functions
   void simulate(double delta_time);

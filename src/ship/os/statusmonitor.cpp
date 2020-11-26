@@ -68,6 +68,13 @@ void shipos::StatusMonitor::render(ConsoleKey key) {
                        Lang::get("program_smon_installed");
   mvwprintw(this->win, 5, 1, modstr.c_str(), this->ship->getModuleCount());
 
+  // docked info
+  if (this->ship->isDocked()) {
+    wattron(this->win, A_BOLD);
+    mvwprintw(this->win, 7, 1, Lang::get("program_smon_docked").c_str());
+    wattroff(this->win, A_BOLD);
+  }
+
   // render window
   Program::render(key);
 }
