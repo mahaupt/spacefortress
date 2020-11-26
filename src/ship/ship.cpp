@@ -2,9 +2,7 @@
 
 Ship::Ship(std::string name, double hull,
            std::vector<GameObject *> *ptr_gobjects)
-    : ptr_gobjects(ptr_gobjects) {
-  this->name = name;
-
+    : GameObject(name, "Ship", 0, 0), ptr_gobjects(ptr_gobjects) {
   this->hull = hull;
   this->shield = 0;
   this->max_hull = hull;
@@ -63,7 +61,7 @@ double Ship::getEnergyTotalCapacity() {
 
   for (const auto &module : this->modules) {
     if (module->getType() == "Capacitor") {
-        capacity += ((Capacitor*)module)->getMaxCapacity();
+      capacity += ((Capacitor *)module)->getMaxCapacity();
     }
   }
 

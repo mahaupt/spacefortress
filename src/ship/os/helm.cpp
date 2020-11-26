@@ -129,20 +129,29 @@ void Helm::render(ConsoleKey key) {
 
   // draw eng power
   if (this->ptr_engine != 0) {
-    std::string pwr = Lang::get("program_helm_eng") + ": [";
-    int nsymb = this->wwidth - 3 - pwr.length();
-    int nsymb_h = round(nsymb * this->engpwr);
-    for (int i = 0; i < nsymb_h; i++) {
-      pwr += "#";
+    if (this->ptr_engine->isOnline()) {
+      std::string pwr = Lang::get("program_helm_eng") + ": [";
+      int nsymb = this->wwidth - 3 - pwr.length();
+      int nsymb_h = round(nsymb * this->engpwr);
+      for (int i = 0; i < nsymb_h; i++) {
+        pwr += "#";
+      }
+      for (int i = 0; i < nsymb - nsymb_h; i++) {
+        pwr += "_";
+      }
+      pwr += "]";
+      mvwprintw(this->win, this->wheight - 2, 1, pwr.c_str());
+      wattron(this->win, A_BOLD);
+      mvwprintw(this->win, this->wheight - 2, cx + 1, "%.0f%%", engpwr * 100.0);
+      wattroff(this->win, A_BOLD);
+    } else {
+      // print error if engine is offline
+      std::string error = Lang::get("program_helm_engoffline");
+      int error_x = round((this->wwidth - error.length()) / 2.0);
+      wattron(this->win, A_BLINK | A_BOLD);
+      mvwprintw(this->win, this->wheight - 4, error_x, error.c_str());
+      wattroff(this->win, A_BLINK | A_BOLD);
     }
-    for (int i = 0; i < nsymb - nsymb_h; i++) {
-      pwr += "_";
-    }
-    pwr += "]";
-    mvwprintw(this->win, this->wheight - 4, 1, pwr.c_str());
-    wattron(this->win, A_BOLD);
-    mvwprintw(this->win, this->wheight - 4, cx + 1, "%.0f%%", engpwr * 100.0);
-    wattroff(this->win, A_BOLD);
   } else {
     // print error if engine does not exist
     std::string error = Lang::get("program_helm_noengine");
@@ -152,12 +161,14 @@ void Helm::render(ConsoleKey key) {
     wattroff(this->win, A_BLINK | A_BOLD);
   }
 
-  // draw instructions
-  std::string line1 = "a: " + Lang::get("program_helm_left") +
-                      " - b: " + Lang::get("program_helm_right");
-  mvwprintw(this->win, this->wheight - 3, 1, line1.c_str());
-  std::string line2 = "w: " + Lang::get("program_helm_fwd") + " - y: autostop";
-  mvwprintw(this->win, this->wheight - 2, 1, line2.c_str());
+  // draw autopilot active
+  if (this->autopilot) {
+    std::string sautop = Lang::get("program_helm_autopilot");
+    int sap_x = round((this->wwidth - sautop.length()) / 2.0);
+    wattron(this->win, A_BOLD);
+    mvwprintw(this->win, this->wheight - 3, sap_x, sautop.c_str());
+    wattroff(this->win, A_BOLD);
+  }
 
   // apply rotation
   this->ship->setRot(this->rot);

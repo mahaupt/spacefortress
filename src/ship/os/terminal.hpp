@@ -5,6 +5,7 @@
 #include "../../tools/console.hpp"
 #include "../../tools/lang.hpp"
 #include "../../ui/inputtext.hpp"
+#include "../modules/dockingport.hpp"
 #include "program.hpp"
 
 namespace shipos {

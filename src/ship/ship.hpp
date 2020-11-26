@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "../gameobject.hpp"
-#include "modules/capacitor.hpp"
 #include "module.hpp"
+#include "modules/capacitor.hpp"
 
 class Ship : public GameObject {
  public:

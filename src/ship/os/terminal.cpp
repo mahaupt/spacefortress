@@ -71,17 +71,81 @@ void shipos::Terminal::processCmd(std::string cmd) {
   if (cmd.length() > 0) {
     // process command
     switch (str2int(cmd.c_str())) {
-      case str2int("help"):
+      case str2int("help"): {
         terminal_lines.push_back(Lang::get("program_terminal_help"));
-        terminal_lines.push_back("help, exit");
+        terminal_lines.push_back(
+            "help, exit, dock, modules, clear, online, offline, killall, nav");
         break;
-      case str2int("exit"):
+      }
+      case str2int("exit"): {
         if (this->win != stdscr) {
           this->setState(ProgramState::TERM);
         } else {
           terminal_lines.push_back(Lang::get("program_terminal_exit"));
         }
         break;
+      }
+      case str2int("dock"): {
+        // get dock module
+        Dockingport* ptr_dp = 0;
+        for (const auto& module : *(this->ship->getModules())) {
+          if (module->getType() == "Dockingport") {
+            ptr_dp = (Dockingport*)module;
+            break;
+          }
+        }
+        if (ptr_dp != 0) {
+          if (ptr_dp->canDock()) {
+            ptr_dp->dock();
+            terminal_lines.push_back(Lang::get("program_terminal_docking"));
+          } else {
+            terminal_lines.push_back(
+                Lang::get("program_terminal_dockingerror"));
+          }
+        } else {
+          terminal_lines.push_back(
+              Lang::get("program_terminal_nodockingmodule"));
+        }
+
+        break;
+      }
+      case str2int("modules"): {
+        size_t i = 0;
+        for (const auto& module : *(this->ship->getModules())) {
+          std::string line = std::to_string(i++);
+          while (line.length() < 4) {
+            line += " ";
+          }
+
+          line += module->getName();
+          while (line.length() < 40) {
+            line += " ";
+          }
+          line += (module->isOnline() ? "online" : "offline");
+
+          terminal_lines.push_back(line);
+        }
+        break;
+      }
+      case str2int("clear"): {
+        werase(this->win);
+        terminal_lines.clear();
+        break;
+      }
+      case str2int("online"): {
+        terminal_lines.push_back(Lang::get("program_terminal_turnonline"));
+        for (const auto& module : *(this->ship->getModules())) {
+          module->setOnline(true);
+        }
+        break;
+      }
+      case str2int("offline"): {
+        terminal_lines.push_back(Lang::get("program_terminal_turnoffline"));
+        for (const auto& module : *(this->ship->getModules())) {
+          module->setOnline(false);
+        }
+        break;
+      }
       default:
         terminal_lines.push_back(cmd + ": " +
                                  Lang::get("program_terminal_notfound"));

@@ -17,10 +17,9 @@ general_start_game: Start Game
 
 program_helm: Helm Control
 program_helm_eng: ENG
-program_helm_left: left
-program_helm_right: right
-program_helm_fwd: fwd
 program_helm_noengine: "ERROR: NO ENGINE"
+program_helm_engoffline: "ERROR: ENGINE OFFLINE"
+program_helm_autopilot: "** AUTOPILOT **"
 
 program_map: Map
 program_map_nosensor: "ERROR: NO ACTIVE SENSOR"
@@ -30,6 +29,11 @@ program_terminal: Terminal
 program_terminal_notfound: command not found
 program_terminal_help: "following commands available:"
 program_terminal_exit: "ERROR: exit only works for windowed applications"
+program_terminal_docking: "docking..."
+program_terminal_dockingerror: "error: can not initiate docking sequence"
+program_terminal_nodockingmodule: "Docking module not available"
+program_terminal_turnonline: "starting all modules..."
+program_terminal_turnoffline: "shutting down all modules..."
 
 program_smon: Status Monitor
 program_smon_reg: "#"

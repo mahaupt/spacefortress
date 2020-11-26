@@ -7,17 +7,20 @@ class GameObject {
  public:
   GameObject();
   GameObject(double x, double y, bool fixed = false);
-  GameObject(std::string name, double x, double y, bool fixed = false);
+  GameObject(std::string name, std::string type, double x, double y,
+             bool fixed = false);
   virtual ~GameObject() {}
 
-  // getter
+  // getter and setters
   void setPos(double x, double y);
   void getPos(double &x, double &y);
   double getRot() { return this->rot; }
   void setRot(double rot) { this->rot = rot; }
   void setName(std::string name) { this->name = name; }
   std::string getName() { return this->name; }
+  std::string getType() { return this->type; }
   std::string getSymbol() { return this->symbol; }
+  bool isDockable() { return this->is_dockable; }
   double getVelAbs() { return sqrt(vel_x * vel_x + vel_y * vel_y); }
   void getVel(double &vx, double &vy) {
     vx = this->vel_x;
@@ -41,7 +44,9 @@ class GameObject {
   double y;
   double rot;
   bool is_fixed;
+  bool is_dockable;
   std::string name;
+  std::string type;
   std::string symbol;
 
   double vel_x;

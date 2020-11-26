@@ -9,6 +9,9 @@ class Module {
   virtual ~Module() {}
 
   // info funcitons
+  bool isOnline() { return this->online; }
+  void setOnline(bool o) { this->online = o; }
+  std::string getName() { return this->name; }
   std::string getType() { return this->type; }
   double getEnergyAvbl() { return this->energy_available; }
 

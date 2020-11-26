@@ -3,6 +3,6 @@
 using namespace go;
 
 Planet::Planet(std::string name, double x, double y)
-    : GameObject(name, x, y, true) {
+    : GameObject(name, "Planet", x, y, true) {
   this->symbol = "\u2205";
 }

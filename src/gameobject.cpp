@@ -1,16 +1,19 @@
 #include "gameobject.hpp"
 
-GameObject::GameObject() : GameObject("", 0, 0, false) {}
+GameObject::GameObject() : GameObject("", "Object", 0, 0, false) {}
 
 GameObject::GameObject(double x, double y, bool fixed)
-    : GameObject("", x, y, fixed) {}
+    : GameObject("", "Object", x, y, fixed) {}
 
-GameObject::GameObject(std::string name, double x, double y, bool fixed)
+GameObject::GameObject(std::string name, std::string type, double x, double y,
+                       bool fixed)
     : x(x),
       y(y),
       rot(0),
       is_fixed(fixed),
+      is_dockable(false),
       name(name),
+      type(type),
       vel_x(0),
       vel_y(0),
       force_x(0),
