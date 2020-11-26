@@ -23,6 +23,7 @@ class Helm : public Program {
   int wwidth;
   int wheight;
   bool autopilot;
+  double engpwr;
 
   Engine* ptr_engine;
 

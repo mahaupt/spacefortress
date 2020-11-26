@@ -8,7 +8,8 @@ Helm::Helm(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
            double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
       autopilot(false),
-      ptr_engine(0) {
+      ptr_engine(0),
+      engpwr(1) {
   this->window->setTitle(Lang::get("program_helm"));
 }
 
@@ -32,13 +33,21 @@ void Helm::render(ConsoleKey key) {
   }
   if ((char)key == 'w' || key == ConsoleKey::ARROW_UP) {
     // fire engines
-    double thr_x = sin(this->rot);
-    double thr_y = cos(this->rot);
+    double thr_x = sin(this->rot) * this->engpwr;
+    double thr_y = cos(this->rot) * this->engpwr;
     this->setThrust(thr_x, thr_y);
     this->autopilot = false;
   }
   if ((char)key == 'y') {
     this->autopilot = true;
+  }
+  if ((char)key == 'q' && this->engpwr >= 0.1) {
+    this->engpwr -= 0.1;
+    this->autopilot = false;
+  }
+  if ((char)key == 'e' && this->engpwr <= 0.9) {
+    this->engpwr += 0.1;
+    this->autopilot = false;
   }
 
   // correct rot variable
@@ -75,20 +84,20 @@ void Helm::render(ConsoleKey key) {
     this->rot += avec;
 
     mvwprintw(this->win, 2, 1, "%.0f", ang / 3.1416 * 180.0);
-    mvwprintw(this->win, 3, 1, "%.0f", avec * 1000.0);
 
     // thrust
     if (fabs(avec) < 0.001) {
-      double velabs = this->ship->getVelAbs() * 1000.0;
+      double velabs = this->ship->getVelAbs() * 1000.0 * 5;
       velabs = fmin(velabs, 1.0);
       double thr_x = sin(this->rot) * velabs;
       double thr_y = cos(this->rot) * velabs;
 
       // turn ap off when stopped
-      if (velabs <= 0.001) {
+      if (velabs <= 0.01) {
         this->autopilot = false;
       } else {
         this->setThrust(thr_x, thr_y);
+        this->engpwr = floor(velabs * 10) / 10.0;
       }
     }
   }
@@ -122,13 +131,17 @@ void Helm::render(ConsoleKey key) {
   if (this->ptr_engine != 0) {
     std::string pwr = Lang::get("program_helm_eng") + ": [";
     int nsymb = this->wwidth - 3 - pwr.length();
-    for (int i = 0; i < nsymb - 2; i++) {
+    int nsymb_h = round(nsymb * this->engpwr);
+    for (int i = 0; i < nsymb_h; i++) {
       pwr += "#";
     }
-    pwr += "__]";
+    for (int i = 0; i < nsymb - nsymb_h; i++) {
+      pwr += "_";
+    }
+    pwr += "]";
     mvwprintw(this->win, this->wheight - 4, 1, pwr.c_str());
     wattron(this->win, A_BOLD);
-    mvwprintw(this->win, this->wheight - 4, cx + 1, "80%%");
+    mvwprintw(this->win, this->wheight - 4, cx + 1, "%.0f%%", engpwr * 100.0);
     wattroff(this->win, A_BOLD);
   } else {
     // print error if engine does not exist

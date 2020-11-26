@@ -30,8 +30,8 @@ void Engine::simulate(double delta_time, Ship *ship) {
   }
 
   // get engine thrust power
-  double eng_thrust = this->max_thrust / fabs;
-  double eng_power = this->max_power / fabs * delta_time;
+  double eng_thrust = this->max_thrust * fabs;
+  double eng_power = this->max_power * fabs * delta_time;
 
   // try to get engine power
   double drawn_power = ship->getEnergy(eng_power);
