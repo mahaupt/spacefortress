@@ -1,6 +1,8 @@
 #include "ship.hpp"
 
-Ship::Ship(std::string name, double hull) : modules(std::vector<Module *>()) {
+Ship::Ship(std::string name, double hull,
+           std::vector<GameObject *> *ptr_gobjects)
+    : ptr_gobjects(ptr_gobjects) {
   this->name = name;
 
   this->hull = hull;
@@ -34,7 +36,7 @@ double Ship::getEnergy(double energy_needed) {
 
   // search
   for (const auto &module : this->modules) {
-    if (module->energy_available >= 0) {
+    if (module->getEnergyAvbl() >= 0) {
       energy_drawn += module->getEnergy(energy_needed - energy_drawn);
       if (energy_drawn == energy_needed) {
         return energy_needed;
@@ -48,8 +50,8 @@ double Ship::getEnergyLevel() {
   double total_energy_avbl = 0;
 
   for (const auto &module : this->modules) {
-    if (module->type != GENERATOR) {
-      total_energy_avbl += module->energy_available;
+    if (module->getType() != "Generator") {
+      total_energy_avbl += module->getEnergyAvbl();
     }
   }
 
@@ -60,8 +62,8 @@ double Ship::getEnergyTotalCapacity() {
   double capacity = 0;
 
   for (const auto &module : this->modules) {
-    if (module->max_capacity > 0) {
-      capacity += module->max_capacity;
+    if (module->getMaxCapacity() > 0) {
+      capacity += module->getMaxCapacity();
     }
   }
 

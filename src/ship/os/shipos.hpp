@@ -25,7 +25,7 @@ enum class ShipOsState { OFF, BOOTING, RUNNING, SHUTDOWN };
  */
 class ShipOs {
  public:
-  ShipOs(Ship *ship, std::vector<GameObject *> *game_objects);
+  ShipOs(Ship *ship);
   ~ShipOs();
   void boot();
   void autostart();
@@ -37,7 +37,6 @@ class ShipOs {
 
  private:
   Ship *ship;
-  std::vector<GameObject *> *game_objects;
   ShipOsState state;
 
   std::chrono::time_point<std::chrono::steady_clock> boot_time;

@@ -9,7 +9,7 @@
 
 class Ship : public GameObject {
  public:
-  Ship(std::string name, double hull);
+  Ship(std::string name, double hull, std::vector<GameObject *> *ptr_gobjects);
   ~Ship();
 
   // info functions
@@ -20,6 +20,8 @@ class Ship : public GameObject {
   size_t getModuleCount() { return this->modules.size(); }
   double getEnergyLevel();
   double getEnergyTotalCapacity();
+  std::vector<GameObject *> *getGameObjects() { return this->ptr_gobjects; }
+  std::vector<Module *> *getModules() { return &(this->modules); }
 
   // management functions
   void simulate(double delta_time);
@@ -36,4 +38,5 @@ class Ship : public GameObject {
   double max_shield;
 
   std::vector<Module *> modules;
+  std::vector<GameObject *> *ptr_gobjects;
 };

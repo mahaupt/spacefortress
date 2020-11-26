@@ -1,7 +1,7 @@
 #include "lifesupport.hpp"
 
 Lifesupport::Lifesupport(std::string name, double hull, double capacity)
-    : Module(name, hull, ModuleType::ACTIVE), capacity(capacity) {}
+    : Module(name, "Lifesupport", hull), capacity(capacity) {}
 
 void Lifesupport::simulate(double delta_time, Ship* ship) {
   if (!this->online) return;

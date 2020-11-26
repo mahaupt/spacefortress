@@ -3,7 +3,7 @@
 ShieldGenerator::ShieldGenerator(std::string name, double hull,
                                  double max_power_input,
                                  double max_shield_output)
-    : Module(name, hull, ACTIVE),
+    : Module(name, "ShieldGenerator", hull),
       max_power_input(max_power_input),
       max_shield_output(max_shield_output) {}
 

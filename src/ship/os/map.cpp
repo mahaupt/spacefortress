@@ -1,14 +1,12 @@
 #include "map.hpp"
 
-shipos::Map::Map(Ship* ship, std::vector<GameObject*>* game_objects)
-    : Program(ship), zoom(5), game_objects(game_objects) {}
+shipos::Map::Map(Ship* ship) : Program(ship), zoom(5), ptr_sensor(0) {}
 
-shipos::Map::Map(Ship* ship, std::vector<GameObject*>* game_objects,
-                 WindowAlignment alignment_x, WindowAlignment alignment_y,
-                 double size_x, double size_y)
+shipos::Map::Map(Ship* ship, WindowAlignment alignment_x,
+                 WindowAlignment alignment_y, double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
       zoom(5),
-      game_objects(game_objects) {
+      ptr_sensor(0) {
   this->window->setTitle(Lang::get("program_map"));
 }
 
@@ -32,23 +30,35 @@ void shipos::Map::render(ConsoleKey key) {
   int cy = round(this->wheight / 2.0);
   this->ship->getPos(sx, sy);
 
-  // draw objects
-  for (const auto& gobject : (*this->game_objects)) {
-    // get position of object
-    double gpx;
-    double gpy;
-    gobject->getPos(gpx, gpy);
+  // make sure we have a sensor object
+  this->findShipSensor();
 
-    // calc screen position
-    double spx = cx + (gpx - sx) * this->zoom;
-    double spy = cy - (gpy - sy) * this->zoom;
+  // draw objects with sensor
+  if (this->ptr_sensor != 0) {
+    for (const auto& gobject : *(this->ptr_sensor->getScannedObjects())) {
+      // get position of object
+      double gpx;
+      double gpy;
+      gobject->getPos(gpx, gpy);
 
-    // object is in map screen
-    if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
-        spy < this->wheight - 2) {
-      mvwprintw(this->win, round(spy), round(spx),
-                gobject->getSymbol().c_str());
+      // calc screen position
+      double spx = cx + (gpx - sx) * this->zoom;
+      double spy = cy - (gpy - sy) * this->zoom;
+
+      // object is in map screen
+      if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
+          spy < this->wheight - 2) {
+        mvwprintw(this->win, round(spy), round(spx),
+                  gobject->getSymbol().c_str());
+      }
     }
+  } else {
+    // display no sensor blinking
+    wattron(this->win, A_BLINK | A_BOLD);
+    std::string error = "ERROR: NO ACTIVE SENSOR";
+    int err_x = round((this->wwidth - error.length()) / 2.0);
+    mvwprintw(this->win, this->wheight - 5, err_x, error.c_str());
+    wattroff(this->win, A_BLINK | A_BOLD);
   }
 
   // draw ship and pos info
@@ -69,4 +79,19 @@ void shipos::Map::render(ConsoleKey key) {
  */
 void shipos::Map::getWindowSize() {
   getmaxyx(this->win, this->wheight, this->wwidth);
+}
+
+/**
+ * Find ship sensor to display map with
+ */
+void shipos::Map::findShipSensor() {
+  if (this->ptr_sensor != 0) return;
+
+  // search through ship modules
+  for (const auto& module : *(ship->getModules())) {
+    if (module->getType() == "Sensor") {
+      this->ptr_sensor = (Sensor*)module;
+      return;
+    }
+  }
 }

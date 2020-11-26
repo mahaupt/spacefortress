@@ -1,7 +1,7 @@
 #include "generator.hpp"
 
 Generator::Generator(std::string name, double hull, double power_output)
-    : Module(name, hull, GENERATOR),
+    : Module(name, "Generator", hull),
       max_power_output(power_output),
       last_power_usage(0),
       last_power_generation(0) {}
