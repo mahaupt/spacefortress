@@ -4,6 +4,7 @@
 #include "../../gameobject.hpp"
 #include "../module.hpp"
 #include "../ship.hpp"
+#include "engine.hpp"
 
 class ShipAi : public Module {
  public:
@@ -12,7 +13,9 @@ class ShipAi : public Module {
   void simulate(double delta_time, Ship* ship);
 
  private:
-  GameObject* target;
+  GameObject* p_target;
+  Engine* p_engine;
 
   void findTarget(Ship* ship);
+  void findEngineModule(Ship* ship);
 };
