@@ -1,5 +1,7 @@
 #include "engine.hpp"
 
+using namespace module;
+
 Engine::Engine(const std::string &name, double hull, double max_thrust,
                double max_power)
     : Module(name, "Engine", hull),

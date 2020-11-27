@@ -6,6 +6,7 @@
 #include "../module.hpp"
 #include "../ship.hpp"
 
+namespace module {
 class Sensor : public Module {
  public:
   Sensor(const std::string &name, double hull);
@@ -16,3 +17,4 @@ class Sensor : public Module {
  private:
   Ship *ownship;
 };
+}  // namespace module

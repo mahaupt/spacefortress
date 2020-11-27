@@ -5,6 +5,7 @@
 #include "../module.hpp"
 #include "../ship.hpp"
 
+namespace module {
 class Capacitor : public Module {
  public:
   Capacitor(const std::string &name, double hull, double max_capacity,
@@ -19,3 +20,4 @@ class Capacitor : public Module {
   double max_power_output;
   double max_capacity;
 };
+}  // namespace module

@@ -8,6 +8,7 @@
 #include "../module.hpp"
 #include "../ship.hpp"
 
+namespace module {
 class Dockingport : public Module {
  public:
   Dockingport(const std::string& name, double hull);
@@ -23,3 +24,4 @@ class Dockingport : public Module {
   bool can_dock;
   GameObject* dockable_object;
 };
+}  // namespace module

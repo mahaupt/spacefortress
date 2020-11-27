@@ -1,5 +1,7 @@
 #include "dockingport.hpp"
 
+using namespace module;
+
 Dockingport::Dockingport(const std::string& name, double hull)
     : Module(name, "Dockingport", hull), ownship(0), docked(false) {}
 

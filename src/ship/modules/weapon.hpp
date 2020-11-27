@@ -2,6 +2,7 @@
 
 #include "../module.hpp"
 
+namespace module {
 enum class WeaponType {};
 
 class Weapon : public Module {
@@ -15,3 +16,4 @@ class Weapon : public Module {
   double output_vel;
   double max_power_input;
 };
+}  // namespace module

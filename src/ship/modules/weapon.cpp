@@ -1,5 +1,7 @@
 #include "weapon.hpp"
 
+using namespace module;
+
 Weapon::Weapon(const std::string &name, const double &hull,
                const double &rate_of_fire, const double &output_vel,
                const double &max_power_input)

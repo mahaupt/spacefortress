@@ -1,5 +1,7 @@
 #include "sensor.hpp"
 
+using namespace module;
+
 Sensor::Sensor(const std::string &name, double hull)
     : Module(name, "Sensor", hull), ownship(0) {}
 

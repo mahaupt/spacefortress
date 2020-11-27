@@ -1,5 +1,7 @@
 #include "generator.hpp"
 
+using namespace module;
+
 Generator::Generator(const std::string& name, double hull, double power_output)
     : Module(name, "Generator", hull),
       max_power_output(power_output),

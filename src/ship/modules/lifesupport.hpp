@@ -3,6 +3,7 @@
 #include "../module.hpp"
 #include "../ship.hpp"
 
+namespace module {
 class Lifesupport : public Module {
  public:
   Lifesupport(const std::string& name, double hull, double capacity);
@@ -12,3 +13,4 @@ class Lifesupport : public Module {
  private:
   double capacity;
 };
+}  // namespace module

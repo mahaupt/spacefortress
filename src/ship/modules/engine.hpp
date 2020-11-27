@@ -6,6 +6,7 @@
 #include "../module.hpp"
 #include "../ship.hpp"
 
+namespace module {
 class Engine : public Module {
  public:
   Engine(const std::string &name, double hull, double max_thrust,
@@ -20,3 +21,4 @@ class Engine : public Module {
 
   Vec2 thr_cmd;
 };
+}  // namespace module

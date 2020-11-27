@@ -1,5 +1,7 @@
 #include "lifesupport.hpp"
 
+using namespace module;
+
 Lifesupport::Lifesupport(const std::string& name, double hull, double capacity)
     : Module(name, "Lifesupport", hull), capacity(capacity) {}
 

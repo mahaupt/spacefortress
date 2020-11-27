@@ -80,6 +80,7 @@ void shipos::Terminal::processCmd(std::string cmd) {
         terminal_lines.push_back(
             "help, exit, dock, undock, modules, clear, online, offline, "
             "ps, killall, nav");
+        terminal_lines.push_back("sensors");
         break;
       }
       case str2int("exit"): {
@@ -92,10 +93,10 @@ void shipos::Terminal::processCmd(std::string cmd) {
       }
       case str2int("dock"): {
         // get dock module
-        Dockingport* ptr_dp = 0;
+        module::Dockingport* ptr_dp = 0;
         for (const auto& module : *(this->ship->getModules())) {
           if (module->getType() == "Dockingport") {
-            ptr_dp = (Dockingport*)module;
+            ptr_dp = (module::Dockingport*)module;
             break;
           }
         }
@@ -116,10 +117,10 @@ void shipos::Terminal::processCmd(std::string cmd) {
       }
       case str2int("undock"): {
         // get dock module
-        Dockingport* ptr_dp = 0;
+        module::Dockingport* ptr_dp = 0;
         for (const auto& module : *(this->ship->getModules())) {
           if (module->getType() == "Dockingport") {
-            ptr_dp = (Dockingport*)module;
+            ptr_dp = (module::Dockingport*)module;
             break;
           }
         }
@@ -200,6 +201,25 @@ void shipos::Terminal::processCmd(std::string cmd) {
           this->pprograms->push_back(
               new Helm(this->ship, WindowAlignment::RIGHT,
                        WindowAlignment::BOTTOM, 0.3, 0.5));
+
+          // set to halt to allow other programs to show
+          this->setState(ProgramState::HALT);
+        } else {
+          terminal_lines.push_back(Lang::get("program_terminal_newprog_error"));
+        }
+        break;
+      }
+      case str2int("sensors"): {
+        if (this->pprograms->size() == 0) {
+          terminal_lines.push_back(Lang::get("program_terminal_sensors"));
+          this->pprograms->push_back(
+              new Sensor(this->ship, WindowAlignment::LEFT,
+                         WindowAlignment::TOP, 0.7, 1.0));
+          this->pprograms->push_back(
+              new StatusMonitor(this->ship, WindowAlignment::RIGHT,
+                                WindowAlignment::BOTTOM, 0.3, 0.5));
+          this->pprograms->push_back(new Map(this->ship, WindowAlignment::RIGHT,
+                                             WindowAlignment::TOP, 0.3, 0.5));
 
           // set to halt to allow other programs to show
           this->setState(ProgramState::HALT);

@@ -9,6 +9,7 @@
 #include "helm.hpp"
 #include "map.hpp"
 #include "program.hpp"
+#include "sensor.hpp"
 #include "statusmonitor.hpp"
 
 namespace shipos {

@@ -3,14 +3,15 @@
 Game::Game() : s("Omega", 100, &game_objects), os(&s) {
   // add player ship
   this->s.setPos(Vec2(-1, 0.1));
-  this->s.addModule(new Generator("Generator MK I", 1, 1));
-  this->s.addModule(new Lifesupport("LifeSupport", 1, 3));
-  this->s.addModule(new Dockingport("Docking port", 1));
-  this->s.addModule(new Sensor("SR Sensor 2.7", 1));
-  this->s.addModule(new Cargo("Cargo hold", 1, 1000));
-  this->s.addModule(new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
-  this->s.addModule(new Engine("Engine MK I", 1, 1, 2));
-  this->s.addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
+  this->s.addModule(new module::Generator("Generator MK I", 1, 1));
+  this->s.addModule(new module::Lifesupport("LifeSupport", 1, 3));
+  this->s.addModule(new module::Dockingport("Docking port", 1));
+  this->s.addModule(new module::Sensor("SR Sensor 2.7", 1));
+  this->s.addModule(new module::Cargo("Cargo hold", 1, 1000));
+  this->s.addModule(
+      new module::ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
+  this->s.addModule(new module::Engine("Engine MK I", 1, 1, 2));
+  this->s.addModule(new module::Capacitor("Capacitor MK I", 1, 100, 1, 10));
 
   // add planets
   this->game_objects.push_back(new go::Planet("Rix", 1, 1));
@@ -32,16 +33,17 @@ Game::Game() : s("Omega", 100, &game_objects), os(&s) {
     Ship *friendly_ship = new Ship("Camera", 100, &game_objects);
     friendly_ship->setPos(
         Vec2(distribution(generator), distribution(generator)));
-    friendly_ship->addModule(new Generator("Generator MK I", 1, 1));
-    friendly_ship->addModule(new ShipAi("Ship AI", 1));
-    friendly_ship->addModule(new Lifesupport("LifeSupport", 1, 3));
-    friendly_ship->addModule(new Dockingport("Docking port", 1));
-    friendly_ship->addModule(new Sensor("SR Sensor 2.7", 1));
-    friendly_ship->addModule(new Cargo("Cargo hold", 1, 1000));
+    friendly_ship->addModule(new module::Generator("Generator MK I", 1, 1));
+    friendly_ship->addModule(new module::ShipAi("Ship AI", 1));
+    friendly_ship->addModule(new module::Lifesupport("LifeSupport", 1, 3));
+    friendly_ship->addModule(new module::Dockingport("Docking port", 1));
+    friendly_ship->addModule(new module::Sensor("SR Sensor 2.7", 1));
+    friendly_ship->addModule(new module::Cargo("Cargo hold", 1, 1000));
     friendly_ship->addModule(
-        new ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
-    friendly_ship->addModule(new Engine("Engine MK I", 1, 1, 2));
-    friendly_ship->addModule(new Capacitor("Capacitor MK I", 1, 100, 1, 10));
+        new module::ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
+    friendly_ship->addModule(new module::Engine("Engine MK I", 1, 1, 2));
+    friendly_ship->addModule(
+        new module::Capacitor("Capacitor MK I", 1, 100, 1, 10));
     this->game_objects.push_back(friendly_ship);
   }
 

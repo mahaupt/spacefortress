@@ -3,6 +3,7 @@
 #include "../module.hpp"
 #include "../ship.hpp"
 
+namespace module {
 class ShieldGenerator : public Module {
  private:
   double max_power_input;
@@ -13,3 +14,4 @@ class ShieldGenerator : public Module {
                   double max_shield_output);
   void simulate(double delta_time, Ship* ship);
 };
+}  // namespace module

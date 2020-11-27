@@ -97,7 +97,7 @@ void shipos::Map::findShipSensor() {
   // search through ship modules
   for (const auto& module : *(ship->getModules())) {
     if (module->getType() == "Sensor") {
-      this->ptr_sensor = (Sensor*)module;
+      this->ptr_sensor = (module::Sensor*)module;
       return;
     }
   }

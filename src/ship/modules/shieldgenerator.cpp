@@ -1,4 +1,5 @@
 #include "shieldgenerator.hpp"
+using namespace module;
 
 ShieldGenerator::ShieldGenerator(const std::string &name, double hull,
                                  double max_power_input,

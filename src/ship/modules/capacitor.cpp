@@ -1,5 +1,7 @@
 #include "capacitor.hpp"
 
+using namespace module;
+
 Capacitor::Capacitor(const std::string &name, double hull, double max_capacity,
                      double max_power_input, double max_power_output)
     : Module(name, "Capacitor", hull),

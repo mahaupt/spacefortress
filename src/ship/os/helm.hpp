@@ -25,7 +25,7 @@ class Helm : public Program {
   bool autopilot;
   double engpwr;
 
-  Engine* ptr_engine;
+  module::Engine* ptr_engine;
 
   void getWindowSize();
   void findShipEngine();

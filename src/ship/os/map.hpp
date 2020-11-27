@@ -21,7 +21,7 @@ class Map : public Program {
   int wwidth;
   int wheight;
   int zoom;
-  Sensor* ptr_sensor;
+  module::Sensor* ptr_sensor;
 
   void findShipSensor();
   void getWindowSize();

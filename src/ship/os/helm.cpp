@@ -179,7 +179,7 @@ void Helm::findShipEngine() {
 
   for (const auto& module : *(this->ship->getModules())) {
     if (module->getType() == "Engine") {
-      this->ptr_engine = (Engine*)module;
+      this->ptr_engine = (module::Engine*)module;
       return;
     }
   }

@@ -2,6 +2,7 @@
 
 #include "../module.hpp"
 
+namespace module {
 class Cargo : public Module {
  public:
   Cargo(const std::string &name, double hull, double capacity);
@@ -9,3 +10,4 @@ class Cargo : public Module {
  private:
   double capacity;
 };
+}  // namespace module

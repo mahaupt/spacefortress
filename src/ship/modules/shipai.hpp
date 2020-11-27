@@ -7,6 +7,7 @@
 #include "../ship.hpp"
 #include "engine.hpp"
 
+namespace module {
 class ShipAi : public Module {
  public:
   ShipAi(const std::string& name, double hull);
@@ -20,3 +21,4 @@ class ShipAi : public Module {
   void findTarget(Ship* ship);
   void findEngineModule(Ship* ship);
 };
+}  // namespace module
