@@ -17,19 +17,14 @@ void ShipAi::simulate(double delta_time, Ship* ship) {
 
   // get target coords and fly to it
   // get ship pos
-  double sx;
-  double sy;
-  ship->getPos(sx, sy);
+  Vec2 spos = ship->getPos();
 
   // get target pos
-  double tx;
-  double ty;
-  this->p_target->getPos(tx, ty);
+  Vec2 tpos = this->p_target->getPos();
 
   // vector to target
-  double vttx = tx - sx;
-  double vtty = ty - sy;
-  double dist = sqrt(vttx * vttx + vtty * vtty);
+  Vec2 vtgt = tpos - spos;
+  double dist = vtgt.magnitude();
 
   // too close - abort and search new target (only for test)
   if (dist <= 0.01) {
@@ -38,7 +33,7 @@ void ShipAi::simulate(double delta_time, Ship* ship) {
   }
 
   // apply thrust
-  p_engine->setThrust(vttx / dist, vtty / dist);
+  p_engine->setThrust(vtgt / dist);
 
   // if in range and aggressive, shoot at it
 }
@@ -49,9 +44,7 @@ void ShipAi::simulate(double delta_time, Ship* ship) {
  */
 void ShipAi::findTarget(Ship* ship) {
   // get ship pos
-  double sx;
-  double sy;
-  ship->getPos(sx, sy);
+  Vec2 spos = ship->getPos();
 
   // if hostile, find enemy ship
   // if friendly, find market opportunity
@@ -62,12 +55,9 @@ void ShipAi::findTarget(Ship* ship) {
 
   for (const auto& object : *(ship->getGameObjects())) {
     if (object->getType() == "Planet") {
-      double gx;
-      double gy;
-      object->getPos(gx, gy);
-      gx -= sx;
-      gy -= sy;
-      double dist = sqrt(gx * gx + gy * gy);
+      Vec2 opos = object->getPos();
+      opos -= spos;
+      double dist = opos.magnitude();
 
       if (dist > farthest_dist) {
         farthest_dist = dist;

@@ -29,6 +29,6 @@ class Helm : public Program {
 
   void getWindowSize();
   void findShipEngine();
-  void setThrust(double x, double y);
+  void setThrust(const Vec2& thr);
 };
 }  // namespace shipos

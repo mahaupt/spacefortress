@@ -24,11 +24,9 @@ void shipos::Map::render(ConsoleKey key) {
   }
 
   // get ship pos and center pos
-  double sx;
-  double sy;
   int cx = round(this->wwidth / 2.0);
   int cy = round(this->wheight / 2.0);
-  this->ship->getPos(sx, sy);
+  Vec2 spos = this->ship->getPos();
 
   // make sure we have a sensor object
   this->findShipSensor();
@@ -39,19 +37,18 @@ void shipos::Map::render(ConsoleKey key) {
     if (gobjects != 0) {
       for (const auto& gobject : *gobjects) {
         // get position of object
-        double gpx;
-        double gpy;
-        gobject->getPos(gpx, gpy);
+        Vec2 gpos = gobject->getPos();
+        gpos -= spos;  // vec from ship to obj
+        gpos *= this->zoom;
 
         // calc screen position
-        double spx = cx + (gpx - sx) * this->zoom;
-        double spy = cy - (gpy - sy) * this->zoom;
+        int spx = round(cx + gpos.getX());
+        int spy = round(cy - gpos.getY());
 
         // object is in map screen
         if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
             spy < this->wheight - 2) {
-          mvwprintw(this->win, round(spy), round(spx),
-                    gobject->getSymbol().c_str());
+          mvwprintw(this->win, spy, spx, gobject->getSymbol().c_str());
         }
       }
     } else {
@@ -73,8 +70,8 @@ void shipos::Map::render(ConsoleKey key) {
 
   // draw ship and pos info
   mvwprintw(this->win, cy, cx, this->ship->getSymbol().c_str());
-  mvwprintw(this->win, 1, 2, "%.3f / %.3f    %.1f mAU/s", sx, sy,
-            (this->ship->getVelAbs() * 1000.0f));
+  mvwprintw(this->win, 1, 2, "%.3f / %.3f    %.1f mAU/s", spos.getX(),
+            spos.getY(), (this->ship->getVel().magnitude() * 1000.0f));
   mvwprintw(this->win, this->wheight - 3, 1, "y");
   mvwprintw(this->win, this->wheight - 2, 1, "└x");
   mvwprintw(this->win, this->wheight - 2, this->wwidth - 4, "x%i", this->zoom);

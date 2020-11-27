@@ -2,7 +2,7 @@
 
 Game::Game() : s("Omega", 100, &game_objects), os(&s) {
   // add player ship
-  this->s.setPos(-1, 0.1);
+  this->s.setPos(Vec2(-1, 0.1));
   this->s.addModule(new Generator("Generator MK I", 1, 1));
   this->s.addModule(new Lifesupport("LifeSupport", 1, 3));
   this->s.addModule(new Dockingport("Docking port", 1));
@@ -30,7 +30,8 @@ Game::Game() : s("Omega", 100, &game_objects), os(&s) {
   std::uniform_real_distribution<double> distribution(-8.0, 8.0);
   for (int i = 0; i < 5; i++) {
     Ship *friendly_ship = new Ship("Camera", 100, &game_objects);
-    friendly_ship->setPos(distribution(generator), distribution(generator));
+    friendly_ship->setPos(
+        Vec2(distribution(generator), distribution(generator)));
     friendly_ship->addModule(new Generator("Generator MK I", 1, 1));
     friendly_ship->addModule(new ShipAi("Ship AI", 1));
     friendly_ship->addModule(new Lifesupport("LifeSupport", 1, 3));

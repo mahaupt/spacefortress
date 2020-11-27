@@ -3,6 +3,8 @@
 #include <cmath>
 #include <string>
 
+#include "tools/vec2.hpp"
+
 class GameObject {
  public:
   GameObject();
@@ -12,37 +14,28 @@ class GameObject {
   virtual ~GameObject() {}
 
   // getter and setters
-  void setPos(double x, double y);
-  void getPos(double &x, double &y);
-  double getRot() { return this->rot; }
-  void setRot(double rot) { this->rot = rot; }
   void setName(const std::string &name) { this->name = name; }
   std::string getName() { return this->name; }
   std::string getType() { return this->type; }
   std::string getSymbol() { return this->symbol; }
   bool isDockable() { return this->is_dockable; }
-  void setFixed(bool f) { this->is_fixed = f; }
-  double getVelAbs() { return sqrt(vel_x * vel_x + vel_y * vel_y); }
-  void getVel(double &vx, double &vy) {
-    vx = this->vel_x;
-    vy = this->vel_y;
-  }
-  void getForce(double &fx, double &fy) {
-    fx = this->force_x;
-    fy = this->force_y;
-  }
-  void setForce(double fx, double fy) {
-    this->force_x = fx;
-    this->force_y = fy;
-  }
+  void setFixed(const bool &f) { this->is_fixed = f; }
+
+  // position and motion
+  void setPos(const Vec2 &pos) { this->pos = pos; }
+  Vec2 getPos() { return this->pos; }
+  double getRot() { return this->rot; }
+  void setRot(const double &rot) { this->rot = rot; }
+  Vec2 getVel() { return this->vel; }
+  Vec2 getForce() { return this->force; }
+  void setForce(const Vec2 &force) { this->force = force; }
 
   // simulation
-  void applyForce(double fx, double fy);
+  void addForce(const Vec2 &force);
   virtual void simulate(double delta_time);
 
  protected:
-  double x;
-  double y;
+  Vec2 pos;
   double rot;
   bool is_fixed;
   bool is_dockable;
@@ -50,9 +43,7 @@ class GameObject {
   std::string type;
   std::string symbol;
 
-  double vel_x;
-  double vel_y;
+  Vec2 vel;
 
-  double force_x;
-  double force_y;
+  Vec2 force;
 };

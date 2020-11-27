@@ -16,9 +16,7 @@ void Dockingport::simulate(double delta_time, Ship* ship) {
   if (!this->online) return;
 
   // get ship position
-  double sx;
-  double sy;
-  ship->getPos(sx, sy);
+  Vec2 spos = ship->getPos();
 
   // find dockable object in range
   auto gobjects = ship->getGameObjects();
@@ -27,14 +25,11 @@ void Dockingport::simulate(double delta_time, Ship* ship) {
     if (!object->isDockable()) continue;
 
     // calc distance
-    double ox;
-    double oy;
-    object->getPos(ox, oy);
+    Vec2 opos = object->getPos();
 
-    ox -= sx;
-    oy -= sy;
-    double dist = sqrt(ox * ox + oy * oy);
-    if (dist < 0.01) {
+    opos -= spos;
+
+    if (opos.magnitude() < 0.01) {
       // dockable
       this->can_dock = true;
       this->dockable_object = object;
@@ -52,10 +47,8 @@ bool Dockingport::dock() {
   this->ownship->setFixed(true);
 
   // sync positions
-  double opx;
-  double opy;
-  this->dockable_object->getPos(opx, opy);
-  this->ownship->setPos(opx, opy);
+  Vec2 pos = this->dockable_object->getPos();
+  this->ownship->setPos(pos);
 
   this->docked = true;
 

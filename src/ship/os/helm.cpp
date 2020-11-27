@@ -8,8 +8,8 @@ Helm::Helm(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
            double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
       autopilot(false),
-      ptr_engine(0),
-      engpwr(1) {
+      engpwr(1),
+      ptr_engine(0) {
   this->window->setTitle(Lang::get("program_helm"));
 }
 
@@ -36,9 +36,7 @@ void Helm::render(ConsoleKey key) {
   }
   if ((char)key == 'w' || key == ConsoleKey::ARROW_UP) {
     // fire engines
-    double thr_x = sin(this->rot) * this->engpwr;
-    double thr_y = cos(this->rot) * this->engpwr;
-    this->setThrust(thr_x, thr_y);
+    this->setThrust(Vec2::fromAngle(this->rot, this->engpwr));
     this->autopilot = false;
   }
   if ((char)key == 'y') {
@@ -64,19 +62,11 @@ void Helm::render(ConsoleKey key) {
   // autopilot
   if (this->autopilot) {
     // get vel vector
-    double vx;
-    double vy;
-    this->ship->getVel(vx, vy);
-
+    Vec2 ivel = this->ship->getVel().inverse();
     // calc vel angle
-    double ang = atan2(vx, vy);
-    // rotate ang + 180°
-    if (ang < 3.1416) {
-      ang += 3.1416;
-    } else {
-      ang -= 3.1416;
-    }
+    double ang = atan2(ivel.getX(), ivel.getY());
 
+    // get angular vector
     double avec = ang - this->rot;
     if (avec > 0) {
       avec = fmin(avec, 0.05);
@@ -90,16 +80,14 @@ void Helm::render(ConsoleKey key) {
 
     // thrust
     if (fabs(avec) < 0.001) {
-      double velabs = this->ship->getVelAbs() * 1000.0 * 5;
+      double velabs = ivel.magnitude() * 1000.0 * 5;
       velabs = fmin(velabs, 1.0);
-      double thr_x = sin(this->rot) * velabs;
-      double thr_y = cos(this->rot) * velabs;
 
       // turn ap off when stopped
       if (velabs <= 0.01) {
         this->autopilot = false;
       } else {
-        this->setThrust(thr_x, thr_y);
+        this->setThrust(Vec2::fromAngle(this->rot, velabs));
         this->engpwr = floor(velabs * 10) / 10.0;
       }
     }
@@ -197,7 +185,7 @@ void Helm::findShipEngine() {
   }
 }
 
-void Helm::setThrust(double x, double y) {
+void Helm::setThrust(const Vec2& thr) {
   if (this->ptr_engine == 0) return;
-  this->ptr_engine->setThrust(x, y);
+  this->ptr_engine->setThrust(thr);
 }

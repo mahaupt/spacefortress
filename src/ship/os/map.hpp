@@ -5,6 +5,7 @@
 
 #include "../../gameobject.hpp"
 #include "../../tools/lang.hpp"
+#include "../../tools/vec2.hpp"
 #include "../modules/sensor.hpp"
 #include "program.hpp"
 

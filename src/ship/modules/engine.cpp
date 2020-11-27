@@ -16,16 +16,14 @@ void Engine::simulate(double delta_time, Ship *ship) {
   if (!this->online) return;
 
   // take thrust command
-  double fabs = sqrt(this->thr_cmd_x * this->thr_cmd_x +
-                     this->thr_cmd_y * this->thr_cmd_y);
+  double fabs = this->thr_cmd.magnitude();
 
   // skip if fabs to small
   if (fabs == 0) return;
 
   // limit force vector to 1
   if (fabs > 1.0) {
-    this->thr_cmd_x /= fabs;
-    this->thr_cmd_y /= fabs;
+    this->thr_cmd.normalize();
     fabs = 1.0;
   }
 
@@ -42,21 +40,15 @@ void Engine::simulate(double delta_time, Ship *ship) {
   }
 
   // apply thrust
-  this->thr_cmd_x *= eng_thrust;
-  this->thr_cmd_y *= eng_thrust;
-  ship->applyForce(this->thr_cmd_x, this->thr_cmd_y);
+  this->thr_cmd *= eng_thrust;
+  ship->addForce(this->thr_cmd);
 
   // reset thrust
-  this->thr_cmd_x = 0;
-  this->thr_cmd_y = 0;
+  this->thr_cmd.zero();
 }
 
 /**
- * Sets engine thrust, must be a vector of magnitude 1
- * @param x Thrust in X direction
- * @param y Thrust in Y direction
+ * Sets engine thrust, must be a vector of magnitude 1 or less
+ * @param thr Vec2 Thrust Command
  */
-void Engine::setThrust(double x, double y) {
-  this->thr_cmd_x = x;
-  this->thr_cmd_y = y;
-}
+void Engine::setThrust(const Vec2 &thr) { this->thr_cmd = thr; }

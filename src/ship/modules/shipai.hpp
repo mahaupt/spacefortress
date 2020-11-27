@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "../../gameobject.hpp"
+#include "../../tools/vec2.hpp"
 #include "../module.hpp"
 #include "../ship.hpp"
 #include "engine.hpp"

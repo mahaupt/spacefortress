@@ -22,6 +22,7 @@
 #include "ship/ship.hpp"
 #include "tools/console.hpp"
 #include "tools/log.hpp"
+#include "tools/vec2.hpp"
 
 class Game {
  public:

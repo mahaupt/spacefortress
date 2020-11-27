@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "../../tools/vec2.hpp"
 #include "../module.hpp"
 #include "../ship.hpp"
 
@@ -11,12 +12,11 @@ class Engine : public Module {
          double max_power);
   void simulate(double delta_time, Ship *ship);
 
-  void setThrust(double x, double y);
+  void setThrust(const Vec2 &thr);
 
  private:
   double max_thrust;
   double max_power;
 
-  double thr_cmd_x;
-  double thr_cmd_y;
+  Vec2 thr_cmd;
 };
