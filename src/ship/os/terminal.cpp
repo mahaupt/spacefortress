@@ -1,19 +1,23 @@
 #include "terminal.hpp"
 
-shipos::Terminal::Terminal(Ship* ship) : Program(ship), input_field(0, 0, "") {
+using namespace shipos;
+
+Terminal::Terminal(Ship* ship, std::vector<shipos::Program*>* pprograms)
+    : Program(ship), input_field(0, 0, ""), pprograms(pprograms) {
   this->setup();
 }
 
-shipos::Terminal::Terminal(Ship* ship, WindowAlignment alignment_x,
-                           WindowAlignment alignment_y, double size_x,
-                           double size_y)
+Terminal::Terminal(Ship* ship, std::vector<shipos::Program*>* pprograms,
+                   WindowAlignment alignment_x, WindowAlignment alignment_y,
+                   double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
-      input_field(0, 0, "") {
+      input_field(0, 0, ""),
+      pprograms(pprograms) {
   this->window->setTitle(Lang::get("program_terminal"));
   this->setup();
 }
 
-void shipos::Terminal::setup() {
+void Terminal::setup() {
   terminal_lines.push_back("ShipOS " + Lang::get("program_terminal"));
 
   this->input_field.setWin(win);
@@ -25,7 +29,7 @@ void shipos::Terminal::setup() {
   Console::showCursor(true);
 }
 
-void shipos::Terminal::render(ConsoleKey key) {
+void Terminal::render(ConsoleKey key) {
   // enter - get value and process input
   if (key == ConsoleKey::ENTER) {
     std::string cmd = input_field.getValue();
@@ -54,9 +58,9 @@ void shipos::Terminal::render(ConsoleKey key) {
  * Disable crsor when Program is HALT oder TERM
  * @param s ProgramState
  */
-void shipos::Terminal::setState(ProgramState s) {
+void Terminal::setState(ProgramState s) {
   this->state = s;
-  if (s == shipos::ProgramState::RUN) {
+  if (s == ProgramState::RUN) {
     input_field.setSelected(true);
     Console::showCursor(true);
   } else {
@@ -75,7 +79,7 @@ void shipos::Terminal::processCmd(std::string cmd) {
         terminal_lines.push_back(Lang::get("program_terminal_help"));
         terminal_lines.push_back(
             "help, exit, dock, undock, modules, clear, online, offline, "
-            "killall, nav");
+            "ps, killall, nav");
         break;
       }
       case str2int("exit"): {
@@ -167,6 +171,40 @@ void shipos::Terminal::processCmd(std::string cmd) {
         terminal_lines.push_back(Lang::get("program_terminal_turnoffline"));
         for (const auto& module : *(this->ship->getModules())) {
           module->setOnline(false);
+        }
+        break;
+      }
+      case str2int("top"):
+      case str2int("ps"): {
+        for (const auto& prog : *(this->pprograms)) {
+          terminal_lines.push_back("Program " + std::to_string((size_t)prog));
+        }
+
+        break;
+      }
+      case str2int("killall"): {
+        terminal_lines.push_back(Lang::get("program_terminal_killall"));
+        for (const auto& prog : *(this->pprograms)) {
+          prog->setState(ProgramState::TERM);
+        }
+        break;
+      }
+      case str2int("nav"): {
+        if (this->pprograms->size() == 0) {
+          terminal_lines.push_back(Lang::get("program_terminal_nav"));
+          this->pprograms->push_back(new Map(this->ship, WindowAlignment::LEFT,
+                                             WindowAlignment::TOP, 0.7, 1.0));
+          this->pprograms->push_back(
+              new StatusMonitor(this->ship, WindowAlignment::RIGHT,
+                                WindowAlignment::TOP, 0.3, 0.5));
+          this->pprograms->push_back(
+              new Helm(this->ship, WindowAlignment::RIGHT,
+                       WindowAlignment::BOTTOM, 0.3, 0.5));
+
+          // set to halt to allow other programs to show
+          this->setState(ProgramState::HALT);
+        } else {
+          terminal_lines.push_back(Lang::get("program_terminal_newprog_error"));
         }
         break;
       }

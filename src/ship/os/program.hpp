@@ -2,6 +2,8 @@
 
 #include <ncurses.h>
 
+//#include <string>
+
 #include "../../tools/console.hpp"
 #include "../../ui/window.hpp"
 #include "../ship.hpp"

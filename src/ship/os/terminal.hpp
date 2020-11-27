@@ -6,7 +6,10 @@
 #include "../../tools/lang.hpp"
 #include "../../ui/inputtext.hpp"
 #include "../modules/dockingport.hpp"
+#include "helm.hpp"
+#include "map.hpp"
 #include "program.hpp"
+#include "statusmonitor.hpp"
 
 namespace shipos {
 constexpr unsigned int str2int(const char* str, int h = 0) {
@@ -15,8 +18,9 @@ constexpr unsigned int str2int(const char* str, int h = 0) {
 
 class Terminal : public Program {
  public:
-  Terminal(Ship* ship);
-  Terminal(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
+  Terminal(Ship* ship, std::vector<shipos::Program*>* pprograms);
+  Terminal(Ship* ship, std::vector<shipos::Program*>* pprograms,
+           WindowAlignment alignment_x, WindowAlignment alignment_y,
            double size_x, double size_y);
   void setState(ProgramState s);
   void render(ConsoleKey key);
@@ -25,6 +29,7 @@ class Terminal : public Program {
  private:
   std::vector<std::string> terminal_lines;
   InputText input_field;
+  std::vector<shipos::Program*>* pprograms;
 
   void setup();
 };

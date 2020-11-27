@@ -36,6 +36,9 @@ program_terminal_undockingerror: "error: can not initiate undocking sequence"
 program_terminal_nodockingmodule: "Docking module not available"
 program_terminal_turnonline: "starting all modules..."
 program_terminal_turnoffline: "shutting down all modules..."
+program_terminal_killall: "Terminating all programs"
+program_terminal_nav: "starting nav..."
+program_terminal_newprog_error: "Error, too many programs open at once"
 
 program_smon: Status Monitor
 program_smon_reg: "#"

@@ -5,7 +5,7 @@ ShipOs::ShipOs(Ship *ship) : ship(ship), state(ShipOsState::OFF) {
 }
 
 /**
- * removing all remaining dynamic classes from memory
+ * removing all remaining heap classes from memory
  */
 ShipOs::~ShipOs() {
   for (const auto &program : this->v_programs) {
@@ -32,10 +32,10 @@ void ShipOs::autostart() {
   Console::sclear();
 
   // background terminal
-  this->main_terminal = new shipos::Terminal(this->ship);
+  this->main_terminal = new shipos::Terminal(this->ship, &(this->v_programs));
   this->main_terminal->setState(shipos::ProgramState::HALT);
 
-  // windowed programs
+  // nav overview programs
   this->addProgram(new shipos::Map(this->ship, WindowAlignment::LEFT,
                                    WindowAlignment::TOP, 0.7, 1.0));
   this->addProgram(new shipos::StatusMonitor(this->ship, WindowAlignment::RIGHT,
@@ -79,8 +79,9 @@ void ShipOs::renderWin(ConsoleKey key) {
   if (key == ConsoleKey::TAB) {
     auto pstate = shipos::ProgramState::HALT;
     auto wstate = WindowState::HIDDEN;
-    if (this->windows_tabbed) {
+    if (this->windows_tabbed && this->v_programs.size() > 0) {
       // restore windows, block background terminal
+      // only do this when there are actually open windows to display
       pstate = shipos::ProgramState::RUN;
       wstate = WindowState::VISIBLE;
       this->main_terminal->setState(shipos::ProgramState::HALT);
