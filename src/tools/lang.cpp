@@ -20,7 +20,7 @@ Lang::Lang() {
   }
 }
 
-std::string Lang::get(std::string key) {
+std::string Lang::get(const char* key) {
   if (Lang::self == 0) return key;
   YAML::Node node = Lang::self->db[key];
 

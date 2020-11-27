@@ -1,6 +1,6 @@
 #include "generator.hpp"
 
-Generator::Generator(std::string name, double hull, double power_output)
+Generator::Generator(const std::string& name, double hull, double power_output)
     : Module(name, "Generator", hull),
       max_power_output(power_output),
       last_power_usage(0),

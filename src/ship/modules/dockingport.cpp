@@ -1,6 +1,6 @@
 #include "dockingport.hpp"
 
-Dockingport::Dockingport(std::string name, double hull)
+Dockingport::Dockingport(const std::string& name, double hull)
     : Module(name, "Dockingport", hull), ownship(0), docked(false) {}
 
 void Dockingport::simulate(double delta_time, Ship* ship) {

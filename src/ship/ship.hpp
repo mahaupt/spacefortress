@@ -10,7 +10,8 @@
 
 class Ship : public GameObject {
  public:
-  Ship(std::string name, double hull, std::vector<GameObject *> *ptr_gobjects);
+  Ship(const std::string &name, double hull,
+       std::vector<GameObject *> *ptr_gobjects);
   ~Ship();
 
   // info functions

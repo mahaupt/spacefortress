@@ -5,8 +5,8 @@ GameObject::GameObject() : GameObject("", "Object", 0, 0, false) {}
 GameObject::GameObject(double x, double y, bool fixed)
     : GameObject("", "Object", x, y, fixed) {}
 
-GameObject::GameObject(std::string name, std::string type, double x, double y,
-                       bool fixed)
+GameObject::GameObject(const std::string &name, const std::string &type,
+                       double x, double y, bool fixed)
     : x(x),
       y(y),
       rot(0),

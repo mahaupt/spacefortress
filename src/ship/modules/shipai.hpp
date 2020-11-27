@@ -8,7 +8,7 @@
 
 class ShipAi : public Module {
  public:
-  ShipAi(std::string name, double hull);
+  ShipAi(const std::string& name, double hull);
 
   void simulate(double delta_time, Ship* ship);
 

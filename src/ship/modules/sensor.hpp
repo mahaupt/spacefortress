@@ -8,7 +8,7 @@
 
 class Sensor : public Module {
  public:
-  Sensor(std::string name, double hull);
+  Sensor(const std::string &name, double hull);
 
   void simulate(double delta_time, Ship *ship);
   std::vector<GameObject *> *getScannedObjects();

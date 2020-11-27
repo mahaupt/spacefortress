@@ -3,13 +3,13 @@
 #include "../module.hpp"
 #include "../ship.hpp"
 
-class ShieldGenerator : public Module
-{
-private:
-    double max_power_input;
-    double max_shield_output;
+class ShieldGenerator : public Module {
+ private:
+  double max_power_input;
+  double max_shield_output;
 
-public:
-    ShieldGenerator(std::string name, double hull, double max_power_input, double max_shield_output);
-    void simulate(double delta_time, Ship* ship);
+ public:
+  ShieldGenerator(const std::string& name, double hull, double max_power_input,
+                  double max_shield_output);
+  void simulate(double delta_time, Ship* ship);
 };

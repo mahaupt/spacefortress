@@ -9,6 +9,6 @@ class Generator : public Module {
   double last_power_generation;
 
  public:
-  Generator(std::string name, double hull, double power_output);
+  Generator(const std::string& name, double hull, double power_output);
   void simulate(double delta_time, Ship* ship);
 };

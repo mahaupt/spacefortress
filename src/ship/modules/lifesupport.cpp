@@ -1,6 +1,6 @@
 #include "lifesupport.hpp"
 
-Lifesupport::Lifesupport(std::string name, double hull, double capacity)
+Lifesupport::Lifesupport(const std::string& name, double hull, double capacity)
     : Module(name, "Lifesupport", hull), capacity(capacity) {}
 
 void Lifesupport::simulate(double delta_time, Ship* ship) {

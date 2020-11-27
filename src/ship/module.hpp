@@ -5,7 +5,7 @@ class Ship;
 
 class Module {
  public:
-  Module(std::string name, std::string type, double hull);
+  Module(const std::string &name, const std::string &type, double hull);
   virtual ~Module() {}
 
   // info funcitons

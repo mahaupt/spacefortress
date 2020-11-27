@@ -1,6 +1,6 @@
 #include "shieldgenerator.hpp"
 
-ShieldGenerator::ShieldGenerator(std::string name, double hull,
+ShieldGenerator::ShieldGenerator(const std::string &name, double hull,
                                  double max_power_input,
                                  double max_shield_output)
     : Module(name, "ShieldGenerator", hull),

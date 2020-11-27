@@ -6,7 +6,7 @@
 namespace go {
 class Station : public GameObject {
  public:
-  Station(std::string name, double x, double y);
+  Station(const std::string &name, double x, double y);
 
  private:
 };

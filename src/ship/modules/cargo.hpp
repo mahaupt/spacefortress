@@ -4,7 +4,7 @@
 
 class Cargo : public Module {
  public:
-  Cargo(std::string name, double hull, double capacity);
+  Cargo(const std::string &name, double hull, double capacity);
 
  private:
   double capacity;

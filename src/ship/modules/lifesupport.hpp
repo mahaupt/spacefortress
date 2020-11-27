@@ -5,7 +5,7 @@
 
 class Lifesupport : public Module {
  public:
-  Lifesupport(std::string name, double hull, double capacity);
+  Lifesupport(const std::string& name, double hull, double capacity);
 
   void simulate(double delta_time, Ship* ship);
 

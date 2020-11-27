@@ -1,6 +1,6 @@
 #include "module.hpp"
 
-Module::Module(std::string name, std::string type, double hull)
+Module::Module(const std::string &name, const std::string &type, double hull)
     : online(true),
       name(name),
       type(type),

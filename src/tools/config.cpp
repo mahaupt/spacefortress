@@ -21,12 +21,12 @@ Config::Config() {
   }
 }
 
-bool Config::hasKey(std::string key) {
+bool Config::hasKey(const char* key) {
   if (Config::self == 0) return false;
   return Config::self->config[key].IsDefined();
 }
 
-std::string Config::getStr(std::string key, std::string default_val) {
+std::string Config::getStr(const char* key, const std::string& default_val) {
   if (Config::self == 0) return default_val;
   YAML::Node node = Config::self->config[key];
 
@@ -38,7 +38,7 @@ std::string Config::getStr(std::string key, std::string default_val) {
   return node.as<std::string>();
 }
 
-void Config::setStr(std::string key, std::string val) {
+void Config::setStr(const char* key, const std::string& val) {
   if (Config::self == 0) return;
   YAML::Node node = Config::self->config[key];
 

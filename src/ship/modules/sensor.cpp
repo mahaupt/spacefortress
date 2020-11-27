@@ -1,6 +1,6 @@
 #include "sensor.hpp"
 
-Sensor::Sensor(std::string name, double hull)
+Sensor::Sensor(const std::string &name, double hull)
     : Module(name, "Sensor", hull), ownship(0) {}
 
 std::vector<GameObject *> *Sensor::getScannedObjects() {

@@ -7,8 +7,8 @@ class GameObject {
  public:
   GameObject();
   GameObject(double x, double y, bool fixed = false);
-  GameObject(std::string name, std::string type, double x, double y,
-             bool fixed = false);
+  GameObject(const std::string &name, const std::string &type, double x,
+             double y, bool fixed = false);
   virtual ~GameObject() {}
 
   // getter and setters
@@ -16,7 +16,7 @@ class GameObject {
   void getPos(double &x, double &y);
   double getRot() { return this->rot; }
   void setRot(double rot) { this->rot = rot; }
-  void setName(std::string name) { this->name = name; }
+  void setName(const std::string &name) { this->name = name; }
   std::string getName() { return this->name; }
   std::string getType() { return this->type; }
   std::string getSymbol() { return this->symbol; }

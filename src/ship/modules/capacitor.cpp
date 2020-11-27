@@ -1,13 +1,12 @@
 #include "capacitor.hpp"
 
-Capacitor::Capacitor(std::string name, double hull, double max_capacity,
+Capacitor::Capacitor(const std::string &name, double hull, double max_capacity,
                      double max_power_input, double max_power_output)
     : Module(name, "Capacitor", hull),
       energy(0),
       max_power_input(max_power_input),
-      max_power_output(max_power_output), 
-      max_capacity(max_capacity) {
-}
+      max_power_output(max_power_output),
+      max_capacity(max_capacity) {}
 
 void Capacitor::simulate(double delta_time, Ship *ship) {
   if (!this->online) {

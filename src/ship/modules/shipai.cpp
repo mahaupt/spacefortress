@@ -1,6 +1,6 @@
 #include "shipai.hpp"
 
-ShipAi::ShipAi(std::string name, double hull)
+ShipAi::ShipAi(const std::string& name, double hull)
     : Module(name, "AI", hull), p_target(0) {}
 
 void ShipAi::simulate(double delta_time, Ship* ship) {

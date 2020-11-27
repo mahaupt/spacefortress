@@ -16,7 +16,7 @@ class Window {
   ~Window();
 
   void render(ConsoleKey key);
-  void setTitle(std::string title) { this->window_title = title; }
+  void setTitle(const std::string &title) { this->window_title = title; }
   void setBorder(bool border) { this->window_border = border; }
   void setState(WindowState s) { this->state = s; }
   WindowState getState() { return this->state; }

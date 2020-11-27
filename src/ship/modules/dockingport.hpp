@@ -10,7 +10,7 @@
 
 class Dockingport : public Module {
  public:
-  Dockingport(std::string name, double hull);
+  Dockingport(const std::string& name, double hull);
   void simulate(double delta_time, Ship* ship);
 
   bool canDock() { return this->can_dock; }

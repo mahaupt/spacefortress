@@ -10,7 +10,7 @@ class Lang {
   Lang();
   ~Lang();
 
-  static std::string get(std::string key);
+  static std::string get(const char* key);
 
  private:
   static Lang* self;

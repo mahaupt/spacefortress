@@ -17,7 +17,7 @@ class Text : public UiElement {
   using UiElement::setPosition;
   void setPosition(int x, int y, UiAlignment align_x, UiAlignment align_y,
                    UiAlignment align_text);
-  void addTextLine(std::string line);
+  void addTextLine(const std::string& line);
   void render(ConsoleKey key);
 
  private:

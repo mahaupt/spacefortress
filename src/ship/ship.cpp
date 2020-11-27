@@ -1,6 +1,6 @@
 #include "ship.hpp"
 
-Ship::Ship(std::string name, double hull,
+Ship::Ship(const std::string &name, double hull,
            std::vector<GameObject *> *ptr_gobjects)
     : GameObject(name, "Ship", 0, 0), ptr_gobjects(ptr_gobjects) {
   this->hull = hull;

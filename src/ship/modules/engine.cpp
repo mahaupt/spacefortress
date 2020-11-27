@@ -1,6 +1,6 @@
 #include "engine.hpp"
 
-Engine::Engine(std::string name, double hull, double max_thrust,
+Engine::Engine(const std::string &name, double hull, double max_thrust,
                double max_power)
     : Module(name, "Engine", hull),
       max_thrust(max_thrust),
