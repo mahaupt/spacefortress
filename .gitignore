@@ -1,12 +1,22 @@
 #own project folders
+binary
+xcode
+
+#binaries
 spacefortress
 sf
+
+#os specific
 .DS_Store
+
+#game logs
+log.txt
+
+#cmake
 CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
 Makefile
-log.txt
 CPackConfig.cmake
 CPackSourceConfig.cmake
 compile_commands.json
