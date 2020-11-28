@@ -40,13 +40,13 @@ void InputText::processInput(ConsoleKey key) {
   // add chars
   if (this->value.length() < this->width) {
     // - . _ : SP
-    if (ikey >= 45 && ikey <= 46 || ikey >= 48 && ikey <= 57 || ikey == 58 ||
+    if ((ikey >= 45 && ikey <= 46) || (ikey >= 48 && ikey <= 57) || ikey == 58 ||
         ikey == 95 || ikey == 32) {
       this->value += ikey;
       this->cursor_pos++;
     }
     // A - z
-    if (ikey >= 65 && ikey <= 90 || ikey >= 97 && ikey <= 122) {
+    if ((ikey >= 65 && ikey <= 90) || (ikey >= 97 && ikey <= 122)) {
       this->value += ikey;
       this->cursor_pos++;
     }
