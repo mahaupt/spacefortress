@@ -25,6 +25,7 @@ class Ship : public GameObject {
   std::vector<GameObject *> *getGameObjects() { return this->ptr_gobjects; }
   std::vector<Module *> *getModules() { return &(this->modules); }
   bool isDocked() { return this->is_fixed; }
+  Module *getFirstModule(const std::string &type);
 
   // management functions
   void simulate(double delta_time);

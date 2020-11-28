@@ -23,7 +23,6 @@ class Map : public Program {
   int zoom;
   module::Sensor* ptr_sensor;
 
-  void findShipSensor();
   void getWindowSize();
 };
 }  // namespace shipos

@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 
 #include "../modules/sensor.hpp"
 #include "program.hpp"
@@ -13,6 +14,12 @@ class Sensor : public Program {
   void render(ConsoleKey key);
 
  private:
+  int wwidth;
+  int wheight;
+  int selection;
+
   module::Sensor* psensor;
+
+  void getWindowSize();
 };
 }  // namespace shipos

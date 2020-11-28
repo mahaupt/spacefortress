@@ -9,12 +9,14 @@ Helm::Helm(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
       autopilot(false),
       engpwr(1),
-      ptr_engine(0) {
+      ptr_engine(nullptr) {
   this->window->setTitle(Lang::get("program_helm"));
 }
 
 void Helm::render(ConsoleKey key) {
-  this->findShipEngine();
+  // find modules
+  if (this->ptr_engine == nullptr)
+    this->ptr_engine = (module::Engine*)this->ship->getFirstModule("Engine");
 
   werase(this->win);
   this->getWindowSize();
@@ -64,7 +66,7 @@ void Helm::render(ConsoleKey key) {
     // get vel vector
     Vec2 ivel = this->ship->getVel().inverse();
     // calc vel angle
-    double ang = atan2(ivel.getX(), ivel.getY());
+    double ang = ivel.angle();
 
     // get angular vector
     double avec = ang - this->rot;
@@ -173,17 +175,6 @@ void Helm::render(ConsoleKey key) {
  * window class clears window for us if resized
  */
 void Helm::getWindowSize() { getmaxyx(this->win, this->wheight, this->wwidth); }
-
-void Helm::findShipEngine() {
-  if (this->ptr_engine != 0) return;
-
-  for (const auto& module : *(this->ship->getModules())) {
-    if (module->getType() == "Engine") {
-      this->ptr_engine = (module::Engine*)module;
-      return;
-    }
-  }
-}
 
 void Helm::setThrust(const Vec2& thr) {
   if (this->ptr_engine == 0) return;

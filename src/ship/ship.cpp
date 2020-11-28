@@ -44,6 +44,10 @@ double Ship::getEnergy(double energy_needed) {
   return energy_drawn;
 }
 
+/**
+ * Calculates current energy level
+ * @return double Energy
+ */
 double Ship::getEnergyLevel() {
   double total_energy_avbl = 0;
 
@@ -74,4 +78,13 @@ void Ship::addShield(double shield) {
   if (this->shield > this->max_shield) {
     this->shield = this->max_shield;
   }
+}
+
+Module *Ship::getFirstModule(const std::string &type) {
+  for (const auto &module : this->modules) {
+    if (module->getType() == type) {
+      return module;
+    }
+  }
+  return nullptr;
 }

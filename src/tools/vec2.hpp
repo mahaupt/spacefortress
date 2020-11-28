@@ -20,6 +20,7 @@ class Vec2 {
   double getY() const { return y; }
   void setX(const double& _x) { x = _x; }
   void setY(const double& _y) { y = _y; }
+  double angle() { return atan2(x, y); }
 
   // operators
   Vec2 operator+(const Vec2& vector) const;

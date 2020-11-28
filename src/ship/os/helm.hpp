@@ -28,7 +28,6 @@ class Helm : public Program {
   module::Engine* ptr_engine;
 
   void getWindowSize();
-  void findShipEngine();
   void setThrust(const Vec2& thr);
 };
 }  // namespace shipos

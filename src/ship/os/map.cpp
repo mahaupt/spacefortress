@@ -6,11 +6,15 @@ shipos::Map::Map(Ship* ship, WindowAlignment alignment_x,
                  WindowAlignment alignment_y, double size_x, double size_y)
     : Program(ship, alignment_x, alignment_y, size_x, size_y),
       zoom(5),
-      ptr_sensor(0) {
+      ptr_sensor(nullptr) {
   this->window->setTitle(Lang::get("program_map"));
 }
 
 void shipos::Map::render(ConsoleKey key) {
+  // find ship modules
+  if (this->ptr_sensor == nullptr)
+    this->ptr_sensor = (module::Sensor*)this->ship->getFirstModule("Sensor");
+
   this->getWindowSize();
 
   werase(this->win);
@@ -27,9 +31,6 @@ void shipos::Map::render(ConsoleKey key) {
   int cx = round(this->wwidth / 2.0);
   int cy = round(this->wheight / 2.0);
   Vec2 spos = this->ship->getPos();
-
-  // make sure we have a sensor object
-  this->findShipSensor();
 
   // draw objects with sensor
   if (this->ptr_sensor != 0) {
@@ -86,19 +87,4 @@ void shipos::Map::render(ConsoleKey key) {
  */
 void shipos::Map::getWindowSize() {
   getmaxyx(this->win, this->wheight, this->wwidth);
-}
-
-/**
- * Find ship sensor to display map with
- */
-void shipos::Map::findShipSensor() {
-  if (this->ptr_sensor != 0) return;
-
-  // search through ship modules
-  for (const auto& module : *(ship->getModules())) {
-    if (module->getType() == "Sensor") {
-      this->ptr_sensor = (module::Sensor*)module;
-      return;
-    }
-  }
 }
