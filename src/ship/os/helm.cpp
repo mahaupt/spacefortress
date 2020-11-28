@@ -139,28 +139,17 @@ void Helm::render(ConsoleKey key) {
       wattroff(this->win, A_BOLD);
     } else {
       // print error if engine is offline
-      std::string error = Lang::get("program_helm_engoffline");
-      int error_x = round((this->wwidth - error.length()) / 2.0);
-      wattron(this->win, A_BLINK | A_BOLD);
-      mvwprintw(this->win, this->wheight - 4, error_x, error.c_str());
-      wattroff(this->win, A_BLINK | A_BOLD);
+      this->showError(this->wheight - 4, Lang::get("program_helm_engoffline"));
     }
   } else {
     // print error if engine does not exist
-    std::string error = Lang::get("program_helm_noengine");
-    int error_x = round((this->wwidth - error.length()) / 2.0);
-    wattron(this->win, A_BLINK | A_BOLD);
-    mvwprintw(this->win, this->wheight - 4, error_x, error.c_str());
-    wattroff(this->win, A_BLINK | A_BOLD);
+    this->showError(this->wheight - 4, Lang::get("program_helm_noengine"));
   }
 
   // draw autopilot active
   if (this->autopilot) {
-    std::string sautop = Lang::get("program_helm_autopilot");
-    int sap_x = round((this->wwidth - sautop.length()) / 2.0);
-    wattron(this->win, A_BOLD);
-    mvwprintw(this->win, this->wheight - 3, sap_x, sautop.c_str());
-    wattroff(this->win, A_BOLD);
+    this->showCentered(this->wheight - 3, Lang::get("program_helm_autopilot"),
+                       A_BOLD);
   }
 
   // apply rotation
@@ -169,12 +158,6 @@ void Helm::render(ConsoleKey key) {
   // render window
   Program::render(key);
 }
-
-/**
- * saves window dimensions
- * window class clears window for us if resized
- */
-void Helm::getWindowSize() { getmaxyx(this->win, this->wheight, this->wwidth); }
 
 void Helm::setThrust(const Vec2& thr) {
   if (this->ptr_engine == 0) return;

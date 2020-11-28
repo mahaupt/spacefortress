@@ -3,11 +3,14 @@
 using namespace module;
 
 Sensor::Sensor(const std::string &name, double hull)
-    : Module(name, "Sensor", hull), ownship(0) {}
+    : Module(name, "Sensor", hull), ownship(nullptr), plocked_object(nullptr) {}
 
+/**
+ * returns list of objects that are in sensor range, or nullpointer
+ */
 std::vector<GameObject *> *Sensor::getScannedObjects() {
-  if (!this->online) return 0;
-  if (this->ownship == 0) return 0;
+  if (!this->online) return nullptr;
+  if (this->ownship == 0) return nullptr;
 
   return this->ownship->getGameObjects();
 }
@@ -23,5 +26,26 @@ void Sensor::simulate(double delta_time, Ship *ship) {
   // turn off when not enough energy
   if (e_got < e_need) {
     this->online = false;
+    return;
   }
+
+  // process target lock
+  if (this->plocked_object != nullptr && this->lock_progress < 1) {
+    this->lock_progress += delta_time / 3.0;
+    if (this->lock_progress > 1) {
+      this->lock_progress = 1;
+    }
+  }
+
+  // command to weapon to shoot?
+}
+
+// locking functions
+void Sensor::startLock(GameObject *go) {
+  this->plocked_object = go;
+  this->lock_progress = 0;
+}
+void Sensor::clearLock() {
+  this->plocked_object = nullptr;
+  this->lock_progress = 0;
 }

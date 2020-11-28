@@ -14,7 +14,16 @@ class Sensor : public Module {
   void simulate(double delta_time, Ship *ship);
   std::vector<GameObject *> *getScannedObjects();
 
+  // locking targets
+  void startLock(GameObject *go);
+  void clearLock();
+  GameObject *getLockTarget() { return this->plocked_object; }
+  double getLockProgress() { return this->lock_progress; }
+
  private:
   Ship *ownship;
+
+  GameObject *plocked_object;
+  double lock_progress;
 };
 }  // namespace module

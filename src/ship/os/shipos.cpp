@@ -73,28 +73,28 @@ void ShipOs::renderWin(ConsoleKey key) {
         program->render(key);
       }
     }
-  }
 
-  // tab control - hide and show programs
-  if (key == ConsoleKey::TAB) {
-    auto pstate = shipos::ProgramState::HALT;
-    auto wstate = WindowState::HIDDEN;
-    if (this->windows_tabbed && this->v_programs.size() > 0) {
-      // restore windows, block background terminal
-      // only do this when there are actually open windows to display
-      pstate = shipos::ProgramState::RUN;
-      wstate = WindowState::VISIBLE;
-      this->main_terminal->setState(shipos::ProgramState::HALT);
-      this->windows_tabbed = false;
-    } else {
-      // hide windows, run terminal
-      this->main_terminal->setState(shipos::ProgramState::RUN);
-      this->windows_tabbed = true;
-      Console::sclear();
-    }
-    for (size_t i = 0; i < this->v_programs.size(); i++) {
-      this->v_programs[i]->setState(pstate);
-      this->v_programs[i]->setWinState(wstate);
+    // tab control - hide and show programs
+    if (key == ConsoleKey::TAB) {
+      auto pstate = shipos::ProgramState::HALT;
+      auto wstate = WindowState::HIDDEN;
+      if (this->windows_tabbed && this->v_programs.size() > 0) {
+        // restore windows, block background terminal
+        // only do this when there are actually open windows to display
+        pstate = shipos::ProgramState::RUN;
+        wstate = WindowState::VISIBLE;
+        this->main_terminal->setState(shipos::ProgramState::HALT);
+        this->windows_tabbed = false;
+      } else {
+        // hide windows, run terminal
+        this->main_terminal->setState(shipos::ProgramState::RUN);
+        this->windows_tabbed = true;
+        Console::sclear();
+      }
+      for (size_t i = 0; i < this->v_programs.size(); i++) {
+        this->v_programs[i]->setState(pstate);
+        this->v_programs[i]->setWinState(wstate);
+      }
     }
   }
 

@@ -14,6 +14,14 @@ Vec2 Vec2::fromAngle(const double& angle, const double& magnitude) {
   return Vec2(sin(angle) * magnitude, cos(angle) * magnitude);
 }
 
+double Vec2::angle() {
+  double a = atan2(x, y);
+  if (a < 0) {
+    a += 3.1416 * 2;
+  }
+  return a;
+}
+
 Vec2 Vec2::operator+(const Vec2& vector) const {
   return Vec2(x + vector.getX(), y + vector.getY());
 }

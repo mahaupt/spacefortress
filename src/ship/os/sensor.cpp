@@ -20,69 +20,93 @@ void Sensor::render(ConsoleKey key) {
 
   // render list of objects
   if (this->psensor != nullptr) {
-    // process keyboard input
-    if (key == ConsoleKey::ARROW_UP && this->selection > 0) {
-      this->selection--;
-    }
-    if (key == ConsoleKey::ARROW_DOWN) {
-      this->selection++;
-    }
-
-    Vec2 spos = this->ship->getPos();
-
-    // fetch and sort object list from sensor
     std::vector<GameObject*>* v = this->psensor->getScannedObjects();
-    std::list<GameObject*> mlist(v->begin(), v->end());
-    mlist.sort([spos](GameObject* a, GameObject* b) {
-      Vec2 posa = a->getPos();
-      Vec2 posb = b->getPos();
-      posa -= spos;
-      posb -= spos;
-      return (posa.magnitude() < posb.magnitude());
-    });
+    if (v != nullptr) {
+      // fetch and sort object list from sensor
+      Vec2 spos = this->ship->getPos();
+      std::list<GameObject*> mlist(v->begin(), v->end());
+      mlist.sort([spos](GameObject* a, GameObject* b) {
+        Vec2 posa = a->getPos();
+        Vec2 posb = b->getPos();
+        posa -= spos;
+        posb -= spos;
+        return (posa.magnitude() < posb.magnitude());
+      });
 
-    // limit selection
-    if (this->selection >= mlist.size()) {
-      this->selection = mlist.size() - 1;
-    }
-
-    // draw object list
-    int i = 0;
-    mvwprintw(this->win, 1, 1, "#  Type      Name            Distance    RB");
-    for (const auto& object : mlist) {
-      Vec2 opos = object->getPos();
-      opos -= spos;
-
-      if (i == this->selection) {
-        wattron(this->win, A_STANDOUT);
+      // process keyboard input
+      if (key == ConsoleKey::ARROW_UP && this->selection > 0) {
+        this->selection--;
+      }
+      if (key == ConsoleKey::ARROW_DOWN) {
+        this->selection++;
+      }
+      // limit selection
+      if (this->selection >= mlist.size()) {
+        this->selection = mlist.size() - 1;
+      }
+      if ((char)key == 'l') {
+        // lock target
+        auto git = mlist.begin();
+        std::advance(git, this->selection);
+        if (*git != nullptr) {
+          this->psensor->startLock(*git);
+        }
       }
 
-      mvwprintw(this->win, i + 2, 1, "%i   ", i);
-      wclrtoeol(this->win);
-      mvwprintw(this->win, i + 2, 4, "%s         ", object->getType().c_str());
-      mvwprintw(this->win, i + 2, 14, "%s               ",
-                object->getName().c_str());
-      mvwprintw(this->win, i + 2, 30, "%.3f AU       ", opos.magnitude());
-      double angle = opos.angle() / 3.1416 * 180;
-      if (angle < 0) angle += 360;
-      mvwprintw(this->win, i + 2, 42, "%03.0f", angle);
+      // draw object list
+      int i = 0;
+      mvwprintw(this->win, 1, 1, "#  Type      Name            Distance    RB");
+      GameObject* lock_go = this->psensor->getLockTarget();
+      double lock_progress = this->psensor->getLockProgress();
+      for (const auto& object : mlist) {
+        Vec2 opos = object->getPos();
+        opos -= spos;
 
-      if (i == this->selection) {
-        wattroff(this->win, A_STANDOUT);
+        if (i == this->selection) {
+          wattron(this->win, A_STANDOUT);
+        }
+
+        // object it type name
+        mvwprintw(this->win, i + 2, 1, "%2i   ", i);
+        wclrtoeol(this->win);
+        mvwprintw(this->win, i + 2, 4, "%s         ",
+                  object->getType().c_str());
+        mvwprintw(this->win, i + 2, 14, "%s               ",
+                  object->getName().c_str());
+
+        // object distance and relative bearing
+        double magnitude = opos.magnitude();
+        mvwprintw(this->win, i + 2, 30, "%6.3f AU       ", magnitude);
+        double angle = opos.angle() / 3.1416 * 180;
+        mvwprintw(this->win, i + 2, 42, "%03.0f", angle);
+
+        // locking indicators
+        if (lock_go == object) {
+          // locking
+          if (lock_progress == 1) {
+            mvwprintw(this->win, i + 2, 46, "**locked**");
+          } else {
+            mvwprintw(this->win, i + 2, 46, "locking...");
+          }
+        }
+
+        if (i == this->selection) {
+          wattroff(this->win, A_STANDOUT);
+        }
+        i++;
+
+        // limit drawing
+        if (i + 2 >= this->wheight - 2) break;
       }
-      i++;
 
-      // limit drawing
-      if (i + 2 >= this->wheight - 2) break;
+      mvwprintw(this->win, this->wheight - 2, 1,
+                "c - call, l - lock, t - ap target");
+    } else {
+      this->showError(4, Lang::get("program_map_sensoroffline"));
     }
-
-    mvwprintw(this->win, this->wheight - 2, 1,
-              "c - call, l - lock, t - ap target");
+  } else {
+    this->showError(4, Lang::get("program_map_nosensor"));
   }
 
   Program::render(key);
-}
-
-void Sensor::getWindowSize() {
-  getmaxyx(this->win, this->wheight, this->wwidth);
 }

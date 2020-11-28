@@ -33,5 +33,13 @@ class Program {
   Ship* ship;
   ProgramState state;
   bool is_main_window;
+
+  int wwidth;
+  int wheight;
+
+  void getWindowSize();
+  void showError(const int& y, const std::string& error);
+  void showCentered(const int& y, const std::string& msg,
+                    const int& attr = A_NORMAL);
 };
 }  // namespace shipos

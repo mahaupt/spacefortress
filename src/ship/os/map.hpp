@@ -18,11 +18,7 @@ class Map : public Program {
   void render(ConsoleKey key);
 
  private:
-  int wwidth;
-  int wheight;
   int zoom;
   module::Sensor* ptr_sensor;
-
-  void getWindowSize();
 };
 }  // namespace shipos

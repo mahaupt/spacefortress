@@ -20,14 +20,11 @@ class Helm : public Program {
 
  private:
   double rot;
-  int wwidth;
-  int wheight;
   bool autopilot;
   double engpwr;
 
   module::Engine* ptr_engine;
 
-  void getWindowSize();
   void setThrust(const Vec2& thr);
 };
 }  // namespace shipos

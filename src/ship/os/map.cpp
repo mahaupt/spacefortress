@@ -54,19 +54,12 @@ void shipos::Map::render(ConsoleKey key) {
       }
     } else {
       // display sensor offline
-      wattron(this->win, A_BLINK | A_BOLD);
-      std::string error = Lang::get("program_map_sensoroffline");
-      int err_x = round((this->wwidth - error.length()) / 2.0);
-      mvwprintw(this->win, this->wheight - 5, err_x, error.c_str());
-      wattroff(this->win, A_BLINK | A_BOLD);
+      this->showError(this->wheight - 5,
+                      Lang::get("program_map_sensoroffline"));
     }
   } else {
     // display no sensor blinking
-    wattron(this->win, A_BLINK | A_BOLD);
-    std::string error = Lang::get("program_map_nosensor");
-    int err_x = round((this->wwidth - error.length()) / 2.0);
-    mvwprintw(this->win, this->wheight - 5, err_x, error.c_str());
-    wattroff(this->win, A_BLINK | A_BOLD);
+    this->showError(this->wheight - 5, Lang::get("program_map_nosensor"));
   }
 
   // draw ship and pos info
@@ -79,12 +72,4 @@ void shipos::Map::render(ConsoleKey key) {
 
   // render window
   Program::render(key);
-}
-
-/**
- * saves window dimensions
- * window class clears window for us if resized
- */
-void shipos::Map::getWindowSize() {
-  getmaxyx(this->win, this->wheight, this->wwidth);
 }
