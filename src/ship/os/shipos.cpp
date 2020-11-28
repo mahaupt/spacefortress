@@ -42,8 +42,6 @@ void ShipOs::autostart() {
                                              WindowAlignment::TOP, 0.3, 0.5));
   this->addProgram(new shipos::Helm(this->ship, WindowAlignment::RIGHT,
                                     WindowAlignment::BOTTOM, 0.3, 0.5));
-
-  this->windows_tabbed = false;
 }
 
 /**
@@ -55,7 +53,8 @@ void ShipOs::render(ConsoleKey key) {
     this->renderBoot(key);
   }
   if (this->state == ShipOsState::RUNNING) {
-    if (this->main_terminal != 0 && this->windows_tabbed) {
+    if (this->main_terminal != 0 &&
+        this->main_terminal->getState() == shipos::ProgramState::RUN) {
       this->main_terminal->render(key);
     }
   }
@@ -78,17 +77,16 @@ void ShipOs::renderWin(ConsoleKey key) {
     if (key == ConsoleKey::TAB) {
       auto pstate = shipos::ProgramState::HALT;
       auto wstate = WindowState::HIDDEN;
-      if (this->windows_tabbed && this->v_programs.size() > 0) {
+      if (this->main_terminal->getState() != pstate &&
+          this->v_programs.size() > 0) {
         // restore windows, block background terminal
         // only do this when there are actually open windows to display
         pstate = shipos::ProgramState::RUN;
         wstate = WindowState::VISIBLE;
         this->main_terminal->setState(shipos::ProgramState::HALT);
-        this->windows_tabbed = false;
       } else {
         // hide windows, run terminal
         this->main_terminal->setState(shipos::ProgramState::RUN);
-        this->windows_tabbed = true;
         Console::sclear();
       }
       for (size_t i = 0; i < this->v_programs.size(); i++) {
@@ -189,7 +187,7 @@ void ShipOs::garbageCollector() {
       if ((size_t)win > 0 && win != stdscr) {
         delete v_programs[i];
         v_programs.erase(v_programs.begin() + i);
-        Console::sclear();
+        // Console::sclear();
         return;  // return to avoid screwing with the iteration
       }
     }

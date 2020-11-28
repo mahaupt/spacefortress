@@ -82,7 +82,7 @@ void Ship::addShield(double shield) {
 
 Module *Ship::getFirstModule(const std::string &type) {
   for (const auto &module : this->modules) {
-    if (module->getType() == type) {
+    if (module->isOnline() && module->getType() == type) {
       return module;
     }
   }

@@ -2,11 +2,12 @@
 
 using namespace shipos;
 
-Sensor::Sensor(Ship* ship) : Program(ship), selection(0), psensor(0) {}
+Sensor::Sensor(Ship* ship)
+    : Program(ship, "Sensor"), selection(0), psensor(0) {}
 
 Sensor::Sensor(Ship* ship, WindowAlignment alignment_x,
                WindowAlignment alignment_y, double size_x, double size_y)
-    : Program(ship, alignment_x, alignment_y, size_x, size_y),
+    : Program(ship, "Sensor", alignment_x, alignment_y, size_x, size_y),
       selection(0),
       psensor(nullptr) {
   this->window->setTitle(Lang::get("program_sensor"));
@@ -52,6 +53,9 @@ void Sensor::render(ConsoleKey key) {
           this->psensor->startLock(*git);
         }
       }
+      if (key == ConsoleKey::BACKSPACE || key == ConsoleKey::BACKSPACE2) {
+        this->psensor->clearLock();
+      }
 
       // draw object list
       int i = 0;
@@ -96,11 +100,9 @@ void Sensor::render(ConsoleKey key) {
         i++;
 
         // limit drawing
-        if (i + 2 >= this->wheight - 2) break;
+        if (i + 2 >= this->wheight - 1) break;
       }
 
-      mvwprintw(this->win, this->wheight - 2, 1,
-                "c - call, l - lock, t - ap target");
     } else {
       this->showError(4, Lang::get("program_map_sensoroffline"));
     }

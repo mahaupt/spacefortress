@@ -8,6 +8,7 @@
 #include "../modules/dockingport.hpp"
 #include "helm.hpp"
 #include "map.hpp"
+#include "offensive.hpp"
 #include "program.hpp"
 #include "sensor.hpp"
 #include "statusmonitor.hpp"

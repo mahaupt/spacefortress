@@ -17,12 +17,15 @@ enum class ProgramState {
 
 class Program {
  public:
-  Program(Ship* ship);
-  Program(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
-          double size_x, double size_y);
+  Program(Ship* ship, const std::string& type);
+  Program(Ship* ship, const std::string& type, WindowAlignment alignment_x,
+          WindowAlignment alignment_y, double size_x, double size_y);
   virtual ~Program();
+
   virtual void render(ConsoleKey key);
+
   ProgramState getState() { return this->state; }
+  std::string getType() { return this->type; }
   virtual void setState(ProgramState s) { this->state = s; }
   virtual void setWinState(WindowState state);
   WINDOW* getWin() { return this->win; }
@@ -31,6 +34,7 @@ class Program {
   WINDOW* win;
   Window* window;
   Ship* ship;
+  std::string type;
   ProgramState state;
   bool is_main_window;
 

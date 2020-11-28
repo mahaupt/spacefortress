@@ -5,8 +5,12 @@ using namespace shipos;
  * Constructor for using the main window
  * @param ship [description]
  */
-Program::Program(Ship* ship)
-    : win(stdscr), window(0), ship(ship), state(ProgramState::RUN) {}
+Program::Program(Ship* ship, const std::string& type)
+    : win(stdscr),
+      window(0),
+      ship(ship),
+      type(type),
+      state(ProgramState::RUN) {}
 
 /**
  * Constructor for using a self created window
@@ -16,9 +20,10 @@ Program::Program(Ship* ship)
  * @param size_x      [description]
  * @param size_y      [description]
  */
-Program::Program(Ship* ship, WindowAlignment alignment_x,
-                 WindowAlignment alignment_y, double size_x, double size_y)
-    : ship(ship), state(ProgramState::RUN) {
+Program::Program(Ship* ship, const std::string& type,
+                 WindowAlignment alignment_x, WindowAlignment alignment_y,
+                 double size_x, double size_y)
+    : ship(ship), type(type), state(ProgramState::RUN) {
   this->window = new Window(alignment_x, alignment_y, size_x, size_y);
   this->win = this->window->getWin();
 }

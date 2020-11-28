@@ -1,10 +1,10 @@
 #include "map.hpp"
 
-shipos::Map::Map(Ship* ship) : Program(ship), zoom(5), ptr_sensor(0) {}
+shipos::Map::Map(Ship* ship) : Program(ship, "Map"), zoom(5), ptr_sensor(0) {}
 
 shipos::Map::Map(Ship* ship, WindowAlignment alignment_x,
                  WindowAlignment alignment_y, double size_x, double size_y)
-    : Program(ship, alignment_x, alignment_y, size_x, size_y),
+    : Program(ship, "Map", alignment_x, alignment_y, size_x, size_y),
       zoom(5),
       ptr_sensor(nullptr) {
   this->window->setTitle(Lang::get("program_map"));

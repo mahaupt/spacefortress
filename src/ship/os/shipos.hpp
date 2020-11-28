@@ -43,7 +43,6 @@ class ShipOs {
 
   std::vector<shipos::Program *> v_programs;
   shipos::Program *main_terminal;
-  bool windows_tabbed;
 
   void renderBoot(ConsoleKey key);
   void garbageCollector();

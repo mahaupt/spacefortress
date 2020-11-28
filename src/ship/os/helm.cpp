@@ -2,11 +2,12 @@
 
 using namespace shipos;
 
-Helm::Helm(Ship* ship) : Program(ship), autopilot(false), ptr_engine(0) {}
+Helm::Helm(Ship* ship)
+    : Program(ship, "Helm"), autopilot(false), ptr_engine(0) {}
 
 Helm::Helm(Ship* ship, WindowAlignment alignment_x, WindowAlignment alignment_y,
            double size_x, double size_y)
-    : Program(ship, alignment_x, alignment_y, size_x, size_y),
+    : Program(ship, "Helm", alignment_x, alignment_y, size_x, size_y),
       autopilot(false),
       engpwr(1),
       ptr_engine(nullptr) {

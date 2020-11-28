@@ -16,7 +16,11 @@ std::vector<GameObject *> *Sensor::getScannedObjects() {
 }
 
 void Sensor::simulate(double delta_time, Ship *ship) {
-  if (!this->online) return;
+  if (!this->online) {
+    this->lock_progress = 0;
+    this->plocked_object = nullptr;
+    return;
+  }
   this->ownship = ship;
 
   // draw energy
@@ -42,6 +46,7 @@ void Sensor::simulate(double delta_time, Ship *ship) {
 
 // locking functions
 void Sensor::startLock(GameObject *go) {
+  if (!this->online) return;
   this->plocked_object = go;
   this->lock_progress = 0;
 }

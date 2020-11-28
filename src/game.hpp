@@ -18,6 +18,7 @@
 #include "ship/modules/sensor.hpp"
 #include "ship/modules/shieldgenerator.hpp"
 #include "ship/modules/shipai.hpp"
+#include "ship/modules/weapon.hpp"
 #include "ship/os/shipos.hpp"
 #include "ship/ship.hpp"
 #include "tools/console.hpp"

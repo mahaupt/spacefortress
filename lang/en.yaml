@@ -39,6 +39,7 @@ program_terminal_turnoffline: "shutting down all modules..."
 program_terminal_killall: "Terminating all programs"
 program_terminal_nav: "starting nav..."
 program_terminal_sensors: "starting sensors..."
+program_terminal_offensive: "starting offensive..."
 program_terminal_newprog_error: "Error, too many programs open at once"
 
 program_smon: Status Monitor
@@ -51,3 +52,9 @@ program_smon_installed: installed
 program_smon_docked: "**docked**"
 
 program_sensor: Sensors
+
+program_offensive: Offensive
+program_offensive_weapons: "Weapons:"
+program_offensive_weapons_error: "NO WEAPON MODULES FOUND"
+program_offensive_tgt: "Target:"
+program_offensive_none: "NONE"

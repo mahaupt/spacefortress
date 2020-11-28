@@ -1,10 +1,11 @@
 #include "statusmonitor.hpp"
 
-shipos::StatusMonitor::StatusMonitor(Ship* ship) : Program(ship) {}
+shipos::StatusMonitor::StatusMonitor(Ship* ship)
+    : Program(ship, "StatusMonitor") {}
 shipos::StatusMonitor::StatusMonitor(Ship* ship, WindowAlignment alignment_x,
                                      WindowAlignment alignment_y, double size_x,
                                      double size_y)
-    : Program(ship, alignment_x, alignment_y, size_x, size_y) {
+    : Program(ship, "StatusMonitor", alignment_x, alignment_y, size_x, size_y) {
   this->window->setTitle(Lang::get("program_smon"));
 }
 
