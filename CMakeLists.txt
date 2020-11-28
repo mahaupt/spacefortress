@@ -40,3 +40,9 @@ target_link_libraries(
     yaml-cpp
     Threads::Threads
 )
+
+#copy config and language files
+#file(COPY lang DESTINATION .)
+configure_file(lang/en.yaml lang/en.yaml COPYONLY)
+configure_file(lang/de.yaml lang/de.yaml COPYONLY)
+configure_file(config.yaml config.yaml COPYONLY)
