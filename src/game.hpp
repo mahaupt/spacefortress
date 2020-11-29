@@ -40,4 +40,5 @@ class Game {
   std::vector<GameObject *> game_objects;
 
   double calcSimTime();
+  void garbageCollector();
 };

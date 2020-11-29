@@ -67,13 +67,18 @@ void Game::start() {
 }
 
 void Game::render(ConsoleKey key) {
+  // simulate
   double sim_time = this->calcSimTime();
   this->s.simulate(sim_time);
   for (const auto &gobject : this->game_objects) {
     gobject->simulate(sim_time);
   }
 
+  // render
   this->os.render(key);
+
+  // garbage collector
+  this->garbageCollector();
 }
 
 void Game::renderWin(ConsoleKey key) { this->os.renderWin(key); }
@@ -88,4 +93,20 @@ double Game::calcSimTime() {
   last_start_time = start_time;
 
   return sim_time;
+}
+
+/**
+ * Searches for dead game objects and removes them from game
+ */
+void Game::garbageCollector() {
+  auto it = this->game_objects.begin();
+  while (it != this->game_objects.end()) {
+    // is dead object?
+    if (!(*it)->isAlive()) {
+      delete (*it);
+      it = this->game_objects.erase(it);
+    } else {
+      it++;
+    }
+  }
 }

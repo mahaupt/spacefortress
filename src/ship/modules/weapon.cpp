@@ -48,8 +48,8 @@ void Weapon::simulate(double delta_time, Ship *ship) {
         tgt != nullptr) {
       // create shell and apply energy
       auto gobjects = ship->getGameObjects();
-      gobjects->push_back(
-          new go::Projectile("Ballistic", ship, tgt, this->output_vel));
+      gobjects->push_back(new go::Projectile(
+          ship->getGameObjects(), "Ballistic", ship, tgt, this->output_vel));
 
       // discharge
       this->charge -= this->shoot_energy;

@@ -30,12 +30,18 @@ class GameObject {
   void setVel(const Vec2 &v) { this->vel = v; }
   Vec2 getForce() { return this->force; }
   void setForce(const Vec2 &force) { this->force = force; }
+  bool isAlive() { return this->alive; }
 
   // simulation
   void addForce(const Vec2 &force);
   virtual void simulate(double delta_time);
 
+  // manipulation
+  virtual void hit(double energy){};
+
  protected:
+  bool alive;
+  double mass;
   Vec2 pos;
   double rot;
   bool is_fixed;

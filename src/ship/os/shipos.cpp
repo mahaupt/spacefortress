@@ -178,18 +178,15 @@ void ShipOs::renderBoot(ConsoleKey key) {
  * Also closes empty windows
  */
 void ShipOs::garbageCollector() {
-  for (size_t i = 0; i < this->v_programs.size(); i++) {
-    // terminated program
-    if (v_programs[i]->getState() == shipos::ProgramState::TERM) {
-      WINDOW *win = v_programs[i]->getWin();
+  auto it = this->v_programs.begin();
+  while (it != this->v_programs.end()) {
+    if ((*it)->getState() == shipos::ProgramState::TERM) {
+      delete *it;
+      it = this->v_programs.erase(it);
 
-      // try to close window
-      if ((size_t)win > 0 && win != stdscr) {
-        delete v_programs[i];
-        v_programs.erase(v_programs.begin() + i);
-        // Console::sclear();
-        return;  // return to avoid screwing with the iteration
-      }
+      // Console::sclear();
+    } else {
+      it++;
     }
   }
 }

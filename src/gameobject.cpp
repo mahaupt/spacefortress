@@ -7,7 +7,9 @@ GameObject::GameObject(double x, double y, bool fixed)
 
 GameObject::GameObject(const std::string &name, const std::string &type,
                        double x, double y, bool fixed)
-    : pos(x, y),
+    : alive(true),
+      mass(1000),
+      pos(x, y),
       rot(0),
       is_fixed(fixed),
       is_dockable(false),
@@ -23,11 +25,11 @@ void GameObject::simulate(double delta_time) {
   }
 
   // apply velocity from force @todo consider mass
-  this->vel += this->force * delta_time / 1000.0;
+  this->vel += this->force * delta_time / this->mass;
 
   // set maximum speed
   if (this->getType() != "Projectile") {
-    double vel = this->vel.magnitude() * 1000.0;
+    double vel = this->vel.magnitude() * 1000.0;  // mAU/s
     if (vel > 10.0) {
       double red = 10.0 / vel;
       this->vel *= red;
