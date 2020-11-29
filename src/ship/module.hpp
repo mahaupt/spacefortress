@@ -17,7 +17,7 @@ class Module {
 
   // manipulation
   virtual void simulate(double delta_time, Ship *ship){};
-  double getEnergy(double energy_needed);
+  virtual double getEnergy(double energy_needed);
 
  protected:
   bool online;

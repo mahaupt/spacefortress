@@ -63,6 +63,7 @@ void Sensor::render(ConsoleKey key) {
       GameObject* lock_go = this->psensor->getLockTarget();
       double lock_progress = this->psensor->getLockProgress();
       for (const auto& object : mlist) {
+        if (object->getType() == "Projectile") continue;
         Vec2 opos = object->getPos();
         opos -= spos;
 

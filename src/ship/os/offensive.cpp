@@ -67,13 +67,28 @@ void Offensive::render(ConsoleKey key) {
   for (const auto& module : *(this->ship->getModules())) {
     if (module->getType() == "Weapon") {
       if (this->selection == i) {
+        // standout
         wattron(this->win, A_STANDOUT);
+
+        // process keyboard commands
+        if ((char)key == 'n') {
+          bool a = ((module::Weapon*)module)->getActive();
+          ((module::Weapon*)module)->setActive(!a);
+        }
+        if ((char)key == 'm') {
+          bool a = ((module::Weapon*)module)->getAutofire();
+          ((module::Weapon*)module)->setAutofire(!a);
+        }
       }
 
       mvwprintw(this->win, i + 6, 1, "%s          ", module->getName().c_str());
 
       // module is online
       if (module->isOnline()) {
+        mvwprintw(this->win, i + 6, 20, "l:%i  a:%i  c:%3.0f%%",
+                  ((module::Weapon*)module)->getActive(),
+                  ((module::Weapon*)module)->getAutofire(),
+                  ((module::Weapon*)module)->getCharge() * 100);
       } else {
         mvwprintw(this->win, i + 6, 20, "**offline**");
       }

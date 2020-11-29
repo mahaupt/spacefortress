@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../modules/sensor.hpp"
+#include "../modules/weapon.hpp"
 #include "program.hpp"
 
 namespace shipos {

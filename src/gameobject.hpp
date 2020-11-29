@@ -27,6 +27,7 @@ class GameObject {
   double getRot() { return this->rot; }
   void setRot(const double &rot) { this->rot = rot; }
   Vec2 getVel() { return this->vel; }
+  void setVel(const Vec2 &v) { this->vel = v; }
   Vec2 getForce() { return this->force; }
   void setForce(const Vec2 &force) { this->force = force; }
 

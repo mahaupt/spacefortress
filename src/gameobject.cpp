@@ -26,10 +26,12 @@ void GameObject::simulate(double delta_time) {
   this->vel += this->force * delta_time / 1000.0;
 
   // set maximum speed
-  double vel = this->vel.magnitude() * 1000.0;
-  if (vel > 10.0) {
-    double red = 10.0 / vel;
-    this->vel *= red;
+  if (this->getType() != "Projectile") {
+    double vel = this->vel.magnitude() * 1000.0;
+    if (vel > 10.0) {
+      double red = 10.0 / vel;
+      this->vel *= red;
+    }
   }
 
   // reset tick force
