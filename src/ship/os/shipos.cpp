@@ -49,6 +49,14 @@ void ShipOs::autostart() {
  * @param key Console Key
  */
 void ShipOs::render(ConsoleKey key) {
+  // check ship status
+  if (this->ship == nullptr || !this->ship->isAlive()) {
+    this->ship = nullptr;
+    Console::sclear();
+    printw("your ship has been destroyed");
+    return;
+  }
+
   if (this->state == ShipOsState::BOOTING) {
     this->renderBoot(key);
   }
@@ -65,6 +73,8 @@ void ShipOs::render(ConsoleKey key) {
  * @param key [description]
  */
 void ShipOs::renderWin(ConsoleKey key) {
+  if (this->ship == nullptr) return;
+
   // render programs
   if (this->state == ShipOsState::RUNNING) {
     for (const auto &program : this->v_programs) {

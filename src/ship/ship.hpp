@@ -34,6 +34,9 @@ class Ship : public GameObject {
   // module functions
   double getEnergy(double energy_needed);
   void addShield(double shield);
+  
+  //external manipulation
+  void hit(double energy);
 
  private:
   double hull;

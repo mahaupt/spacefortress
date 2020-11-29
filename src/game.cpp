@@ -11,7 +11,7 @@ Game::Game() : s("Omega", 100, &game_objects), os(&s) {
   this->s.addModule(
       new module::ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
   this->s.addModule(new module::Engine("Engine MK I", 1, 1, 2));
-  this->s.addModule(new module::Weapon("S Projectile", 2, 0.1, 0.1, 10));
+  this->s.addModule(new module::Weapon("S Projectile", 1, 0.5, 0.1, 1));
   this->s.addModule(new module::Capacitor("Capacitor MK I", 1, 100, 1, 10));
 
   // add planets

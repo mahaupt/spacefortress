@@ -250,6 +250,10 @@ void shipos::Terminal::processCmd(std::string cmd) {
         }
         break;
       }
+      case str2int("selfdestruct"):
+        this->ship->hit(99999999);
+        this->setState(ProgramState::HALT);
+        break;
       default:
         terminal_lines.push_back(cmd + ": " +
                                  Lang::get("program_terminal_notfound"));

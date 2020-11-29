@@ -29,6 +29,11 @@ void Ship::simulate(double delta_time) {
 
 void Ship::addModule(Module *m) { this->modules.push_back(m); }
 
+/**
+ * Draws energy fom energy providing modules (Generator, Capacitor)
+ * @param  energy_needed the amount of energy needed
+ * @return               the amount of energy available and removed
+ */
 double Ship::getEnergy(double energy_needed) {
   double energy_drawn = 0;
 
@@ -60,6 +65,10 @@ double Ship::getEnergyLevel() {
   return total_energy_avbl;
 }
 
+/**
+ * calculates total energy capacity of ship
+ * @return Energy Capacity
+ */
 double Ship::getEnergyTotalCapacity() {
   double capacity = 0;
 
@@ -72,6 +81,11 @@ double Ship::getEnergyTotalCapacity() {
   return capacity;
 }
 
+/**
+ * adds a shield amount to the ship
+ * called from shield generator
+ * @param shield Amount of shield
+ */
 void Ship::addShield(double shield) {
   this->shield += shield;
 
@@ -80,6 +94,11 @@ void Ship::addShield(double shield) {
   }
 }
 
+/**
+ * Returns pointer first online module with given module type
+ * @param  type Type of module
+ * @return      Module pointer
+ */
 Module *Ship::getFirstModule(const std::string &type) {
   for (const auto &module : this->modules) {
     if (module->isOnline() && module->getType() == type) {
@@ -87,4 +106,26 @@ Module *Ship::getFirstModule(const std::string &type) {
     }
   }
   return nullptr;
+}
+
+/**
+ * Damage calculating function
+ * @param energy impact energy of projectile
+ */
+void Ship::hit(double energy) {
+  // shield
+  double e = energy;
+  e -= this->shield;
+  this->shield -= energy;
+  if (e < 0) e = 0;
+
+  // hull
+  this->hull -= e;
+
+  // modules
+
+  // destroy ship:
+  if (this->hull <= 0) {
+    this->alive = false;
+  }
 }
