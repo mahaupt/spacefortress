@@ -9,6 +9,7 @@ sf
 
 #os specific
 .DS_Store
+.ccls*
 
 #game logs
 log.txt
