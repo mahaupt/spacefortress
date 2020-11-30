@@ -1,16 +1,12 @@
 #pragma once
 
-#ifdef WIN32
-
-#else
-#include <sys/socket.h>
-#endif
+#include "log.hpp"
 
 class Server {
  public:
   Server();
   ~Server();
-  void bind();
+  bool bind();
 
  private:
   int isocket;
