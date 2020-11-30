@@ -8,6 +8,7 @@
 #include "sensor.hpp"
 
 namespace module {
+class Sensor;
 enum class WeaponType {};
 
 class Weapon : public Module {

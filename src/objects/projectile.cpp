@@ -40,7 +40,7 @@ void Projectile::simulate(double delta_time) {
       toobj -= pos;
 
       // calc hit
-      if (toobj.magnitude() < 0.002) {
+      if (toobj.magnitude() < 0.003) {
         object->hit(this->mass * this->getVel().magnitude());
         this->alive = false;  // mark game object as dead
       }

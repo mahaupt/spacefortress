@@ -1,18 +1,25 @@
 #include "game.hpp"
 
-Game::Game() : s("Omega", 100, &game_objects), os(&s) {
-  // add player ship
-  this->s.setPos(Vec2(-1, 0.1));
-  this->s.addModule(new module::Generator("Generator MK I", 1, 1));
-  this->s.addModule(new module::Lifesupport("LifeSupport", 1, 3));
-  this->s.addModule(new module::Dockingport("Docking port", 1));
-  this->s.addModule(new module::Sensor("SR Sensor 2.7", 1));
-  this->s.addModule(new module::Cargo("Cargo hold", 1, 1000));
-  this->s.addModule(
-      new module::ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
-  this->s.addModule(new module::Engine("Engine MK I", 1, 1, 2));
-  this->s.addModule(new module::Weapon("S Projectile", 1, 0.5, 0.1, 1));
-  this->s.addModule(new module::Capacitor("Capacitor MK I", 1, 100, 1, 10));
+Game::Game() : running(false) { Log::info("game module loaded"); }
+
+/**
+ * game objects are auto freed
+ */
+Game::~Game() {}
+
+/**
+ * main loading function
+ */
+void Game::createGameWorld() {
+  this->running = true;
+
+  // add playership
+  auto playership = std::make_shared<Ship>("Omega", 100, &game_objects);
+  playership->setPos(Vec2(-1, 0.1));
+  playership->addStandardModules();
+  this->pshipos = std::make_shared<ShipOs>(playership.get());
+  this->pship = playership;
+  this->game_objects.push_back(playership);
 
   // add planets
   this->game_objects.push_back(std::make_shared<go::Planet>("Rix", 1, 1));
@@ -35,49 +42,47 @@ Game::Game() : s("Omega", 100, &game_objects), os(&s) {
     auto friendly_ship = std::make_shared<Ship>("Camera", 100, &game_objects);
     friendly_ship->setPos(
         Vec2(distribution(generator), distribution(generator)));
-    friendly_ship->addModule(new module::Generator("Generator MK I", 1, 1));
+    friendly_ship->addStandardModules();
     friendly_ship->addModule(new module::ShipAi("Ship AI", 1));
-    friendly_ship->addModule(new module::Lifesupport("LifeSupport", 1, 3));
-    friendly_ship->addModule(new module::Dockingport("Docking port", 1));
-    friendly_ship->addModule(new module::Sensor("SR Sensor 2.7", 1));
-    friendly_ship->addModule(new module::Cargo("Cargo hold", 1, 1000));
-    friendly_ship->addModule(
-        new module::ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
-    friendly_ship->addModule(new module::Engine("Engine MK I", 1, 1, 2));
-    friendly_ship->addModule(
-        new module::Capacitor("Capacitor MK I", 1, 100, 1, 10));
     this->game_objects.push_back(friendly_ship);
   }
 
-  Log::info("game module loaded");
+  Log::info("game objects created");
+}
+
+void Game::start() {
+  this->createGameWorld();
+  this->pshipos->boot();
+  Log::info("game start");
 }
 
 /**
- * game objects are auto freed
+ * cleanup game memory
  */
-Game::~Game() {}
-
-void Game::start() {
-  this->os.boot();
-  Log::info("game start");
+void Game::stop() {
+  this->running = false;
+  this->pshipos.reset();
+  this->game_objects.clear();
+  Log::info("game stop");
 }
 
 void Game::render(ConsoleKey key) {
   // simulate
   double sim_time = this->calcSimTime();
-  this->s.simulate(sim_time);
   for (const auto &gobject : this->game_objects) {
     gobject->simulate(sim_time);
   }
 
   // render
-  this->os.render(key);
+  this->pshipos->render(key);
+}
+
+void Game::renderWin(ConsoleKey key) {
+  this->pshipos->renderWin(key);
 
   // garbage collector
   this->garbageCollector();
 }
-
-void Game::renderWin(ConsoleKey key) { this->os.renderWin(key); }
 
 double Game::calcSimTime() {
   static auto last_start_time = std::chrono::steady_clock::now();

@@ -1,4 +1,5 @@
 #include "shipai.hpp"
+
 using namespace module;
 
 ShipAi::ShipAi(const std::string& name, double hull)
