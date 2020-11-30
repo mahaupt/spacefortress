@@ -10,6 +10,7 @@ Console::Console() {
   noecho();
   keypad(stdscr, TRUE);
   start_color();
+  this->initColors();
   this->showCursor(false);
   this->sclear();
 
@@ -76,6 +77,10 @@ void Console::showCursor(bool show) {
 };
 
 void Console::initColors() {
+  init_pair((short int)ConsoleColor::WHITE, COLOR_WHITE, COLOR_BLACK);
   init_pair((short int)ConsoleColor::YELLOW, COLOR_YELLOW, COLOR_BLACK);
   init_pair((short int)ConsoleColor::RED, COLOR_RED, COLOR_BLACK);
+  init_pair((short int)ConsoleColor::MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+
+  init_pair((short int)ConsoleColor::GREEN, COLOR_GREEN, COLOR_BLACK);
 }
