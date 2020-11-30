@@ -2,12 +2,13 @@
 using namespace module;
 
 ShipAi::ShipAi(const std::string& name, double hull)
-    : Module(name, "AI", hull), p_target(0) {}
+    : Module(name, "AI", hull) {}
 
 void ShipAi::simulate(double delta_time, Ship* ship) {
   if (!this->online) return;
 
-  if (this->p_target == 0) {
+  auto target = this->p_target.lock();
+  if (!target) {
     this->findTarget(ship);
     return;
   }
@@ -21,7 +22,7 @@ void ShipAi::simulate(double delta_time, Ship* ship) {
   Vec2 spos = ship->getPos();
 
   // get target pos
-  Vec2 tpos = this->p_target->getPos();
+  Vec2 tpos = target->getPos();
 
   // vector to target
   Vec2 vtgt = tpos - spos;
@@ -29,7 +30,7 @@ void ShipAi::simulate(double delta_time, Ship* ship) {
 
   // too close - abort and search new target (only for test)
   if (dist <= 0.01) {
-    this->p_target = 0;
+    this->p_target.reset();
     return;
   }
 
@@ -52,7 +53,7 @@ void ShipAi::findTarget(Ship* ship) {
 
   // test : find farthest planet
   double farthest_dist = 0;
-  GameObject* farthest_go = 0;
+  std::weak_ptr<GameObject> farthest_go;
 
   for (const auto& object : *(ship->getGameObjects())) {
     if (object->getType() == "Planet") {
@@ -68,7 +69,7 @@ void ShipAi::findTarget(Ship* ship) {
   }
 
   // pick farthest object
-  if (farthest_go != 0) {
+  if (!farthest_go.expired()) {
     this->p_target = farthest_go;
   }
 }

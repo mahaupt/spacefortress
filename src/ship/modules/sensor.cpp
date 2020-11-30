@@ -3,12 +3,12 @@
 using namespace module;
 
 Sensor::Sensor(const std::string &name, double hull)
-    : Module(name, "Sensor", hull), ownship(nullptr), plocked_object(nullptr) {}
+    : Module(name, "Sensor", hull), ownship(nullptr) {}
 
 /**
  * returns list of objects that are in sensor range, or nullpointer
  */
-std::vector<GameObject *> *Sensor::getScannedObjects() {
+std::vector<std::shared_ptr<GameObject>> *Sensor::getScannedObjects() {
   if (!this->online) return nullptr;
   if (this->ownship == 0) return nullptr;
 
@@ -18,7 +18,7 @@ std::vector<GameObject *> *Sensor::getScannedObjects() {
 void Sensor::simulate(double delta_time, Ship *ship) {
   if (!this->online) {
     this->lock_progress = 0;
-    this->plocked_object = nullptr;
+    this->plocked_object.reset();
     return;
   }
   this->ownship = ship;
@@ -34,7 +34,9 @@ void Sensor::simulate(double delta_time, Ship *ship) {
   }
 
   // process target lock
-  if (this->plocked_object != nullptr && this->lock_progress < 1) {
+  if (this->plocked_object.expired()) {
+    this->lock_progress = 0;
+  } else if (this->lock_progress < 1) {
     this->lock_progress += delta_time / 3.0;
     if (this->lock_progress > 1) {
       this->lock_progress = 1;
@@ -45,12 +47,12 @@ void Sensor::simulate(double delta_time, Ship *ship) {
 }
 
 // locking functions
-void Sensor::startLock(GameObject *go) {
+void Sensor::startLock(const std::shared_ptr<GameObject> &go) {
   if (!this->online) return;
   this->plocked_object = go;
   this->lock_progress = 0;
 }
 void Sensor::clearLock() {
-  this->plocked_object = nullptr;
+  this->plocked_object.reset();
   this->lock_progress = 0;
 }

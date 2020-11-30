@@ -21,10 +21,10 @@ void Offensive::render(ConsoleKey key) {
 
   // target information
   if (this->psensor != nullptr) {
-    GameObject* lock_obj = this->psensor->getLockTarget();
+    auto lock_obj = this->psensor->getLockTarget().lock();
     double lock_prog = this->psensor->getLockProgress();
     mvwprintw(this->win, 1, 1, Lang::get("program_offensive_tgt").c_str());
-    if (lock_obj != nullptr) {
+    if (lock_obj) {
       // name, locking %
       mvwprintw(this->win, 2, 1, "%s", lock_obj->getName().c_str());
       wclrtoeol(this->win);

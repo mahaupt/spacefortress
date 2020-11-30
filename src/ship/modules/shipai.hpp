@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <memory>
 
 #include "../../gameobject.hpp"
 #include "../../tools/vec2.hpp"
@@ -15,7 +16,7 @@ class ShipAi : public Module {
   void simulate(double delta_time, Ship* ship);
 
  private:
-  GameObject* p_target;
+  std::weak_ptr<GameObject> p_target;
   Engine* p_engine;
 
   void findTarget(Ship* ship);

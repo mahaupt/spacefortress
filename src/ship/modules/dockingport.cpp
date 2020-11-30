@@ -14,7 +14,7 @@ void Dockingport::simulate(double delta_time, Ship* ship) {
 
   // Reset vars
   this->can_dock = false;
-  this->dockable_object = 0;
+  this->p_dockable_object.reset();
   if (!this->online) return;
 
   // get ship position
@@ -34,7 +34,7 @@ void Dockingport::simulate(double delta_time, Ship* ship) {
     if (opos.magnitude() < 0.01) {
       // dockable
       this->can_dock = true;
-      this->dockable_object = object;
+      this->p_dockable_object = object;
       return;
     }
   }
@@ -43,13 +43,16 @@ void Dockingport::simulate(double delta_time, Ship* ship) {
 bool Dockingport::dock() {
   if (this->ownship == 0) return false;
   if (!this->can_dock) return false;
-  if (this->dockable_object == 0) return false;
+
+  // try to get game object
+  auto go = this->p_dockable_object.lock();
+  if (!go) return false;
 
   // set game object to fixed
   this->ownship->setFixed(true);
 
   // sync positions
-  Vec2 pos = this->dockable_object->getPos();
+  Vec2 pos = go->getPos();
   this->ownship->setPos(pos);
 
   this->docked = true;

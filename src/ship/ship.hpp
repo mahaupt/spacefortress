@@ -1,6 +1,7 @@
 #pragma once
 #include <curses.h>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -11,7 +12,7 @@
 class Ship : public GameObject {
  public:
   Ship(const std::string &name, double hull,
-       std::vector<GameObject *> *ptr_gobjects);
+       std::vector<std::shared_ptr<GameObject>> *ptr_gobjects);
   ~Ship();
 
   // info functions
@@ -22,7 +23,9 @@ class Ship : public GameObject {
   size_t getModuleCount() { return this->modules.size(); }
   double getEnergyLevel();
   double getEnergyTotalCapacity();
-  std::vector<GameObject *> *getGameObjects() { return this->ptr_gobjects; }
+  std::vector<std::shared_ptr<GameObject>> *getGameObjects() {
+    return this->ptr_gobjects;
+  }
   std::vector<Module *> *getModules() { return &(this->modules); }
   bool isDocked() { return this->is_fixed; }
   Module *getFirstModule(const std::string &type);
@@ -34,8 +37,8 @@ class Ship : public GameObject {
   // module functions
   double getEnergy(double energy_needed);
   void addShield(double shield);
-  
-  //external manipulation
+
+  // external manipulation
   void hit(double energy);
 
  private:
@@ -45,5 +48,5 @@ class Ship : public GameObject {
   double max_shield;
 
   std::vector<Module *> modules;
-  std::vector<GameObject *> *ptr_gobjects;
+  std::vector<std::shared_ptr<GameObject>> *ptr_gobjects;
 };

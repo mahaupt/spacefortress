@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <memory>
 #include <vector>
 
 #include "../../gameobject.hpp"
@@ -22,6 +23,6 @@ class Dockingport : public Module {
   Ship* ownship;
   bool docked;
   bool can_dock;
-  GameObject* dockable_object;
+  std::weak_ptr<GameObject> p_dockable_object;
 };
 }  // namespace module

@@ -15,23 +15,24 @@ Game::Game() : s("Omega", 100, &game_objects), os(&s) {
   this->s.addModule(new module::Capacitor("Capacitor MK I", 1, 100, 1, 10));
 
   // add planets
-  this->game_objects.push_back(new go::Planet("Rix", 1, 1));
-  this->game_objects.push_back(new go::Planet("Lira", 2, -1));
-  this->game_objects.push_back(new go::Planet("Omecron", -3, 0));
-  this->game_objects.push_back(new go::Planet("Deca", -4, -2));
-  this->game_objects.push_back(new go::Planet("Zyppr", 5, 2));
+  this->game_objects.push_back(std::make_shared<go::Planet>("Rix", 1, 1));
+  this->game_objects.push_back(std::make_shared<go::Planet>("Lira", 2, -1));
+  this->game_objects.push_back(std::make_shared<go::Planet>("Omecron", -3, 0));
+  this->game_objects.push_back(std::make_shared<go::Planet>("Deca", -4, -2));
+  this->game_objects.push_back(std::make_shared<go::Planet>("Zyppr", 5, 2));
 
   // add star
-  this->game_objects.push_back(new go::Star("Mycra", 0, 0));
+  this->game_objects.push_back(std::make_shared<go::Star>("Mycra", 0, 0));
 
   // add Station
-  this->game_objects.push_back(new go::Station("Mycra Outpost", -1, 0));
+  this->game_objects.push_back(
+      std::make_shared<go::Station>("Mycra Outpost", -1, 0));
 
   // add some other ships
   std::default_random_engine generator;
   std::uniform_real_distribution<double> distribution(-8.0, 8.0);
   for (int i = 0; i < 5; i++) {
-    Ship *friendly_ship = new Ship("Camera", 100, &game_objects);
+    auto friendly_ship = std::make_shared<Ship>("Camera", 100, &game_objects);
     friendly_ship->setPos(
         Vec2(distribution(generator), distribution(generator)));
     friendly_ship->addModule(new module::Generator("Generator MK I", 1, 1));
@@ -52,14 +53,9 @@ Game::Game() : s("Omega", 100, &game_objects), os(&s) {
 }
 
 /**
- * free all game objects
+ * game objects are auto freed
  */
-Game::~Game() {
-  for (const auto &gobject : this->game_objects) {
-    delete gobject;
-  }
-  this->game_objects.clear();
-}
+Game::~Game() {}
 
 void Game::start() {
   this->os.boot();
@@ -103,7 +99,6 @@ void Game::garbageCollector() {
   while (it != this->game_objects.end()) {
     // is dead object?
     if (!(*it)->isAlive()) {
-      delete (*it);
       it = this->game_objects.erase(it);
     } else {
       it++;

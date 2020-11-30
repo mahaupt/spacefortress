@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <future>
+#include <memory>
 #include <random>
 #include <thread>
 #include <vector>
@@ -37,7 +38,7 @@ class Game {
   Ship s;
   ShipOs os;
 
-  std::vector<GameObject *> game_objects;
+  std::vector<std::shared_ptr<GameObject>> game_objects;
 
   double calcSimTime();
   void garbageCollector();

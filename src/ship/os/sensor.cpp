@@ -21,12 +21,13 @@ void Sensor::render(ConsoleKey key) {
 
   // render list of objects
   if (this->psensor != nullptr) {
-    std::vector<GameObject*>* v = this->psensor->getScannedObjects();
+    auto v = this->psensor->getScannedObjects();
     if (v != nullptr) {
       // fetch and sort object list from sensor
       Vec2 spos = this->ship->getPos();
-      std::list<GameObject*> mlist(v->begin(), v->end());
-      mlist.sort([spos](GameObject* a, GameObject* b) {
+      std::list<std::shared_ptr<GameObject>> mlist(v->begin(), v->end());
+      mlist.sort([spos](const std::shared_ptr<GameObject>& a,
+                        const std::shared_ptr<GameObject>& b) {
         Vec2 posa = a->getPos();
         Vec2 posb = b->getPos();
         posa -= spos;
@@ -60,7 +61,7 @@ void Sensor::render(ConsoleKey key) {
       // draw object list
       int i = 0;
       mvwprintw(this->win, 1, 1, "#  Type      Name            Distance    RB");
-      GameObject* lock_go = this->psensor->getLockTarget();
+      auto lock_go = this->psensor->getLockTarget().lock();
       double lock_progress = this->psensor->getLockProgress();
       for (const auto& object : mlist) {
         if (object->getType() == "Projectile") continue;

@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <memory>
 
 #include "../modules/sensor.hpp"
 #include "program.hpp"

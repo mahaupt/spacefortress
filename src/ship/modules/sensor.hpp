@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "../../gameobject.hpp"
@@ -12,18 +13,18 @@ class Sensor : public Module {
   Sensor(const std::string &name, double hull);
 
   void simulate(double delta_time, Ship *ship);
-  std::vector<GameObject *> *getScannedObjects();
+  std::vector<std::shared_ptr<GameObject>> *getScannedObjects();
 
   // locking targets
-  void startLock(GameObject *go);
+  void startLock(const std::shared_ptr<GameObject> &go);
   void clearLock();
-  GameObject *getLockTarget() { return this->plocked_object; }
+  std::weak_ptr<GameObject> getLockTarget() { return plocked_object; }
   double getLockProgress() { return this->lock_progress; }
 
  private:
   Ship *ownship;
 
-  GameObject *plocked_object;
+  std::weak_ptr<GameObject> plocked_object;
   double lock_progress;
 };
 }  // namespace module

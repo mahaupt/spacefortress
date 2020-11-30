@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "../../objects/projectile.hpp"
 #include "../module.hpp"
 #include "../ship.hpp"

@@ -24,10 +24,10 @@ void Weapon::simulate(double delta_time, Ship *ship) {
     this->psensor = (Sensor *)ship->getFirstModule("Sensor");
 
   // check target
-  GameObject *tgt = nullptr;
+  std::shared_ptr<GameObject> tgt;
   if (this->psensor != nullptr) {
     if (this->psensor->getLockProgress() >= 1) {
-      tgt = this->psensor->getLockTarget();
+      tgt = this->psensor->getLockTarget().lock();
     }
   }
 
@@ -44,11 +44,10 @@ void Weapon::simulate(double delta_time, Ship *ship) {
 
     // enough energy?
     // cooldown completed? -> shoot
-    if (this->charge >= this->shoot_energy && this->cooldown <= 0 &&
-        tgt != nullptr) {
+    if (this->charge >= this->shoot_energy && this->cooldown <= 0 && tgt) {
       // create shell and apply energy
       auto gobjects = ship->getGameObjects();
-      gobjects->push_back(new go::Projectile(
+      gobjects->push_back(std::make_shared<go::Projectile>(
           ship->getGameObjects(), "Ballistic", ship, tgt, this->output_vel));
 
       // discharge

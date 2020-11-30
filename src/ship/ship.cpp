@@ -1,7 +1,7 @@
 #include "ship.hpp"
 
 Ship::Ship(const std::string &name, double hull,
-           std::vector<GameObject *> *ptr_gobjects)
+           std::vector<std::shared_ptr<GameObject>> *ptr_gobjects)
     : GameObject(name, "Ship", 0, 0), ptr_gobjects(ptr_gobjects) {
   this->hull = hull;
   this->shield = 0;

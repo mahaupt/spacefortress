@@ -2,9 +2,10 @@
 
 using namespace go;
 
-Projectile::Projectile(std::vector<GameObject *> *pgobjects,
+Projectile::Projectile(std::vector<std::shared_ptr<GameObject>> *pgobjects,
                        const std::string &name, GameObject *origin,
-                       GameObject *target, double velocity)
+                       const std::shared_ptr<GameObject> &target,
+                       double velocity)
     : GameObject(name, "Projectile", 0, 0),
       origin(origin),
       target(target),
@@ -34,7 +35,7 @@ void Projectile::simulate(double delta_time) {
   // hit target
   Vec2 pos = this->getPos();
   for (const auto &object : *pgobjects) {
-    if (object->getType() != "Projectile" && object != this->origin) {
+    if (object->getType() != "Projectile" && object.get() != origin) {
       Vec2 toobj = object->getPos();
       toobj -= pos;
 
