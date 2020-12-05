@@ -18,6 +18,19 @@ Ship::~Ship() {
   this->modules.clear();
 }
 
+void Ship::addStandardModules() {
+  this->addModule(new module::Generator("Generator MK I", 1, 1));
+  this->addModule(new module::Lifesupport("LifeSupport", 1, 3));
+  this->addModule(new module::Dockingport("Docking port", 1));
+  this->addModule(new module::Sensor("SR Sensor 2.7", 1));
+  this->addModule(new module::Cargo("Cargo hold", 1, 1000));
+  this->addModule(
+      new module::ShieldGenerator("Shield Generator MK I", 1, 0.5, 1));
+  this->addModule(new module::Engine("Engine MK I", 1, 1, 2));
+  this->addModule(new module::Weapon("S Projectile", 1, 0.5, 0.1, 1));
+  this->addModule(new module::Capacitor("Capacitor MK I", 1, 100, 1, 10));
+}
+
 void Ship::simulate(double delta_time) {
   for (const auto &module : this->modules) {
     module->simulate(delta_time, this);

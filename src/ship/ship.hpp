@@ -8,12 +8,24 @@
 #include "../gameobject.hpp"
 #include "module.hpp"
 #include "modules/capacitor.hpp"
+#include "modules/cargo.hpp"
+#include "modules/dockingport.hpp"
+#include "modules/engine.hpp"
+#include "modules/generator.hpp"
+#include "modules/lifesupport.hpp"
+#include "modules/sensor.hpp"
+#include "modules/shieldgenerator.hpp"
+#include "modules/shipai.hpp"
+#include "modules/weapon.hpp"
 
 class Ship : public GameObject {
  public:
   Ship(const std::string &name, double hull,
        std::vector<std::shared_ptr<GameObject>> *ptr_gobjects);
   ~Ship();
+
+  // standard module creation
+  void addStandardModules();
 
   // info functions
   double getHull() { return this->hull; }

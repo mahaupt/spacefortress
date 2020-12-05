@@ -9,6 +9,7 @@
 #include "engine.hpp"
 
 namespace module {
+class Engine;
 class ShipAi : public Module {
  public:
   ShipAi(const std::string& name, double hull);

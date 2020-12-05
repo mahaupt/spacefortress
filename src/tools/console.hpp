@@ -19,7 +19,13 @@ enum class ConsoleKey {
   KEY_Q = 113
 };
 
-enum class ConsoleColor { YELLOW = 1, RED = 1 };
+enum class ConsoleColor {
+  WHITE = 1,
+  YELLOW = 2,
+  RED = 3,
+  MAGENTA = 4,
+  GREEN = 5
+};
 
 /**
  * ncurses warpper

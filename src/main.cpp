@@ -26,6 +26,12 @@ void startGame(void) {
     pgame->start();
   }
 }
+void stopGame(void) {
+  main_state = MAIN_MENU;
+  if (pgame != 0) {
+    pgame->stop();
+  }
+}
 void backToMenu(void) { main_state = MAIN_MENU; }
 
 /**

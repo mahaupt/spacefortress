@@ -33,9 +33,12 @@ void shipos::Map::render(ConsoleKey key) {
   Vec2 spos = this->ship->getPos();
 
   // draw objects with sensor
-  if (this->ptr_sensor != 0) {
+  if (this->ptr_sensor != nullptr) {
     auto gobjects = this->ptr_sensor->getScannedObjects();
-    if (gobjects != 0) {
+    if (gobjects != nullptr) {
+      // get sensor lock target
+      auto plocktgt = this->ptr_sensor->getLockTarget().lock();
+
       for (const auto& gobject : *gobjects) {
         // get position of object
         Vec2 gpos = gobject->getPos();
@@ -49,7 +52,15 @@ void shipos::Map::render(ConsoleKey key) {
         // object is in map screen
         if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&
             spy < this->wheight - 2) {
+          if (plocktgt == gobject) {
+            wattron(this->win, COLOR_PAIR(ConsoleColor::MAGENTA));
+          }
+
           mvwprintw(this->win, spy, spx, gobject->getSymbol().c_str());
+
+          if (plocktgt == gobject) {
+            wattroff(this->win, COLOR_PAIR(ConsoleColor::MAGENTA));
+          }
         }
       }
     } else {
@@ -63,7 +74,9 @@ void shipos::Map::render(ConsoleKey key) {
   }
 
   // draw ship and pos info
+  wattron(this->win, COLOR_PAIR(ConsoleColor::GREEN));
   mvwprintw(this->win, cy, cx, this->ship->getSymbol().c_str());
+  wattroff(this->win, COLOR_PAIR(ConsoleColor::GREEN));
   mvwprintw(this->win, 1, 2, "%.3f / %.3f    %.1f mAU/s", spos.getX(),
             spos.getY(), (this->ship->getVel().magnitude() * 1000.0f));
   mvwprintw(this->win, this->wheight - 3, 1, "y");

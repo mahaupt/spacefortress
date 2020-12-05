@@ -10,16 +10,6 @@
 #include "objects/planet.hpp"
 #include "objects/star.hpp"
 #include "objects/station.hpp"
-#include "ship/modules/capacitor.hpp"
-#include "ship/modules/cargo.hpp"
-#include "ship/modules/dockingport.hpp"
-#include "ship/modules/engine.hpp"
-#include "ship/modules/generator.hpp"
-#include "ship/modules/lifesupport.hpp"
-#include "ship/modules/sensor.hpp"
-#include "ship/modules/shieldgenerator.hpp"
-#include "ship/modules/shipai.hpp"
-#include "ship/modules/weapon.hpp"
 #include "ship/os/shipos.hpp"
 #include "ship/ship.hpp"
 #include "tools/console.hpp"
@@ -33,13 +23,16 @@ class Game {
   void start();
   void render(ConsoleKey key);
   void renderWin(ConsoleKey key);
+  void stop();
 
  private:
-  Ship s;
-  ShipOs os;
+  bool running;
+  std::weak_ptr<Ship> pship;
+  std::shared_ptr<ShipOs> pshipos;
 
   std::vector<std::shared_ptr<GameObject>> game_objects;
 
+  void createGameWorld();
   double calcSimTime();
   void garbageCollector();
 };
