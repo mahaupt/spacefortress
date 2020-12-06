@@ -52,7 +52,7 @@ void Program::getWindowSize() {
 
 void Program::showError(const int& y, const std::string& error) {
   this->showCentered(y, error,
-                     A_BOLD | A_BLINK | COLOR_PAIR(ConsoleColor::RED));
+                     A_BOLD | A_BLINK | COLOR_PAIR((int)ConsoleColor::RED));
 }
 
 void Program::showCentered(const int& y, const std::string& msg,
