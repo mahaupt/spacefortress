@@ -1,6 +1,7 @@
 #include "server.hpp"
 
-Server::Server(const ServerSocket &socket) : socket(socket), is_running(false) {
+Server::Server(const std::string& address, const unsigned int& port)
+    : socket(address, port), is_running(false) {
   Log::info("Server init");
 }
 

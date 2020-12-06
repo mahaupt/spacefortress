@@ -3,16 +3,12 @@
 
 #include "log.hpp"
 
-class ServerSocket {
+class ClientSocket {
  public:
-  ServerSocket(const std::string& address, const unsigned int& port);
-  ~ServerSocket();
+  ClientSocket(const std::string& address, const unsigned int& port);
+  ~ClientSocket();
 
-  // info functions
   bool isReady() { return is_ready; }
-
-  // socket control
-  int accept();
 
  private:
   bool is_ready;

@@ -49,18 +49,18 @@ ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
 
 ServerSocket::~ServerSocket() {
   if (isocket > 0) {
-    close(isocket);
+    ::close(isocket);
+    Log::info("server socket closed");
   }
   isocket = 0;
-  Log::info("server socket closed");
 }
 
 int ServerSocket::accept() {
   struct sockaddr_in iaddress;
 
   int new_socket;
-  if ((new_socket = ::accept(this->isocket, (struct sockaddr*)&iaddress,
-                             (socklen_t*)&iaddress)) < 0) {
+  if ((new_socket = ::accept4(this->isocket, (struct sockaddr*)&iaddress,
+                              (socklen_t*)&iaddress, SOCK_NONBLOCK)) < 0) {
     return 0;
   }
 
@@ -70,7 +70,7 @@ int ServerSocket::accept() {
 
   std::string hello("Hello");
   send(new_socket, hello.c_str(), hello.length(), 0);
-  close(new_socket);
+  ::close(new_socket);
 
   return new_socket;
 }

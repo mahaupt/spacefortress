@@ -7,7 +7,7 @@
 
 class Server {
  public:
-  Server(const ServerSocket &socket);
+  Server(const std::string& address, const unsigned int& port);
   ~Server();
 
   void start();
