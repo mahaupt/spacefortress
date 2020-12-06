@@ -69,8 +69,8 @@ void Game::stop() {
 void Game::render(ConsoleKey key) {
   // simulate
   double sim_time = this->calcSimTime();
-  for (const auto &gobject : this->game_objects) {
-    gobject->simulate(sim_time);
+  for (size_t i = 0; i < this->game_objects.size(); i++) {
+    this->game_objects[i]->simulate(sim_time);
   }
 
   // render
