@@ -55,22 +55,19 @@ ServerSocket::~ServerSocket() {
   isocket = 0;
 }
 
-int ServerSocket::accept() {
+std::shared_ptr<ServerClient> ServerSocket::accept() {
   struct sockaddr_in iaddress;
 
   int new_socket;
-  if ((new_socket = ::accept4(this->isocket, (struct sockaddr*)&iaddress,
-                              (socklen_t*)&iaddress, SOCK_NONBLOCK)) < 0) {
-    return 0;
+  if ((new_socket = ::accept(this->isocket, (struct sockaddr*)&iaddress,
+                             (socklen_t*)&iaddress)) < 0) {
+    return std::shared_ptr<ServerClient>(nullptr);
   }
 
-  int bytes = read(new_socket, buffer, 1024);
-  std::string rcvstr(buffer);
-  Log::info("New client: " + rcvstr);
-
-  std::string hello("Hello");
-  send(new_socket, hello.c_str(), hello.length(), 0);
-  ::close(new_socket);
-
-  return new_socket;
+  return std::make_shared<ServerClient>(new_socket);
 }
+
+/**
+ * unblocks socket through quick and dirty connecting to self
+ */
+void ServerSocket::unblock() { ClientSocket cs(this->address, this->port); }

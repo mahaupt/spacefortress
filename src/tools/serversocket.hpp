@@ -1,7 +1,10 @@
 #pragma once
+#include <memory>
 #include <string>
 
+#include "clientsocket.hpp"
 #include "log.hpp"
+#include "serverclient.hpp"
 
 class ServerSocket {
  public:
@@ -12,7 +15,8 @@ class ServerSocket {
   bool isReady() { return is_ready; }
 
   // socket control
-  int accept();
+  std::shared_ptr<ServerClient> accept();
+  void unblock();
 
  private:
   bool is_ready;

@@ -10,6 +10,8 @@ Server::~Server() {
   if (this->isRunningSafe()) {
     this->stop();
   }
+  // disconnect all clients
+  this->clients.clear();
 
   Log::info("Server destroy");
 }
@@ -17,7 +19,7 @@ Server::~Server() {
 void Server::start() {
   Log::info("starting server");
   this->is_running = true;
-  this->client_thread = std::thread(&Server::client_handler, this);
+  this->new_client_acceptor = std::thread(&Server::newClientAcceptor, this);
 }
 
 void Server::stop() {
@@ -26,15 +28,27 @@ void Server::stop() {
     std::lock_guard<std::mutex> guard(this->mx_is_running);
     this->is_running = false;
   }
-  this->client_thread.join();
+  // unblocks client acceptor
+  this->socket.unblock();
+  this->new_client_acceptor.join();
 }
 
-void Server::client_handler() {
-  Log::info("starting thread");
+void Server::newClientAcceptor() {
+  Log::info("starting client handler");
   while (this->isRunningSafe()) {
-    this->socket.accept();
+    auto newclient = this->socket.accept();
+    this->garbageCollector();
+    if (newclient) {
+      {
+        std::lock_guard<std::mutex> guard(this->mx_clients);
+        clients.push_back(newclient);
+      }
+
+      // start client listener
+      newclient->startListener();
+    }
   }
-  Log::info("stopping thread");
+  Log::info("stopping client handler");
 }
 
 bool Server::isRunningSafe() {
@@ -44,4 +58,20 @@ bool Server::isRunningSafe() {
     temp = this->is_running;
   }
   return temp;
+}
+
+/**
+ * removes disconnected clients from memory
+ */
+void Server::garbageCollector() {
+  std::lock_guard<std::mutex> guard(this->mx_clients);
+  auto it = this->clients.begin();
+  while (it != this->clients.end()) {
+    // is dead object?
+    if (!(*it)->isConnectedSafe()) {
+      it = this->clients.erase(it);
+    } else {
+      it++;
+    }
+  }
 }

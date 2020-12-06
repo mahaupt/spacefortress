@@ -1,8 +1,11 @@
 #pragma once
 
+#include <future>
 #include <mutex>
 #include <thread>
+#include <vector>
 
+#include "serverclient.hpp"
 #include "serversocket.hpp"
 
 class Server {
@@ -18,8 +21,12 @@ class Server {
   bool is_running;
   std::mutex mx_is_running;
 
-  std::thread client_thread;
+  std::thread new_client_acceptor;
 
-  void client_handler();
+  std::mutex mx_clients;
+  std::vector<std::shared_ptr<ServerClient>> clients;
+
+  void newClientAcceptor();
   bool isRunningSafe();
+  void garbageCollector();
 };
