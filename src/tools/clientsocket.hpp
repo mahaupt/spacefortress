@@ -1,7 +1,11 @@
 #pragma once
+#include <cstring>
 #include <string>
 
 #include "log.hpp"
+#include "netmsg.hpp"
+
+#define CLIENT_SOCKET_BUFFER_SIZE 1024
 
 class ClientSocket {
  public:
@@ -13,7 +17,8 @@ class ClientSocket {
  private:
   bool is_ready;
   int isocket;
-  char buffer[1024];
+  char ibuffer[CLIENT_SOCKET_BUFFER_SIZE];
+  char obuffer[CLIENT_SOCKET_BUFFER_SIZE];
 
   unsigned int port;
   std::string address;

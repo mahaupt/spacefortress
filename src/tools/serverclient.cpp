@@ -11,7 +11,8 @@
 #include <unistd.h>
 #endif
 
-ServerClient::ServerClient(int socket) : isocket(socket), is_connected(true) {
+ServerClient::ServerClient(int socket)
+    : isocket(socket), is_connected(true), ibytes_avbl(0) {
   struct sockaddr_in address;
   size_t addrlen = sizeof(sockaddr_in);
   getpeername(isocket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
@@ -50,16 +51,46 @@ void ServerClient::startListener() {
 
 void ServerClient::listener() {
   while (this->isConnectedSafe()) {
-    size_t bytes = read(this->isocket, this->ibuffer, 1024);
+    size_t free_buffer_size = CLIENT_BUFFER_SIZE - this->ibytes_avbl;
+    void* buffer_start = this->ibuffer + this->ibytes_avbl;
+    size_t bytes = read(this->isocket, buffer_start, free_buffer_size);
+    this->ibytes_avbl += bytes;
 
     if (bytes <= 0) {
       this->disconnectClientSafe();
       break;
     }
 
-    // todo: try to put buffer into queue...
-    std::string msg = "Client: ";
-    msg.append(this->ibuffer, bytes);
+    this->parseMsg();
+  }
+}
+
+void ServerClient::parseMsg() {
+  while (this->ibytes_avbl >= NETMSG_HEADER_SIZE) {
+    // msg header
+    NetMsg nmsg;
+    memcpy(&nmsg, this->ibuffer, NETMSG_HEADER_SIZE);
+
+    // msg body
+    if (this->ibytes_avbl < nmsg.size + NETMSG_HEADER_SIZE) break;
+    std::string text;
+    switch (nmsg.type) {
+      case ((uint8_t)NetMsgType::TEXT):
+        text.append(this->ibuffer + NETMSG_HEADER_SIZE, nmsg.size);
+        break;
+      default:
+        break;
+    }
+
+    // shift buffer
+    size_t bytes_taken = nmsg.size + NETMSG_HEADER_SIZE;
+    size_t bytes_remaining_in_buffer = this->ibytes_avbl - bytes_taken;
+    memmove(this->ibuffer, this->ibuffer + bytes_taken,
+            bytes_remaining_in_buffer);
+    this->ibytes_avbl -= bytes_taken;
+
+    // debug print out data
+    std::string msg = "Client: " + text;
     Log::info(msg);
   }
 }

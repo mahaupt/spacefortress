@@ -32,8 +32,14 @@ ClientSocket::ClientSocket(const std::string& address, const unsigned int& port)
 
   Log::info("client socket created");
 
-  std::string hello("Hello from client");
-  send(isocket, hello.c_str(), hello.length(), 0);
+  NetMsg nmsg;
+  char hello[] = "Hello from client!";
+  nmsg.type = (uint8_t)NetMsgType::TEXT;
+  nmsg.size = strlen(hello);
+  nmsg.data = hello;
+  size_t bytes = nmsg.writeBuffer(this->obuffer, CLIENT_SOCKET_BUFFER_SIZE);
+
+  send(isocket, this->obuffer, bytes, 0);
 
   this->is_ready = true;
 }

@@ -1,9 +1,13 @@
 #pragma once
 
+#include <cstring>
 #include <future>
 #include <mutex>
 
 #include "log.hpp"
+#include "netmsg.hpp"
+
+#define CLIENT_BUFFER_SIZE 1024
 
 class ServerClient {
  public:
@@ -21,10 +25,12 @@ class ServerClient {
   int isocket;
   std::mutex mx_is_connected;
   bool is_connected;
-  char ibuffer[1024];
-  char obuffer[1024];
+  char ibuffer[CLIENT_BUFFER_SIZE];
+  size_t ibytes_avbl;
+  char obuffer[CLIENT_BUFFER_SIZE];
 
   std::future<void> fut_listener;
 
   void listener();
+  void parseMsg();
 };
