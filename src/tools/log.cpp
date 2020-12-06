@@ -27,6 +27,8 @@ void Log::log(const std::string& msg, const LogLevel& level) {
 }
 
 void Log::olog(const std::string& msg, const LogLevel& level) {
+  std::lock_guard<std::mutex> guard(this->mx_write);
+
   // check error levels
   if (level > this->log_level || this->log_level == LogLevel::OFF) {
     return;

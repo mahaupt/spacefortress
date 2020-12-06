@@ -1,13 +1,25 @@
 #pragma once
 
-#include "log.hpp"
+#include <mutex>
+#include <thread>
+
+#include "serversocket.hpp"
 
 class Server {
  public:
-  Server();
+  Server(const ServerSocket &socket);
   ~Server();
-  bool bind();
+
+  void start();
+  void stop();
 
  private:
-  int isocket;
+  ServerSocket socket;
+  bool is_running;
+  std::mutex mx_is_running;
+
+  std::thread client_thread;
+
+  void client_handler();
+  bool isRunningSafe();
 };

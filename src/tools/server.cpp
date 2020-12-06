@@ -1,48 +1,46 @@
 #include "server.hpp"
 
-#ifdef WIN32
-
-#else
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#endif
-
-Server::Server() : isocket(0) {}
-
-Server::~Server() {
-  // free up socket
+Server::Server(const ServerSocket &socket) : socket(socket), is_running(false) {
+  Log::info("Server init");
 }
 
-bool Server::bind() {
-  // create socket
-  if ((isocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-    Log::error("Server socket creation failed");
-    return false;
+Server::~Server() {
+  // try to stop server
+  if (this->isRunningSafe()) {
+    this->stop();
   }
 
-  // attaching socket
-  int opt = 1;
-  if (setsockopt(isocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
-                 sizeof(int))) {
-    Log::error("Error setting up server");
-    return false;
-  }
+  Log::info("Server destroy");
+}
 
-  // setup socket adress
-  struct sockaddr_in address;
-  address.sin_family = AF_INET;
-  address.sin_addr.s_addr = INADDR_ANY;
-  address.sin_port = htons(8080);
+void Server::start() {
+  Log::info("starting server");
+  this->is_running = true;
+  this->client_thread = std::thread(&Server::client_handler, this);
+}
 
-  if (::bind(isocket, (struct sockaddr *)&address, sizeof(sockaddr_in)) < 0) {
-    Log::error("server socket bind failed");
-    return false;
+void Server::stop() {
+  Log::info("stopping server");
+  {
+    std::lock_guard<std::mutex> guard(this->mx_is_running);
+    this->is_running = false;
   }
-  if (listen(isocket, 5) < 0) {
-    Log::error("server listen failed");
-    return false;
-  }
+  this->client_thread.join();
+}
 
-  return true;
+void Server::client_handler() {
+  Log::info("starting thread");
+  while (this->isRunningSafe()) {
+    this->socket.accept();
+  }
+  Log::info("stopping thread");
+}
+
+bool Server::isRunningSafe() {
+  bool temp;
+  {
+    std::lock_guard<std::mutex> guard(this->mx_is_running);
+    temp = this->is_running;
+  }
+  return temp;
 }
