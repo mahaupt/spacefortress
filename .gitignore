@@ -10,6 +10,7 @@ sf
 #os specific
 .DS_Store
 .ccls*
+.vscode
 
 #game logs
 log.txt
