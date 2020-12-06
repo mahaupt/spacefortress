@@ -20,9 +20,13 @@ void Sensor::render(ConsoleKey key) {
   this->getWindowSize();
 
   // render list of objects
-  if (this->psensor != nullptr) {
+  if (this->psensor == nullptr) {
+    this->showError(4, Lang::get("program_map_nosensor"));
+  } else {
     auto v = this->psensor->getScannedObjects();
-    if (v != nullptr) {
+    if (v == nullptr) {
+      this->showError(4, Lang::get("program_map_sensoroffline"));
+    } else {
       // fetch and sort object list from sensor
       Vec2 spos = this->ship->getPos();
       std::list<std::shared_ptr<GameObject>> mlist(v->begin(), v->end());
@@ -46,14 +50,6 @@ void Sensor::render(ConsoleKey key) {
       if (this->selection >= mlist.size()) {
         this->selection = mlist.size() - 1;
       }
-      if ((char)key == 'l') {
-        // lock target
-        auto git = mlist.begin();
-        std::advance(git, this->selection);
-        if (*git != nullptr) {
-          this->psensor->startLock(*git);
-        }
-      }
       if (key == ConsoleKey::BACKSPACE || key == ConsoleKey::BACKSPACE2) {
         this->psensor->clearLock();
       }
@@ -65,11 +61,18 @@ void Sensor::render(ConsoleKey key) {
       double lock_progress = this->psensor->getLockProgress();
       for (const auto& object : mlist) {
         if (object->getType() == "Projectile") continue;
+        if (object.get() == this->ship) continue;
+
         Vec2 opos = object->getPos();
         opos -= spos;
 
         if (i == this->selection) {
           wattron(this->win, A_STANDOUT);
+
+          // lock key
+          if ((char)key == 'l') {
+            this->psensor->startLock(object);
+          }
         }
 
         // object it type name
@@ -104,12 +107,7 @@ void Sensor::render(ConsoleKey key) {
         // limit drawing
         if (i + 2 >= this->wheight - 1) break;
       }
-
-    } else {
-      this->showError(4, Lang::get("program_map_sensoroffline"));
     }
-  } else {
-    this->showError(4, Lang::get("program_map_nosensor"));
   }
 
   Program::render(key);
