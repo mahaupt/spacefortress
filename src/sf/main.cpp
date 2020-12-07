@@ -41,7 +41,7 @@ void backToMenu(void) { main_state = MAIN_MENU; }
 int main() {
   //////////////////////////////////////////////
   // MODULE LOADING
-  Log log(LogLevel::ALL);
+  Log log("log.txt", LogLevel::ALL);
   Log::info("start");
   Config config;
   Lang lang;

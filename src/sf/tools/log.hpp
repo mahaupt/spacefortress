@@ -17,7 +17,7 @@ enum class LogLevel {
 
 class Log {
  public:
-  Log(const LogLevel &log_level = LogLevel::ERROR);
+  Log(const char * file, const LogLevel &log_level = LogLevel::ERROR);
   ~Log();
 
   void olog(const std::string &msg, const LogLevel &level = LogLevel::INFO);

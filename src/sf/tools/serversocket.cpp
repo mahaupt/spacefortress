@@ -21,9 +21,9 @@ ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
 
   // attaching socket
   int opt = 1;
-  if (setsockopt(isocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
+  if (int n = setsockopt(isocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
                  sizeof(int))) {
-    Log::error("error setting up server socket");
+    Log::error("error setting up server socket: " + std::to_string(n));
     return;
   }
 

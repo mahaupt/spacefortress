@@ -2,10 +2,10 @@
 
 Log* Log::self = 0;
 
-Log::Log(const LogLevel& log_level) {
+Log::Log(const char * file, const LogLevel& log_level) {
   this->log_level = log_level;
   if (log_level != LogLevel::OFF) {
-    fs.open("log.txt", std::ios_base::out | std::ios_base::trunc);
+    fs.open(file, std::ios_base::out | std::ios_base::trunc);
   }
   self = this;
 
