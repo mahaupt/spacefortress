@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-std::size_t NetMsg::writeBuffer(void* buffer, std::size_t buffer_size) {
+size_t NetMsg::writeBuffer(void* buffer, size_t buffer_size) {
   if (buffer_size < this->size + NETMSG_HEADER_SIZE) return 0;
 
   // header

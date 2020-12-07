@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 #define NETMSG_HEADER_SIZE 5
 
@@ -15,7 +16,7 @@ class NetMsg {
 
   NetMsg() {}
   NetMsg(const NetMsgObject& o);
-  std::size_t writeBuffer(void* buffer, std::size_t buffer_size);
+  size_t writeBuffer(void* buffer, size_t buffer_size);
 };
 
 // 81 bytes
