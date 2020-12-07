@@ -35,7 +35,7 @@ ClientSocket::ClientSocket(const std::string& address, const unsigned int& port)
   NetMsg nmsg;
   char hello[] = "Hello from client!";
   nmsg.type = (uint8_t)NetMsgType::TEXT;
-  nmsg.size = strlen(hello);
+  nmsg.size = (uint32_t)strlen(hello);
   nmsg.data = hello;
   size_t bytes = nmsg.writeBuffer(this->obuffer, CLIENT_SOCKET_BUFFER_SIZE);
 
