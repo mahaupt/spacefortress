@@ -7,9 +7,10 @@ Server::Server(const std::string& address, const unsigned int& port)
 
 Server::~Server() {
   // try to stop server
-  if (this->isRunningSafe()) {
+  if (this->is_running) {
     this->stop();
   }
+  
   // disconnect all clients
   this->clients.clear();
 
@@ -24,18 +25,19 @@ void Server::start() {
 
 void Server::stop() {
   Log::info("stopping server");
-  {
-    std::lock_guard<std::mutex> guard(this->mx_is_running);
-    this->is_running = false;
-  }
-  // unblocks client acceptor
+  
+  // stopping client acceptor
+  this->is_running = false;
   this->socket.unblock();
   this->new_client_acceptor.join();
+  
+  //close socket
+  this->socket.close();
 }
 
 void Server::newClientAcceptor() {
   Log::info("starting client handler");
-  while (this->isRunningSafe()) {
+  while (this->is_running) {
     auto newclient = this->socket.accept();
     this->garbageCollector();
     if (newclient) {
@@ -49,15 +51,6 @@ void Server::newClientAcceptor() {
     }
   }
   Log::info("stopping client handler");
-}
-
-bool Server::isRunningSafe() {
-  bool temp;
-  {
-    std::lock_guard<std::mutex> guard(this->mx_is_running);
-    temp = this->is_running;
-  }
-  return temp;
 }
 
 /**

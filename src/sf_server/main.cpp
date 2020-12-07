@@ -4,11 +4,12 @@
 #include "../sf/tools/server.hpp"
 
 int main(void) {
-  Log log("log_server.txt", LogLevel::ALL);
+  Log log(LogLevel::ALL);
   Server s("0.0.0.0", 8123);
+  if (!s.isSocketReady()) return 1;
+  
   s.start();
 
-  std::cout << "Server started...";
   std::cin.get();
 
   return 0;

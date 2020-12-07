@@ -17,6 +17,7 @@ class ServerSocket {
   // socket control
   std::shared_ptr<ServerClient> accept();
   void unblock();
+  void close();
 
  private:
   bool is_ready;

@@ -19,13 +19,13 @@ ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
     return;
   }
 
-  // attaching socket
-  int opt = 1;
+  // setup socket options
+  /*int opt = 1;
   if (int n = setsockopt(isocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
                  sizeof(int))) {
     Log::error("error setting up server socket: " + std::to_string(n));
     return;
-  }
+  }*/
 
   // setup socket adress
   struct sockaddr_in oaddress;
@@ -47,12 +47,16 @@ ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
   this->is_ready = true;
 }
 
-ServerSocket::~ServerSocket() {
+void ServerSocket::close() {
   if (isocket > 0) {
     ::close(isocket);
     Log::info("server socket closed");
   }
   isocket = 0;
+}
+
+ServerSocket::~ServerSocket() {
+  this->close();
 }
 
 std::shared_ptr<ServerClient> ServerSocket::accept() {

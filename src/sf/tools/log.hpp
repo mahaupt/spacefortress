@@ -1,6 +1,7 @@
 #pragma once
 #include <ctime>
 #include <fstream>
+#include <iostream>
 #include <mutex>
 #include <string>
 
@@ -18,6 +19,7 @@ enum class LogLevel {
 class Log {
  public:
   Log(const char * file, const LogLevel &log_level = LogLevel::ERROR);
+  Log(const LogLevel &log_level = LogLevel::ERROR);
   ~Log();
 
   void olog(const std::string &msg, const LogLevel &level = LogLevel::INFO);
@@ -35,7 +37,7 @@ class Log {
 
  private:
   static Log *self;
-  std::fstream fs;
+  std::ostream *fs;
   LogLevel log_level;
 
   std::mutex mx_write;

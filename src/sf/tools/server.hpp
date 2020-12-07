@@ -4,6 +4,7 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <atomic>
 
 #include "serverclient.hpp"
 #include "serversocket.hpp"
@@ -13,13 +14,15 @@ class Server {
   Server(const std::string& address, const unsigned int& port);
   ~Server();
 
+  // management functions
   void start();
   void stop();
-
+  
+  // info functions
+  bool isSocketReady() { return socket.isReady(); }
  private:
   ServerSocket socket;
-  bool is_running;
-  std::mutex mx_is_running;
+  std::atomic<bool> is_running;
 
   std::thread new_client_acceptor;
 
@@ -27,6 +30,5 @@ class Server {
   std::vector<std::shared_ptr<ServerClient>> clients;
 
   void newClientAcceptor();
-  bool isRunningSafe();
   void garbageCollector();
 };

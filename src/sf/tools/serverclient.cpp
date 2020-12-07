@@ -33,15 +33,22 @@ ServerClient::~ServerClient() {
   msg += inet_ntoa(address.sin_addr);
   msg += ":";
   msg += std::to_string(ntohs(address.sin_port));
-  Log::info(msg);
 
+  //disconnect
+  if (this->isocket > 0) {
+    shutdown(this->isocket, SHUT_RDWR);
+  }
+  
+  // join threads
+  this->fut_listener.wait();
+  
+  // close socket
   if (this->isocket > 0) {
     close(this->isocket);
     this->isocket = 0;
   }
-
-  // join threads
-  this->fut_listener.get();
+  
+  Log::info(msg);
 }
 
 void ServerClient::startListener() {
