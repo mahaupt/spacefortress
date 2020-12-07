@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../../src/tools/client.hpp"
-#include "../../src/tools/log.hpp"
+#include "../sf/tools/client.hpp"
+#include "../sf/tools/log.hpp"
 
 int main(void) {
   Log log(LogLevel::ALL);

@@ -1,11 +1,12 @@
 #own project folders
 binary
 build
+gbuild
 xcode
 
 #binaries
-spacefortress
-sf
+./spacefortress
+./sf
 
 #os specific
 .DS_Store

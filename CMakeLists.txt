@@ -24,9 +24,10 @@ include_directories(
 message(STATUS "CURSES_LIBRARIES: ${CURSES_LIBRARIES}")
 message(STATUS "CURSES_INCLUDE: ${CURSES_INCLUDE_DIR}")
 
-#build files
+##############################
+# SF
 file(GLOB_RECURSE SF_SRC
-    "src/*.cpp"
+    "src/sf/*.cpp"
 )
 
 add_executable(
@@ -38,6 +39,48 @@ target_link_libraries(
     sf
     ${CURSES_LIBRARIES}
     yaml-cpp
+    Threads::Threads
+)
+
+##############################
+# SF_SERVER
+file(GLOB_RECURSE SF_SERVER_SRC
+    "src/sf_server/*.cpp"
+)
+
+add_executable(
+    sf_server
+    ${SF_SERVER_SRC}
+    "src/sf/tools/log.cpp"
+    "src/sf/tools/server.cpp"
+    "src/sf/tools/serversocket.cpp"
+    "src/sf/tools/serverclient.cpp"
+    "src/sf/tools/clientsocket.cpp"
+    "src/sf/tools/netmsg.cpp"
+)
+
+target_link_libraries(
+    sf_server
+    Threads::Threads
+)
+
+##############################
+# SF_CLIENT_TEST
+file(GLOB_RECURSE SF_CLIENT_TEST_SRC
+    "src/sf_client_test/*.cpp"
+)
+
+add_executable(
+    sf_client_test
+    ${SF_CLIENT_TEST_SRC}
+    "src/sf/tools/log.cpp"
+    "src/sf/tools/client.cpp"
+    "src/sf/tools/clientsocket.cpp"
+    "src/sf/tools/netmsg.cpp"
+)
+
+target_link_libraries(
+    sf_client_test
     Threads::Threads
 )
 
