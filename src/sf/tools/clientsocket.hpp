@@ -12,10 +12,10 @@ class ClientSocket {
   ClientSocket(const std::string& address, const unsigned int& port);
   ~ClientSocket();
 
-  bool isReady() { return is_ready; }
+  bool isConnected() { return is_connected; }
 
  private:
-  bool is_ready;
+  bool is_connected;
   int isocket;
   char ibuffer[CLIENT_SOCKET_BUFFER_SIZE];
   char obuffer[CLIENT_SOCKET_BUFFER_SIZE];

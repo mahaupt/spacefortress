@@ -12,7 +12,8 @@
 #endif
 
 ClientSocket::ClientSocket(const std::string& address, const unsigned int& port)
-    : is_ready(false), isocket(0), port(port), address(address) {
+    : is_connected(false), isocket(0), port(port), address(address) {
+      
   // create socket
   if ((isocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
     Log::error("client socket creation failed");
@@ -32,16 +33,11 @@ ClientSocket::ClientSocket(const std::string& address, const unsigned int& port)
 
   Log::info("client socket created");
 
-  NetMsg nmsg;
-  char hello[] = "Hello from client!";
-  nmsg.type = (uint8_t)NetMsgType::TEXT;
-  nmsg.size = (uint32_t)strlen(hello);
-  nmsg.data = hello;
+  NetMsg nmsg("Hello from client!");
   size_t bytes = nmsg.writeBuffer(this->obuffer, CLIENT_SOCKET_BUFFER_SIZE);
-
   send(isocket, this->obuffer, bytes, 0);
 
-  this->is_ready = true;
+  this->is_connected = true;
 }
 
 ClientSocket::~ClientSocket() {

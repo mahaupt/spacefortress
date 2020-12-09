@@ -74,30 +74,24 @@ void ServerClient::listener() {
 
 void ServerClient::parseMsg() {
   while (this->ibytes_avbl >= NETMSG_HEADER_SIZE) {
-    // msg header
+    
+    // get message
     NetMsg nmsg;
-    memcpy(&nmsg, this->ibuffer, NETMSG_HEADER_SIZE);
-
-    // msg body
-    if (this->ibytes_avbl < nmsg.size + NETMSG_HEADER_SIZE) break;
-    std::string text;
-    switch (nmsg.type) {
-      case ((uint8_t)NetMsgType::TEXT):
-        text.append(this->ibuffer + NETMSG_HEADER_SIZE, nmsg.size);
-        break;
-      default:
-        break;
+    if (!nmsg.tryReadFromBuffer(this->ibuffer, this->ibytes_avbl)) {
+      break;
     }
 
     // shift buffer
-    size_t bytes_taken = nmsg.size + NETMSG_HEADER_SIZE;
+    size_t bytes_taken = nmsg.getSize();
     size_t bytes_remaining_in_buffer = this->ibytes_avbl - bytes_taken;
     memmove(this->ibuffer, this->ibuffer + bytes_taken,
             bytes_remaining_in_buffer);
     this->ibytes_avbl -= bytes_taken;
 
     // debug print out data
-    std::string msg = "Client: " + text;
+    std::string msg = "Client: ";
+    NetMsgText *txt = (NetMsgText*)nmsg.data;
+    msg.append(txt->text, nmsg.size);
     Log::info(msg);
   }
 }

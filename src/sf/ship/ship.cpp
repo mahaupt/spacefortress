@@ -32,8 +32,11 @@ void Ship::addStandardModules() {
 }
 
 void Ship::simulate(double delta_time) {
-  for (const auto &module : this->modules) {
-    module->simulate(delta_time, this);
+  {
+    std::lock_guard<std::mutex> lock_guard(this->mx_object);
+    for (const auto &module : this->modules) {
+      module->simulate(delta_time, this);
+    }
   }
 
   // simulate game object moving
@@ -122,10 +125,12 @@ Module *Ship::getFirstModule(const std::string &type) {
 }
 
 /**
- * Damage calculating function
+ * Damage calculating function. Called from outside!
  * @param energy impact energy of projectile
  */
 void Ship::hit(double energy) {
+  std::lock_guard<std::mutex> lock_guard(this->mx_object);
+  
   // shield
   double e = energy;
   e -= this->shield;

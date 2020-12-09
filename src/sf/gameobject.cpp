@@ -17,6 +17,8 @@ GameObject::GameObject(const std::string &name, const std::string &type,
       type(type) {}
 
 void GameObject::simulate(double delta_time) {
+  std::lock_guard<std::mutex> lock_guard(this->mx_object);
+  
   // skip movement simulation on fixed object
   if (this->is_fixed) {
     this->vel.zero();
@@ -28,7 +30,7 @@ void GameObject::simulate(double delta_time) {
   this->vel += this->force * delta_time / this->mass;
 
   // set maximum speed
-  if (this->getType() != "Projectile") {
+  if (this->type != "Projectile") {
     double vel = this->vel.magnitude() * 1000.0;  // mAU/s
     if (vel > 10.0) {
       double red = 10.0 / vel;

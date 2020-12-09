@@ -18,6 +18,16 @@ sudo apt install build-essentials cmake libncurses-dev
 
 # Arch only:
 sudo pacman -S base-devel cmake ncurses
+
+# MacOS
+# install command line tools and cmake (via brew or directly)
+xcode-select --install
+brew install cmake
+
+# Windows 
+# make sure you have your favourite build tools installed
+# you need: compiler(gcc, vs), cmake, ncurses, git
+# cygwin or mingw32 work fine
 ```
 clone the repository:
 ```
@@ -32,37 +42,36 @@ make
 ```  
 
 
-## Ships
+## Ship
+Your character is already inside your ship when the game starts. If your ship gets destroyed, the game is over. You will also be able to share a ship with others via a crew code.
+
 ### Modules
 Modules provide the main functionality for the space ship. Modules can be installed, removed,
-switched online and offline, damaged and repaired.  
-Current module ideas:  
-- Reactor (power generation)  
-- Cargo  
-- Shield Generator  
-- Engine  
-- Capacitor  (power storage)  
-- Jump Drive  
-- Weapons  
-- Life Support  
+switched online and offline, damaged, repaired and upgraded.  
 
-### Reactor (power generation)
-The reactor creates power for the ships modules.
+### ShipOs
+The ShipOs is the main interface between human and ship. It provides the crew with several programs and a terminal to control modules and systems.
 
 
 ## Ideas
-Strategie - SciFi
-
-Person
-Schiff Kontroller
-- alleine - Multitasking
-- Gemeinsam - Effizienter
-
-Erde - Erde muss verlassen werden
-(Prototypschiff / Fehler / Fehler fixen)
-Planeten Treibstoff holen
-Ehemalige Zivilplaneten - Ressourcen
-Schiff upgraden - Wissenschaftscore
-Rätsel sammeln -> Verstorbenen Zivilisationen -> Koordinaten
-
-Systeme // Sprungantrieb
+### World:
+- Strategy - SciFi  
+- Multiplayer Client-Server  
+- Open World  
+- Procedurally generated?  
+  
+### Ship:
+- Ship Controlle 
+- alone - possible
+- multiplayer - more efficient  
+- Ship upgrade with materials (crafting?)
+- Ship repair with materials
+- Planet / Stars - resources/fue 
+- Scientific core - research?
+- Get tasks - get rewards - channelges
+  
+### Systems: 
+- Jump drive - consumes fuel, jump fatigue?
+- Star gates - quick travel between systems
+- Safe systems w/ police
+- Dangerous systems with high reward

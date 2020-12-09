@@ -28,9 +28,6 @@ void startGame(void) {
 }
 void stopGame(void) {
   main_state = MAIN_MENU;
-  if (pgame != 0) {
-    pgame->stop();
-  }
 }
 void backToMenu(void) { main_state = MAIN_MENU; }
 
@@ -120,6 +117,12 @@ int main() {
         break;
       case GAME:
         game.render(key);
+        //state switch
+        if (main_state == MAIN_MENU) {
+          game.stop();
+          Console::showCursor(false);
+          Console::sclear();
+        }
         break;
     }
 

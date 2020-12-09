@@ -2,6 +2,9 @@
 
 using namespace shipos;
 
+//defined in main.cpp
+void stopGame(void);
+
 Terminal::Terminal(Ship* ship, std::vector<shipos::Program*>* pprograms)
     : Program(ship, "Terminal"), input_field(0, 0, ""), pprograms(pprograms) {
   this->setup();
@@ -88,7 +91,8 @@ void shipos::Terminal::processCmd(std::string cmd) {
         if (this->win != stdscr) {
           this->setState(ProgramState::TERM);
         } else {
-          terminal_lines.push_back(Lang::get("program_terminal_exit"));
+          //terminal_lines.push_back(Lang::get("program_terminal_exit"));
+          stopGame();
         }
         break;
       }

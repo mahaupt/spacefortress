@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <string>
+#include <mutex>
 
 #include "tools/vec2.hpp"
 
@@ -40,6 +41,7 @@ class GameObject {
   virtual void hit(double energy){};
 
  protected:
+  std::mutex mx_object;
   bool alive;
   double mass;
   Vec2 pos;

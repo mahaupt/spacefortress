@@ -6,7 +6,7 @@
 int main(void) {
   Log log(LogLevel::ALL);
   Client c("127.0.0.1", 8123);
-
+  if (!c.isConnected()) return 1;
   std::cin.get();
 
   return 0;

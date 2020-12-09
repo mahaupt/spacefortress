@@ -23,7 +23,8 @@ Projectile::Projectile(std::vector<std::shared_ptr<GameObject>> *pgobjects,
 
 void Projectile::simulate(double delta_time) {
   GameObject::simulate(delta_time);
-
+  std::lock_guard<std::mutex> lock_guard(this->mx_object);
+  
   // die
   this->lifetime -= delta_time;
   if (this->lifetime <= 0) {
@@ -33,11 +34,11 @@ void Projectile::simulate(double delta_time) {
 
   // go through object list and look for targets in close range
   // hit target
-  Vec2 pos = this->getPos();
   for (const auto &object : *pgobjects) {
+    if (object.get() == this) continue;
     if (object->getType() != "Projectile" && object.get() != origin) {
       Vec2 toobj = object->getPos();
-      toobj -= pos;
+      toobj -= this->pos;
 
       // calc hit
       if (toobj.magnitude() < 0.003) {

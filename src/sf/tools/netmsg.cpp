@@ -2,19 +2,37 @@
 
 #include <cstring>
 
-size_t NetMsg::writeBuffer(void* buffer, size_t buffer_size) {
+size_t NetMsg::writeBuffer(char* buffer, size_t buffer_size) {
   if (buffer_size < this->size + NETMSG_HEADER_SIZE) return 0;
 
   // header
   memcpy(buffer, this, NETMSG_HEADER_SIZE);
+  
   // body
-  void* body = static_cast<char*>(buffer) + NETMSG_HEADER_SIZE;
-  memcpy(body, this->data, this->size);
+  if (this->data != nullptr) {
+    memcpy(buffer+NETMSG_HEADER_SIZE, (void*)this->data->getDataPtr(), this->size);
+  }
+  
   return this->size + NETMSG_HEADER_SIZE;
 }
 
-NetMsg::NetMsg(const NetMsgObject& o) {
-  this->type = 1;
-  this->size = sizeof(NetMsgObject);
-  this->data = (char*)&o;
+
+bool NetMsg::tryReadFromBuffer(char* buffer, size_t buffer_size) {
+  //get header
+  if (buffer_size < NETMSG_HEADER_SIZE) return false;
+  memcpy(this, buffer, NETMSG_HEADER_SIZE);
+  
+  //get body
+  if (buffer_size < this->size + NETMSG_HEADER_SIZE) return false;
+  char *dataptr = buffer + NETMSG_HEADER_SIZE;
+  switch((NetMsgType)this->type) {
+    case (NetMsgType::TEXT):
+      this->data = new NetMsgText(dataptr, this->size);
+      break;
+    default:
+      //nothing
+      break;
+  }
+  
+  return true;
 }
