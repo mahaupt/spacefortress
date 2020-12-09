@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 
-#include "clientsocket.hpp"
-#include "log.hpp"
+#include "../sf/tools/clientsocket.hpp"
+#include "../sf/tools/log.hpp"
 #include "serverclient.hpp"
 
 class ServerSocket {

@@ -61,7 +61,7 @@ void Server::garbageCollector() {
   auto it = this->clients.begin();
   while (it != this->clients.end()) {
     // is dead object?
-    if (!(*it)->isConnectedSafe()) {
+    if (!(*it)->isConnected()) {
       it = this->clients.erase(it);
     } else {
       it++;
