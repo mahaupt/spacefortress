@@ -25,9 +25,10 @@ void Dockingport::simulate(double delta_time, Ship* ship) {
   for (const auto& object : *gobjects) {
     // filter objects
     if (!object->isDockable()) continue;
+    if (object.get() == ship) continue;
 
     // calc distance
-    Vec2 opos = object->getPos();
+    Vec2 opos = object->getPosSafe();
 
     opos -= spos;
 

@@ -46,3 +46,8 @@ void GameObject::simulate(double delta_time) {
 }
 
 void GameObject::addForce(const Vec2 &force) { this->force += force; }
+
+Vec2 GameObject::getPosSafe() {
+  std::lock_guard<std::mutex> lock_guard(this->mx_object);
+  return this->getPos();
+}

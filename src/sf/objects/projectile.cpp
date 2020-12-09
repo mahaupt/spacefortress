@@ -35,9 +35,9 @@ void Projectile::simulate(double delta_time) {
   // go through object list and look for targets in close range
   // hit target
   for (const auto &object : *pgobjects) {
-    if (object.get() == this) continue;
+    //if (object.get() == this) continue; // redundant
     if (object->getType() != "Projectile" && object.get() != origin) {
-      Vec2 toobj = object->getPos();
+      Vec2 toobj = object->getPosSafe();
       toobj -= this->pos;
 
       // calc hit

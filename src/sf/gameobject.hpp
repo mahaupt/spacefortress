@@ -25,6 +25,7 @@ class GameObject {
   // position and motion
   void setPos(const Vec2 &pos) { this->pos = pos; }
   Vec2 getPos() { return this->pos; }
+  Vec2 getPosSafe();
   double getRot() { return this->rot; }
   void setRot(const double &rot) { this->rot = rot; }
   Vec2 getVel() { return this->vel; }
