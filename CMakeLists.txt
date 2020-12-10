@@ -53,6 +53,7 @@ add_executable(
     ${SF_SERVER_SRC}
     "src/sf/tools/log.cpp"
     "src/sf/tools/clientsocket.cpp"
+    "src/sf/tools/basesocket.cpp"
     "src/sf/tools/netmsg.cpp"
 )
 
@@ -73,6 +74,7 @@ add_executable(
     "src/sf/tools/log.cpp"
     "src/sf/tools/client.cpp"
     "src/sf/tools/clientsocket.cpp"
+    "src/sf/tools/basesocket.cpp"
     "src/sf/tools/netmsg.cpp"
 )
 

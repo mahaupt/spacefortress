@@ -4,9 +4,36 @@
 #include <cstddef>
 #include <string>
 
-#define NETMSG_HEADER_SIZE 5
+#define NETMSG_HEADER_SIZE 4
 
-enum class NetMsgType { NONE = 0, PING = 1, TEXT = 10, OBJECT = 11 };
+enum class NetMsgType {
+  //basic
+  NONE = 0,
+  PING = 1,
+  PONG = 2,
+  
+  //join type
+  INTENTION_CREATE = 40,
+  INTENTION_JOIN = 41,
+  
+  //AUTH & User Management
+  AUTH = 50,
+  AUTHREQUEST = 51, //reserved for token based auth
+  AUTHACCEPT = 52,
+  AUTHDENY = 53,
+  KICK = 60,
+  BAN = 61,
+  
+  //objects
+  TEXT = 100,
+  OBJECT = 101,
+
+  //errors
+  ERR = 200,
+  ERR_REQ = 201,
+  ERR_FULL = 202,
+  ERR_CREWNOTFOUND = 203,
+};
 
 #pragma pack(push, 1)
 class NetMsgData {
@@ -16,10 +43,10 @@ public:
   virtual void* getDataPtr() { return this; }
 };
 
-// 81 bytes
+// 82 bytes
 class NetMsgObject : public NetMsgData {
 public:
-  uint8_t type;
+  uint16_t type;
   double x;
   double y;
   double vel_x;
@@ -51,7 +78,7 @@ public:
   }
   ~NetMsgText() {
     if (text != nullptr) {
-      delete text;
+      delete[] text;
     }
   }
   
@@ -67,24 +94,25 @@ public:
 
 class NetMsg {
  public:
-  uint8_t type;
-  uint32_t size;
+  uint16_t type;
+  uint16_t size;
   NetMsgData* data;
 
-  NetMsg() : type(0), data(nullptr) {}
+  NetMsg() : type(0), size(0), data(nullptr) {}
   ~NetMsg() { if(data != nullptr) { delete data; } }
   
   //msg types
   NetMsg(const char * text)
-  : type((uint8_t)NetMsgType::TEXT)
   {
     data = new NetMsgText(text);
     size = data->getSize();
+    setType(NetMsgType::TEXT);
   }
   
   // management functions
   size_t writeBuffer(char* buffer, size_t buffer_size);
   bool tryReadFromBuffer(char* buffer, size_t buffer_size);
+  void setType(const NetMsgType &t) { this->type = (uint16_t)t; }
   
   // info functions
   size_t getSize() { return this->size + NETMSG_HEADER_SIZE; }

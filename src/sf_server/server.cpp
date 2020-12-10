@@ -1,9 +1,7 @@
 #include "server.hpp"
 
 Server::Server(const std::string& address, const unsigned int& port)
-    : socket(address, port), is_running(false) {
-  Log::info("Server init");
-}
+    : socket(address, port), is_running(false) {}
 
 Server::~Server() {
   // try to stop server
@@ -21,15 +19,17 @@ void Server::start() {
   Log::info("starting server");
   this->is_running = true;
   this->new_client_acceptor = std::thread(&Server::newClientAcceptor, this);
+  this->client_updater = std::thread(&Server::clientUpdater, this);
 }
 
 void Server::stop() {
   Log::info("stopping server");
   
-  // stopping client acceptor
+  // stopping threads
   this->is_running = false;
   this->socket.unblock();
   this->new_client_acceptor.join();
+  this->client_updater.join();
   
   //close socket
   this->socket.close();
@@ -39,7 +39,6 @@ void Server::newClientAcceptor() {
   Log::info("starting client handler");
   while (this->is_running) {
     auto newclient = this->socket.accept();
-    this->garbageCollector();
     if (newclient) {
       {
         std::lock_guard<std::mutex> guard(this->mx_clients);
@@ -51,6 +50,22 @@ void Server::newClientAcceptor() {
     }
   }
   Log::info("stopping client handler");
+}
+
+void Server::clientUpdater() {
+  Log::info("starting client updater");
+  while (this->is_running) {
+    this->garbageCollector();
+    {
+      std::lock_guard<std::mutex> guard(this->mx_clients);
+      for (const auto & client : this->clients) {
+        //update clients
+        client->ping();
+      }
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+  Log::info("stopping client updater");
 }
 
 /**

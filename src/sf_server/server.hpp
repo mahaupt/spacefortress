@@ -25,10 +25,12 @@ class Server {
   std::atomic<bool> is_running;
 
   std::thread new_client_acceptor;
+  std::thread client_updater;
 
   std::mutex mx_clients;
   std::vector<std::shared_ptr<ServerClient>> clients;
 
   void newClientAcceptor();
+  void clientUpdater();
   void garbageCollector();
 };
