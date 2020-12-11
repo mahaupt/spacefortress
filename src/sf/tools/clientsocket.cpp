@@ -11,8 +11,8 @@
 #include <unistd.h>
 #endif
 
-ClientSocket::ClientSocket(const std::string& address, const unsigned int& port)
-{
+ClientSocket::ClientSocket(const std::string& address,
+                           const unsigned int& port) {
   this->port = port;
   this->address = address;
 
@@ -39,17 +39,15 @@ ClientSocket::ClientSocket(const std::string& address, const unsigned int& port)
 }
 
 void ClientSocket::authenticate() {
-  NetMsg intent;
-  intent.setType(NetMsgType::INTENTION_CREATE);
-      
   NetMsg auth("cbacon");
   auth.setType(NetMsgType::AUTH);
-      
-  size_t bytes = intent.writeBuffer(this->obuffer, BS_OBUFFER_SIZE);
-  bytes += auth.writeBuffer(this->obuffer+bytes, BS_OBUFFER_SIZE-bytes);
+  
+  NetMsg intent("abc-def");
+  intent.setType(NetMsgType::INTENTION_JOIN);
+
+  size_t bytes = auth.writeBuffer(this->obuffer, BS_OBUFFER_SIZE);
+  bytes += intent.writeBuffer(this->obuffer + bytes, BS_OBUFFER_SIZE - bytes);
   send(isocket, this->obuffer, bytes, 0);
 }
 
-ClientSocket::~ClientSocket() {
-  Log::info("client socket closed");
-}
+ClientSocket::~ClientSocket() { Log::info("client socket closed"); }

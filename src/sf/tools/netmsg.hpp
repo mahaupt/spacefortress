@@ -102,6 +102,9 @@ class NetMsg {
   ~NetMsg() { if(data != nullptr) { delete data; } }
   
   //msg types
+  NetMsg(const NetMsgType & type) : NetMsg() {
+    this->setType(type);
+  }
   NetMsg(const char * text)
   {
     data = new NetMsgText(text);

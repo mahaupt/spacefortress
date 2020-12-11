@@ -26,6 +26,7 @@ bool NetMsg::tryReadFromBuffer(char* buffer, size_t buffer_size) {
   if (buffer_size < this->size + NETMSG_HEADER_SIZE) return false;
   char *dataptr = buffer + NETMSG_HEADER_SIZE;
   switch((NetMsgType)this->type) {
+    case (NetMsgType::INTENTION_JOIN):
     case (NetMsgType::AUTH):
     case (NetMsgType::TEXT):
       this->data = new NetMsgText(dataptr, this->size);

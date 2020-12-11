@@ -11,6 +11,9 @@
 #include <unistd.h>
 #endif
 
+/**
+ * creates and binds to server socket. after successful, server can accept new clients
+ */
 ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
     : is_ready(false), isocket(0), port(port), address(address) {
   // create socket
@@ -59,6 +62,10 @@ ServerSocket::~ServerSocket() {
   this->close();
 }
 
+/**
+ * function accepts new client, adds ServerClient wrapper and returns shared_ptr
+ * blocking function
+ */
 std::shared_ptr<ServerClient> ServerSocket::accept() {
   struct sockaddr_in iaddress;
 

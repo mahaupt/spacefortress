@@ -15,6 +15,11 @@ enum class ProgramState {
   TERM   // terminated
 };
 
+/**
+ * base class template for shipos programs
+ * render will be called by shipos
+ * can draw on a ncurses window or the standard screen
+ */
 class Program {
  public:
   Program(Ship* ship, const std::string& type);

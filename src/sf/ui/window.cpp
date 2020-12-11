@@ -42,6 +42,11 @@ void Window::render(ConsoleKey key) {
   this->resizeWindow();
 }
 
+/**
+ * calculates the should-size of the window depending on
+ * the size of the main window and the window alignment
+ * used for repositioning and rescaling purposes
+ */
 void Window::calcWindowSize(int &x, int &y, int &width, int &height) {
   x = 0;
   y = 0;

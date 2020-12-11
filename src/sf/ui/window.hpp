@@ -9,6 +9,9 @@
 enum class WindowAlignment { LEFT, RIGHT, MIDDLE, TOP, BOTTOM };
 enum class WindowState { VISIBLE, HIDDEN };
 
+/**
+ * wrapper class for easy creating, managing and rendering ncurses windows
+ */
 class Window {
  public:
   Window(WindowAlignment alignment_x, WindowAlignment alignment_y,

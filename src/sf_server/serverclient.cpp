@@ -33,41 +33,32 @@ ServerClient::~ServerClient() {
 }
 
 
-
-void ServerClient::handleMsg(std::shared_ptr<NetMsg> pnmsg) {
-  // debug print out data
-  std::string msg = this->address + ":" + std::to_string(this->port) + ": b" + std::to_string(pnmsg->getSize()) + " t" + std::to_string(pnmsg->type) + " : ";
+/**
+ * handle client based messages
+ * other messages will be transfered to queue where server main queue will handle it
+ */
+bool ServerClient::handleMsg(std::shared_ptr<NetMsg> &pnmsg) {
   
   //handle message
   switch ((NetMsgType)pnmsg->type) {
     case (NetMsgType::AUTH): {
+      if (this->is_authenticated) return false;
       NetMsgText* txt = (NetMsgText*)pnmsg->data;
       this->name = std::string(txt->text, pnmsg->size);
       this->is_authenticated = true;
-      msg.append(txt->text, pnmsg->size);
-      break;
+      Log::info(this->address + ": authenticates as " + this->name);
+      return false;
     }
     case (NetMsgType::TEXT): {
       NetMsgText* txt = (NetMsgText*)pnmsg->data;
-      msg.append(txt->text, pnmsg->size);
-      break;
+      return true;
     }
-    case (NetMsgType::INTENTION_CREATE):
-      // create crew
-      break;
-      
-    case (NetMsgType::INTENTION_JOIN):
-      // join crew
-      break;
-      
     default:
       //nothing
       break;
   }
   
-  Log::info(msg);
-  
-  BaseSocket::handleMsg(pnmsg);
+  return true;
 }
 
 
