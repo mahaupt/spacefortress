@@ -1,0 +1,21 @@
+name: cmake Windows
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: mkdir build && cd build
+      run: mkdir build && cd build
+    - name: cmake ..
+      run: cmake ..
+    - name: make -j4
+      run: make -j4
