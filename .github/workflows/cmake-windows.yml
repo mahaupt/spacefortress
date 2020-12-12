@@ -12,10 +12,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: mkdir build && cd build
-      run: mkdir build && cd build
-    - name: cmake ..
-      run: cmake ..
-    - name: make -j4
+    - name: Checkout master
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: git submodule update --init --recursive
+    - name: cmake
+      run: cmake .
+    - name: make
       run: make -j4
