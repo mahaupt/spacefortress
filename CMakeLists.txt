@@ -56,6 +56,8 @@ target_link_libraries(
     Threads::Threads
 )
 
+set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
+
 ##############################
 # SF_SERVER
 file(GLOB_RECURSE SF_SERVER_SRC
@@ -80,6 +82,8 @@ if(MSVC)
   add_dependencies(sf_server PDCurses)
 endif()
 
+set_target_properties( sf_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
+
 ##############################
 # SF_CLIENT_TEST
 file(GLOB_RECURSE SF_CLIENT_TEST_SRC
@@ -100,6 +104,8 @@ target_link_libraries(
     sf_client_test
     Threads::Threads
 )
+
+set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
 
 #copy config and language files
 #file(COPY lang DESTINATION .)
