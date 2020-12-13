@@ -6,34 +6,46 @@
 #include <string>
 
 enum class LogLevel {
-  OFF = 0,
-  FATAL = 1,
-  ERROR = 2,
-  WARN = 3,
-  INFO = 4,
-  DEBUG = 5,
-  TRACE = 6,
-  ALL = 7
+  LL_OFF = 0,
+  LL_FATAL = 1,
+  LL_ERROR = 2,
+  LL_WARN = 3,
+  LL_INFO = 4,
+  LL_DEBUG = 5,
+  LL_TRACE = 6,
+  LL_ALL = 7
 };
 
 class Log {
  public:
-  Log(const char * file, const LogLevel &log_level = LogLevel::ERROR);
-  Log(const LogLevel &log_level = LogLevel::ERROR);
+  Log(const char *file, const LogLevel &log_level = LogLevel::LL_ERROR);
+  Log(const LogLevel &log_level = LogLevel::LL_ERROR);
   ~Log();
 
-  void olog(const std::string &msg, const LogLevel &level = LogLevel::INFO);
+  void olog(const std::string &msg, const LogLevel &level = LogLevel::LL_INFO);
   const char *getLogLevelStr(const LogLevel &level);
 
   static void log(const std::string &msg,
-                  const LogLevel &level = LogLevel::INFO);
-  static void fatal(const std::string &msg) { Log::log(msg, LogLevel::FATAL); };
-  static void error(const std::string &msg) { Log::log(msg, LogLevel::ERROR); };
-  static void warn(const std::string &msg) { Log::log(msg, LogLevel::WARN); };
-  static void info(const std::string &msg) { Log::log(msg, LogLevel::INFO); };
-  static void debug(const std::string &msg) { Log::log(msg, LogLevel::DEBUG); };
-  static void trace(const std::string &msg) { Log::log(msg, LogLevel::TRACE); };
-  static void all(const std::string &msg) { Log::log(msg, LogLevel::ALL); };
+                  const LogLevel &level = LogLevel::LL_INFO);
+  static void fatal(const std::string &msg) {
+    Log::log(msg, LogLevel::LL_FATAL);
+  };
+  static void error(const std::string &msg) {
+    Log::log(msg, LogLevel::LL_ERROR);
+  };
+  static void warn(const std::string &msg) {
+    Log::log(msg, LogLevel::LL_WARN);
+  };
+  static void info(const std::string &msg) {
+    Log::log(msg, LogLevel::LL_INFO);
+  };
+  static void debug(const std::string &msg) {
+    Log::log(msg, LogLevel::LL_DEBUG);
+  };
+  static void trace(const std::string &msg) {
+    Log::log(msg, LogLevel::LL_TRACE);
+  };
+  static void all(const std::string &msg) { Log::log(msg, LogLevel::LL_ALL); };
 
  private:
   static Log *self;

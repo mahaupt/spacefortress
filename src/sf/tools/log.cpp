@@ -5,9 +5,9 @@ Log* Log::self = 0;
 /**
  * Goes to a file
  */
-Log::Log(const char * file, const LogLevel& log_level) : fs(nullptr) {
+Log::Log(const char* file, const LogLevel& log_level) : fs(nullptr) {
   this->log_level = log_level;
-  if (log_level != LogLevel::OFF) {
+  if (log_level != LogLevel::LL_OFF) {
     fs = new std::fstream(file, std::ios_base::out | std::ios_base::trunc);
   }
   self = this;
@@ -20,7 +20,7 @@ Log::Log(const char * file, const LogLevel& log_level) : fs(nullptr) {
  */
 Log::Log(const LogLevel& log_level) : fs(nullptr) {
   this->log_level = log_level;
-  if (log_level != LogLevel::OFF) {
+  if (log_level != LogLevel::LL_OFF) {
     fs = &std::cout;
   }
   self = this;
@@ -51,7 +51,7 @@ void Log::olog(const std::string& msg, const LogLevel& level) {
   std::lock_guard<std::mutex> guard(this->mx_write);
 
   // check error levels
-  if (level > this->log_level || this->log_level == LogLevel::OFF) {
+  if (level > this->log_level || this->log_level == LogLevel::LL_OFF) {
     return;
   }
   // check fstream open
@@ -81,21 +81,21 @@ void Log::olog(const std::string& msg, const LogLevel& level) {
 
 const char* Log::getLogLevelStr(const LogLevel& level) {
   switch (level) {
-    case (LogLevel::FATAL):
+    case (LogLevel::LL_FATAL):
       return "FATAL";
-    case (LogLevel::ERROR):
+    case (LogLevel::LL_ERROR):
       return "ERROR";
-    case (LogLevel::WARN):
+    case (LogLevel::LL_WARN):
       return "WARN";
-    case (LogLevel::INFO):
+    case (LogLevel::LL_INFO):
       return "INFO";
-    case (LogLevel::DEBUG):
+    case (LogLevel::LL_DEBUG):
       return "DEBUG";
-    case (LogLevel::TRACE):
+    case (LogLevel::LL_TRACE):
       return "TRACE";
-    case (LogLevel::ALL):
+    case (LogLevel::LL_ALL):
       return "ALL";
-    case (LogLevel::OFF):
+    case (LogLevel::LL_OFF):
       return "ALL";
   }
   return "NONE";

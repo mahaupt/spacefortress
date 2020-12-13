@@ -90,7 +90,7 @@ bool BaseSocket::createSocketClient() {
 
   if (connect(isocket, (struct sockaddr*)&oaddress, sizeof(sockaddr_in)) < 0) {
     Log::error("client socket connect failed");
-    return;
+    return false;
   }
 #endif
 

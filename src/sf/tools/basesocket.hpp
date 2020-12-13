@@ -95,7 +95,7 @@ class BaseSocket {
   void listener();
   void parseiBuffer();
   virtual bool handleBaseMsg(std::shared_ptr<NetMsg> &pnmsg);
-  virtual bool handleMsg(std::shared_ptr<NetMsg> &pnmsg) {}
+  virtual bool handleMsg(std::shared_ptr<NetMsg> &pnmsg) { return true; }
   void readAddress();
   SOCKET accept();
 };

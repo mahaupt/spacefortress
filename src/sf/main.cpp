@@ -26,9 +26,7 @@ void startGame(void) {
     pgame->start();
   }
 }
-void stopGame(void) {
-  main_state = MAIN_MENU;
-}
+void stopGame(void) { main_state = MAIN_MENU; }
 void backToMenu(void) { main_state = MAIN_MENU; }
 
 /**
@@ -38,7 +36,7 @@ void backToMenu(void) { main_state = MAIN_MENU; }
 int main() {
   //////////////////////////////////////////////
   // MODULE LOADING
-  Log log("log.txt", LogLevel::ALL);
+  Log log("log.txt", LogLevel::LL_ALL);
   Log::info("start");
   Config config;
   Lang lang;
@@ -117,7 +115,7 @@ int main() {
         break;
       case GAME:
         game.render(key);
-        //state switch
+        // state switch
         if (main_state == MAIN_MENU) {
           game.stop();
           Console::showCursor(false);
