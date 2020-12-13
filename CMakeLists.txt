@@ -35,7 +35,7 @@ include_directories(
 )
 
 #check ncursesw
-message(STATUS "CURSES_LIBRARIES: ${CURSES_LIBRARIES}")
+message(STATUS "CURSES_LIBRARIES: ${CURSES_LIBRARIES}/pdcurses.lib")
 message(STATUS "CURSES_INCLUDE: ${CURSES_INCLUDE_DIR}")
 
 ##############################
