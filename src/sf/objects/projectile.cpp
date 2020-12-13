@@ -11,7 +11,7 @@ Projectile::Projectile(std::vector<std::shared_ptr<GameObject>> *pgobjects,
       target(target),
       lifetime(60),
       pgobjects(pgobjects) {
-  this->symbol = "\u2219";
+  this->symbol = u8"\u2219";
   this->mass = 100;
   Vec2 spos = origin->getPos();
   this->setPos(spos);
