@@ -16,6 +16,11 @@ GameObject::GameObject(const std::string &name, const std::string &type,
       name(name),
       type(type) {}
 
+/**
+ * main gameobject simulation
+ * calculates kinetic movement
+ * should be overridden by child classes to simulate custom behaviour
+ */
 void GameObject::simulate(double delta_time) {
   std::lock_guard<std::mutex> lock_guard(this->mx_object);
   

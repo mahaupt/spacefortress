@@ -35,12 +35,18 @@ Program::~Program() {
   }
 }
 
+/**
+ * main render function for programs
+ */
 void Program::render(ConsoleKey key) {
   if (this->window != 0) {
     this->window->render(key);
   }
 }
 
+/*
+ * set the program state
+ */
 void Program::setWinState(WindowState state) {
   if (this->window == 0) return;
   this->window->setState(state);
@@ -50,11 +56,19 @@ void Program::getWindowSize() {
   getmaxyx(this->win, this->wheight, this->wwidth);
 }
 
+/**
+ * used to display a centered blinking bold red warning on the screen.
+ * looks cool
+ */
 void Program::showError(const int& y, const std::string& error) {
   this->showCentered(y, error,
                      A_BOLD | A_BLINK | COLOR_PAIR((int)ConsoleColor::RED));
 }
 
+/**
+ * draw centered string on program
+ *  useful for errors / warnings or general
+ */
 void Program::showCentered(const int& y, const std::string& msg,
                            const int& attr) {
   int errorx = round((this->wwidth - msg.length()) / 2.0);

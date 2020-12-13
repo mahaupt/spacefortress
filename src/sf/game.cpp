@@ -50,6 +50,9 @@ void Game::createGameWorld() {
   Log::info("game objects created");
 }
 
+/**
+ * creating game objects, player ship and startup shipos
+ */
 void Game::start() {
   this->createGameWorld();
   this->pshipos->boot();
@@ -66,6 +69,12 @@ void Game::stop() {
   Log::info("game stop");
 }
 
+/**
+ * main simulation and render loop
+ * GameObjects will be simulated (todo: check if async simulation is benificial)
+ * ShipOs renders the main display
+ * execution of all main OS functions
+ */
 void Game::render(ConsoleKey key) {
   // simulate
   double sim_time = this->calcSimTime();
@@ -77,6 +86,10 @@ void Game::render(ConsoleKey key) {
   this->pshipos->render(key);
 }
 
+/**
+ * render loop of shipos windows and popups
+ * This is called after the main window is refreshed
+ */
 void Game::renderWin(ConsoleKey key) {
   this->pshipos->renderWin(key);
 
@@ -84,6 +97,10 @@ void Game::renderWin(ConsoleKey key) {
   this->garbageCollector();
 }
 
+/**
+ * calculates the time period since the last time this function was called, or 0 on the first call.
+ * used to call once for simulation times, do not call twice per game loop!
+ */
 double Game::calcSimTime() {
   static auto last_start_time = std::chrono::steady_clock::now();
   auto start_time = std::chrono::steady_clock::now();

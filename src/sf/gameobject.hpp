@@ -6,6 +6,10 @@
 
 #include "tools/vec2.hpp"
 
+/**
+ * gameobjects are defining the base of objects in the game.
+ * can be derived to have custom properties
+ */
 class GameObject {
  public:
   GameObject();

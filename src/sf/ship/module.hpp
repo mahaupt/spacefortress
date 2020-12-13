@@ -3,6 +3,10 @@
 
 class Ship;
 
+/**
+ * base class to define modules for the ship
+ * todo: adjust class to fit for general gameobjects. Maybe adding modules to space creatures / stations
+ */
 class Module {
  public:
   Module(const std::string &name, const std::string &type, double hull);

@@ -2,7 +2,16 @@
 
 Client::Client(const std::string& address, const unsigned int& port)
     : socket(address, port) {
-  Log::info("client init");
+  if (socket.isConnected()) {
+    socket.authenticate();
+    socket.startListener();
+  }
 }
 
-Client::~Client() {}
+Client::~Client() {
+#ifdef WIN32
+  //windows cleanup
+  WSACleanup();
+#endif
+  
+}

@@ -2,11 +2,12 @@
 #include <memory>
 #include <string>
 
-#include "clientsocket.hpp"
-#include "log.hpp"
+#include "../sf/tools/basesocket.hpp"
+#include "../sf/tools/clientsocket.hpp"
+#include "../sf/tools/log.hpp"
 #include "serverclient.hpp"
 
-class ServerSocket {
+class ServerSocket : public BaseSocket {
  public:
   ServerSocket(const std::string& address, const unsigned int& port);
   ~ServerSocket();
@@ -17,13 +18,7 @@ class ServerSocket {
   // socket control
   std::shared_ptr<ServerClient> accept();
   void unblock();
-  void close();
 
  private:
   bool is_ready;
-  int isocket;
-  char buffer[1024];
-
-  unsigned int port;
-  std::string address;
 };

@@ -1,25 +1,19 @@
 #pragma once
+#include <atomic>
 #include <cstring>
+#include <future>
 #include <string>
 
+#include "basesocket.hpp"
 #include "log.hpp"
 #include "netmsg.hpp"
 
-#define CLIENT_SOCKET_BUFFER_SIZE 1024
-
-class ClientSocket {
+class ClientSocket : public BaseSocket {
  public:
   ClientSocket(const std::string& address, const unsigned int& port);
   ~ClientSocket();
 
-  bool isConnected() { return is_connected; }
+  void authenticate();
 
  private:
-  bool is_connected;
-  int isocket;
-  char ibuffer[CLIENT_SOCKET_BUFFER_SIZE];
-  char obuffer[CLIENT_SOCKET_BUFFER_SIZE];
-
-  unsigned int port;
-  std::string address;
 };
