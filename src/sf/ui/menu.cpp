@@ -25,12 +25,12 @@ void Menu::render(ConsoleKey key) {
   }
 
   // render text
-  for (int i = 0; i < this->menu_text.size(); i++) {
+  for (int i = 0; i < (int)this->menu_text.size(); i++) {
     menu_text[i]->render(key);
   }
 
   // render selectable items
-  for (int i = 0; i < this->menu_items.size(); i++) {
+  for (int i = 0; i < (int)this->menu_items.size(); i++) {
     menu_items[i]->render(key);
   }
 }
@@ -50,7 +50,7 @@ void Menu::processInput(ConsoleKey key) {
       }
       break;
     case ConsoleKey::ARROW_DOWN:
-      if (this->selection < this->menu_items.size() - 1) {
+      if (this->selection < (int)this->menu_items.size() - 1) {
         this->menu_items[this->selection]->afterFocus();
         this->menu_items[++this->selection]->beforeFocus();
       }

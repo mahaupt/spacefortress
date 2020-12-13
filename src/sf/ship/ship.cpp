@@ -8,7 +8,7 @@ Ship::Ship(const std::string &name, double hull,
   this->max_hull = hull;
   this->max_shield = 10;
 
-  this->symbol = "\u2206";
+  this->symbol = L'\u2206';
 }
 
 Ship::~Ship() {
@@ -130,7 +130,7 @@ Module *Ship::getFirstModule(const std::string &type) {
  */
 void Ship::hit(double energy) {
   std::lock_guard<std::mutex> lock_guard(this->mx_object);
-  
+
   // shield
   double e = energy;
   e -= this->shield;

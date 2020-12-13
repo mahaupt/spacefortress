@@ -22,6 +22,12 @@ double Vec2::angle() const {
   return a;
 }
 
+Vec2& Vec2::operator=(const Vec2 other) {
+  this->x = other.getX();
+  this->y = other.getY();
+  return *this;
+}
+
 Vec2 Vec2::operator+(const Vec2& vector) const {
   return Vec2(x + vector.getX(), y + vector.getY());
 }

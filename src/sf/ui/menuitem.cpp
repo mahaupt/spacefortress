@@ -2,8 +2,8 @@
 
 MenuItem::MenuItem(int x, int y, std::string text, void (*cb)(void))
     : UiElement(x, y, MIDDLE, MIDDLE),
-      text(text),
       selected(false),
+      text(text),
       callback(cb) {}
 
 void MenuItem::render(ConsoleKey key) {

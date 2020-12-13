@@ -47,8 +47,8 @@ void Sensor::render(ConsoleKey key) {
         this->selection++;
       }
       // limit selection
-      if (this->selection >= mlist.size()) {
-        this->selection = mlist.size() - 1;
+      if (this->selection >= (int)mlist.size()) {
+        this->selection = (int)mlist.size() - 1;
       }
       if (key == ConsoleKey::BACKSPACE || key == ConsoleKey::BACKSPACE2) {
         this->psensor->clearLock();

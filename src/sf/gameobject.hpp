@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cmath>
-#include <string>
 #include <mutex>
+#include <string>
 
 #include "tools/vec2.hpp"
 
@@ -22,7 +22,7 @@ class GameObject {
   void setName(const std::string &name) { this->name = name; }
   std::string getName() { return this->name; }
   std::string getType() { return this->type; }
-  std::string getSymbol() { return this->symbol; }
+  wchar_t getSymbol() { return this->symbol; }
   bool isDockable() { return this->is_dockable; }
   void setFixed(const bool &f) { this->is_fixed = f; }
 
@@ -55,7 +55,7 @@ class GameObject {
   bool is_dockable;
   std::string name;
   std::string type;
-  std::string symbol;
+  wchar_t symbol;
 
   Vec2 vel;
 

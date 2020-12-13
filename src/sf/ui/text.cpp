@@ -27,7 +27,7 @@ void Text::render(ConsoleKey key) {
   }
 
   // render each line
-  for (int i = 0; i < this->textlines.size(); i++) {
+  for (int i = 0; i < (int)this->textlines.size(); i++) {
     int dx = -floor(this->text_size / 2.0f);
     switch (this->align_text) {
       case (MIDDLE):

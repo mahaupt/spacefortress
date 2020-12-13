@@ -23,6 +23,7 @@ class Vec2 {
   double angle() const;
 
   // operators
+  Vec2& operator=(const Vec2 other);
   Vec2 operator+(const Vec2& vector) const;
   void operator+=(const Vec2& vector);
   Vec2 operator-(const Vec2& vector) const;

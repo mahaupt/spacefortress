@@ -56,7 +56,8 @@ void shipos::Map::render(ConsoleKey key) {
             wattron(this->win, COLOR_PAIR((int)ConsoleColor::MAGENTA));
           }
 
-          mvwprintw(this->win, spy, spx, gobject->getSymbol().c_str());
+          wchar_t wstr[] = {gobject->getSymbol(), L'\0'};
+          mvwaddwstr(this->win, spy, spx, wstr);
 
           if (plocktgt == gobject) {
             wattroff(this->win, COLOR_PAIR((int)ConsoleColor::MAGENTA));
@@ -75,7 +76,8 @@ void shipos::Map::render(ConsoleKey key) {
 
   // draw ship and pos info
   wattron(this->win, COLOR_PAIR((int)ConsoleColor::GREEN));
-  mvwprintw(this->win, cy, cx, this->ship->getSymbol().c_str());
+  wchar_t wstr[] = {this->ship->getSymbol(), L'\0'};
+  mvwaddwstr(this->win, cy, cx, wstr);
   wattroff(this->win, COLOR_PAIR((int)ConsoleColor::GREEN));
   mvwprintw(this->win, 1, 2, "%.3f / %.3f    %.1f mAU/s", spos.getX(),
             spos.getY(), (this->ship->getVel().magnitude() * 1000.0f));

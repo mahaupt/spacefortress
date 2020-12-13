@@ -40,8 +40,8 @@ void InputText::processInput(ConsoleKey key) {
   // add chars
   if (this->value.length() < this->width) {
     // - . _ : SP
-    if ((ikey >= 45 && ikey <= 46) || (ikey >= 48 && ikey <= 57) || ikey == 58 ||
-        ikey == 95 || ikey == 32) {
+    if ((ikey >= 45 && ikey <= 46) || (ikey >= 48 && ikey <= 57) ||
+        ikey == 58 || ikey == 95 || ikey == 32) {
       this->value += ikey;
       this->cursor_pos++;
     }
@@ -60,7 +60,8 @@ void InputText::processInput(ConsoleKey key) {
                     this->value.substr(this->cursor_pos);
       this->cursor_pos--;
     }
-    if (key == ConsoleKey::DELETE && this->cursor_pos < this->value.length()) {
+    if (key == ConsoleKey::DELETE &&
+        this->cursor_pos < (int)this->value.length()) {
       this->value = this->value.substr(0, this->cursor_pos) +
                     this->value.substr(this->cursor_pos + 1);
     }
@@ -74,8 +75,8 @@ void InputText::processInput(ConsoleKey key) {
   }
   if (key == ConsoleKey::ARROW_RIGHT) {
     this->cursor_pos++;
-    if (this->cursor_pos > this->value.length()) {
-      this->cursor_pos = this->value.length();
+    if (this->cursor_pos > (int)this->value.length()) {
+      this->cursor_pos = (int)this->value.length();
     }
   }
 }
