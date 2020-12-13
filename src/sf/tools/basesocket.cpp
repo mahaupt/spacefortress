@@ -28,6 +28,9 @@ BaseSocket::~BaseSocket() {
  */
 bool BaseSocket::wsa_initialized = false;
 bool BaseSocket::wsa_result = false;
+#ifdef WIN32
+WSADATA BaseSocket::wsaData;
+#endif
 bool BaseSocket::initWsa() {
   if (BaseSocket::wsa_initialized) return BaseSocket::wsa_result;
   BaseSocket::wsa_initialized = true;
