@@ -1,5 +1,5 @@
 #pragma once
-#include <ncurses.h>
+#include <curses.h>
 
 #include <cmath>
 #include <string>
