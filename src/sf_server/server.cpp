@@ -11,6 +11,11 @@ Server::~Server() {
   
   // disconnect all clients
   this->clients.clear();
+  
+#ifdef WIN32
+  //windows cleanup
+  WSACleanup();
+#endif
 
   Log::info("Server destroy");
 }
@@ -37,9 +42,6 @@ void Server::stop() {
   this->socket.unblock();
   this->new_client_acceptor.join();
   this->client_updater.join();
-  
-  //close socket
-  this->socket.close();
 }
 
 /**

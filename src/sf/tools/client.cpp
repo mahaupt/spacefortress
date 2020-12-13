@@ -8,4 +8,10 @@ Client::Client(const std::string& address, const unsigned int& port)
   }
 }
 
-Client::~Client() {}
+Client::~Client() {
+#ifdef WIN32
+  //windows cleanup
+  WSACleanup();
+#endif
+  
+}

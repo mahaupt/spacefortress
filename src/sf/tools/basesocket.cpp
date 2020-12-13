@@ -1,8 +1,9 @@
 #include "basesocket.hpp"
 
 #ifdef WIN32
-#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")  // Winsock Library
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #else
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -12,7 +13,7 @@
 #endif
 
 BaseSocket::BaseSocket()
-    : is_connected(false), isocket(0), ibytes_avbl(0), latency(0) {}
+    : is_connected(false), isocket(INVALID_SOCKET), ibytes_avbl(0), latency(0) {}
 
 /**
  * disconnects the connection and joins all threads
@@ -25,10 +26,145 @@ BaseSocket::~BaseSocket() {
   if (this->fut_listener.valid()) this->fut_listener.wait();
 
   // close socket
-  if (this->isocket > 0) {
+  if (this->isocket != INVALID_SOCKET) {
     close(this->isocket);
-    this->isocket = 0;
+    this->isocket = INVALID_SOCKET;
   }
+}
+
+/**
+ * Winsock WSA Functionality initializator
+ */
+bool BaseSocket::wsa_initialized = false;
+bool BaseSocket::wsa_result = false;
+bool BaseSocket::initWsa() {
+  if (BaseSocket::wsa_initialized) return BaseSocket::wsa_result;
+  BaseSocket::wsa_initialized = true;
+  
+#ifdef WIN32
+  if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
+    Log::error("WSAStartup failed");
+    return false;
+  }
+#endif
+  BaseSocket::wsa_result = true;
+  return BaseSocket::wsa_result;
+}
+
+/**
+ * creates a socket
+ */
+bool BaseSocket::createSocketClient() {
+#ifdef WIN32
+  struct addrinfo *result = NULL,
+                  *ptr = NULL,
+                  hints;
+
+  memset( &hints, 0, sizeof(hints) );
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+  
+  if (getaddrinfo(this->address.c_str(), std::to_string(this->port).c_str(), &hints, &result) != 0) {
+    Log::error("client socket getaddrinfo failed");
+    return false;
+  }
+  
+  ptr=result;
+  this->isocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+  if (this->isock == INVALID_SOCKET) {
+    Log::error("client socket creation failed");
+    freeaddrinfo(result);
+    return false;
+  }
+  
+  if (connect( this->isock, ptr->ai_addr, (int)ptr->ai_addrlen) == SOCKET_ERROR) {
+    Log::error("client socket connect failed");
+    freeaddrinfo(result);
+    return false;
+  }
+  
+#else
+  
+  if ((this->isocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+    Log::error("client socket creation failed");
+    return false;
+  }
+  
+  // setup socket adress
+  struct sockaddr_in oaddress;
+  oaddress.sin_family = AF_INET;
+  oaddress.sin_port = htons(8080);
+  inet_aton(this->address.c_str(), &oaddress.sin_addr);
+
+  if (connect(isocket, (struct sockaddr*)&oaddress, sizeof(sockaddr_in)) < 0) {
+    Log::error("client socket connect failed");
+    return;
+  }
+#endif
+  
+  return true;
+}
+
+
+/**
+ * creates and binds a server socket
+ */
+bool BaseSocket::createSocketServer() {
+#ifdef WIN32
+  struct addrinfo *result = NULL, *ptr = NULL, hints;
+  memset(&hints, 0, sizeof(addrinfo));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+  hints.ai_flags = AI_PASSIVE;
+  
+  if (getaddrinfo(this->address.c_str(), std::to_string(this->port).c_str(), &hints, &result) != 0) {
+    Log::error("server socket getaddrinfo failed");
+    return false;
+  }
+  
+  this->isock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+  if (this->isock == INVALID_SOCKET) {
+    Log::error("server socket creation failed");
+    freeaddrinfo(result);
+    return false;
+  }
+  
+  if (bind( this->isocket, result->ai_addr, (int)result->ai_addrlen) == SOCKET_ERROR) {
+    freeaddrinfo(result);
+    Log::error("server socket bind failed");
+    return false;
+  }
+  
+  if ( listen( this->isocket, 5 ) == SOCKET_ERROR ) {
+    Log::error("server socket listen failed");
+    return false;
+  }
+  
+#else
+  if ((this->isocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+    Log::error("server socket creation failed");
+    return false;
+  }
+  
+  // setup socket adress
+  struct sockaddr_in oaddress;
+  oaddress.sin_family = AF_INET;
+  oaddress.sin_port = htons(8080);
+  inet_aton(this->address.c_str(), &oaddress.sin_addr);
+
+  if (::bind(isocket, (struct sockaddr*)&oaddress, sizeof(sockaddr_in)) < 0) {
+    Log::error("server socket bind failed");
+    return false;
+  }
+  if (listen(isocket, 5) < 0) {
+    Log::error("server socket listen failed");
+    return false;
+  }
+#endif
+  
+  return true;
 }
 
 /**
@@ -48,7 +184,13 @@ void BaseSocket::listener() {
   while (this->isConnected()) {
     size_t free_buffer_size = BS_IBUFFER_SIZE - this->ibytes_avbl;
     void* buffer_start = this->ibuffer + this->ibytes_avbl;
+    
+#ifdef WIN32
+    size_t bytes = read(this->isocket, buffer_start, free_buffer_size, 0);
+#else
     size_t bytes = read(this->isocket, buffer_start, free_buffer_size);
+#endif
+    
     this->ibytes_avbl += bytes;
 
     if (bytes <= 0) {
@@ -120,7 +262,7 @@ void BaseSocket::disconnect() {
   this->is_connected = false;
 
   // disconnect
-  if (this->isocket > 0) {
+  if (this->isocket != INVALID_SOCKET) {
     shutdown(this->isocket, SHUT_RDWR);
   }
 }
@@ -171,4 +313,30 @@ std::shared_ptr<NetMsg> BaseSocket::popMessage() {
   std::shared_ptr<NetMsg> ptr = inc_msg.front();
   inc_msg.pop();
   return ptr;
+}
+
+
+void BaseSocket::readAddress() {
+  struct sockaddr_in address;
+  size_t addrlen = sizeof(sockaddr_in);
+  getpeername(isocket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
+  this->address = inet_ntoa(address.sin_addr);
+  this->port = ntohs(address.sin_port);
+}
+
+
+SOCKET BaseSocket::accept() {
+  SOCKET new_socket;
+  
+#ifdef WIN32
+  new_socket = ::accept(this->isocket, NULL, NULL);
+#else
+  struct sockaddr_in iaddress;
+  if ((new_socket = ::accept(this->isocket, (struct sockaddr*)&iaddress,
+                             (socklen_t*)&iaddress)) < 0) {
+    return INVALID_SOCKET;
+  }
+#endif
+
+  return new_socket;
 }

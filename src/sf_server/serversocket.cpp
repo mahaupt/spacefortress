@@ -1,47 +1,20 @@
 #include "serversocket.hpp"
+#include "../sf/tools/basesocket.hpp"
 
-#ifdef WIN32
-#include <winsock2.h>
-#pragma comment(lib, "ws2_32.lib")  // Winsock Library
-#else
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#endif
 
 /**
  * creates and binds to server socket. after successful, server can accept new clients
  */
 ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
-    : is_ready(false), isocket(0), port(port), address(address) {
+    : is_ready(false) {
+  this->port = port;
+  this->address = address;
+      
+  // Winsock WSA init
+  if (!BaseSocket::initWsa()) return;
+      
   // create socket
-  if ((isocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-    Log::error("server socket creation failed");
-    return;
-  }
-
-  // setup socket options
-  /*int opt = 1;
-  if (int n = setsockopt(isocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
-                 sizeof(int))) {
-    Log::error("error setting up server socket: " + std::to_string(n));
-    return;
-  }*/
-
-  // setup socket adress
-  struct sockaddr_in oaddress;
-  oaddress.sin_family = AF_INET;
-  oaddress.sin_port = htons(8080);
-  inet_aton(this->address.c_str(), &oaddress.sin_addr);
-
-  if (::bind(isocket, (struct sockaddr*)&oaddress, sizeof(sockaddr_in)) < 0) {
-    Log::error("server socket bind failed");
-    return;
-  }
-  if (listen(isocket, 5) < 0) {
-    Log::error("server socket listen failed");
+  if (!this->createSocketServer()) {
     return;
   }
 
@@ -50,16 +23,8 @@ ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
   this->is_ready = true;
 }
 
-void ServerSocket::close() {
-  if (isocket > 0) {
-    ::close(isocket);
-    Log::info("server socket closed");
-  }
-  isocket = 0;
-}
-
 ServerSocket::~ServerSocket() {
-  this->close();
+  Log::info("server socket closed");
 }
 
 /**
@@ -67,11 +32,9 @@ ServerSocket::~ServerSocket() {
  * blocking function
  */
 std::shared_ptr<ServerClient> ServerSocket::accept() {
-  struct sockaddr_in iaddress;
 
-  int new_socket;
-  if ((new_socket = ::accept(this->isocket, (struct sockaddr*)&iaddress,
-                             (socklen_t*)&iaddress)) < 0) {
+  SOCKET new_socket = BaseSocket::accept();
+  if (new_socket == INVALID_SOCKET) {
     return std::shared_ptr<ServerClient>(nullptr);
   }
 

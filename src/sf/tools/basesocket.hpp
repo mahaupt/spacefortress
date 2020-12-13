@@ -14,6 +14,14 @@
 #define BS_OBUFFER_SIZE 1024
 #define BS_MSG_QUEUE_SIZE 24
 
+#ifdef WIN32
+#define close closesocket
+#define SHUT_RDWR SD_BOTH
+#else
+#define SOCKET int
+#define INVALID_SOCKET 0
+#endif
+
 class BaseSocket {
  public:
   BaseSocket();
@@ -34,10 +42,13 @@ class BaseSocket {
   void sendData(void *data, size_t size);
   void sendEmptyMsg(const NetMsgType & t);
   void ping();
+  
+  //win32 extra
+  static bool initWsa();
 
  protected:
   // connection
-  int isocket;
+  SOCKET isocket;
   std::atomic<bool> is_connected;
   std::mutex mx_socket_tx;
   char ibuffer[BS_IBUFFER_SIZE];
@@ -56,10 +67,23 @@ class BaseSocket {
   // msg queue
   std::mutex mx_inc_msg;
   std::queue<std::shared_ptr<NetMsg>> inc_msg;
+  
+  //WIN32 extra
+#ifdef WIN32
+  static WSADATA wsaData;
+#endif
+  static bool wsa_initialized;
+  static bool wsa_result;
+  
+  //startup
+  bool createSocketClient();
+  bool createSocketServer();
 
-  //
+  //functions
   void listener();
   void parseiBuffer();
   virtual bool handleBaseMsg(std::shared_ptr<NetMsg> &pnmsg);
   virtual bool handleMsg(std::shared_ptr<NetMsg> &pnmsg) {}
+  void readAddress();
+  SOCKET accept();
 };

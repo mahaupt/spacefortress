@@ -1,29 +1,14 @@
 #include "serverclient.hpp"
 
-#ifdef WIN32
-#include <winsock2.h>
-#pragma comment(lib, "ws2_32.lib")  // Winsock Library
-#else
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#endif
 
-ServerClient::ServerClient(int socket) :
+ServerClient::ServerClient(SOCKET socket) :
       is_authenticated(false),
       name("guest"),
       connection_time(std::chrono::system_clock::now())
 {
   this->isocket = socket;
   this->is_connected = true;
-  
-  struct sockaddr_in address;
-  size_t addrlen = sizeof(sockaddr_in);
-  getpeername(isocket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
-  this->address = inet_ntoa(address.sin_addr);
-  this->port = ntohs(address.sin_port);
+  this->readAddress();
 
   Log::info("Client connected: " + this->address + ":" + std::to_string(this->port));
 }

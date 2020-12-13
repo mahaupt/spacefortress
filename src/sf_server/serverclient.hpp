@@ -13,7 +13,7 @@
 
 class ServerClient : public BaseSocket {
  public:
-  ServerClient(int socket);
+  ServerClient(SOCKET socket);
   ~ServerClient();
   
   //info functions
