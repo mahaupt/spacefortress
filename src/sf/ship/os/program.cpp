@@ -71,7 +71,7 @@ void Program::showError(const int& y, const std::string& error) {
  */
 void Program::showCentered(const int& y, const std::string& msg,
                            const int& attr) {
-  int errorx = round((this->wwidth - msg.length()) / 2.0);
+  int errorx = (int)round((this->wwidth - msg.length()) / 2.0);
   wattron(this->win, attr);
   mvwprintw(this->win, y, errorx, msg.c_str());
   wattroff(this->win, attr);

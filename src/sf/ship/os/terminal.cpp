@@ -2,7 +2,7 @@
 
 using namespace shipos;
 
-//defined in main.cpp
+// defined in main.cpp
 void stopGame(void);
 
 Terminal::Terminal(Ship* ship, std::vector<shipos::Program*>* pprograms)
@@ -42,8 +42,8 @@ void Terminal::render(ConsoleKey key) {
   }
 
   // render text line
-  size_t i;
-  for (i = 0; i < this->terminal_lines.size(); i++) {
+  int i;
+  for (i = 0; i < (int)this->terminal_lines.size(); i++) {
     mvwprintw(this->win, 1 + i, 1, this->terminal_lines[i].c_str());
   }
 
@@ -91,7 +91,7 @@ void shipos::Terminal::processCmd(std::string cmd) {
         if (this->win != stdscr) {
           this->setState(ProgramState::TERM);
         } else {
-          //terminal_lines.push_back(Lang::get("program_terminal_exit"));
+          // terminal_lines.push_back(Lang::get("program_terminal_exit"));
           stopGame();
         }
         break;

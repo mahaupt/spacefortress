@@ -1,19 +1,10 @@
 #include "basesocket.hpp"
 
-#ifdef WIN32
-#pragma comment(lib, "ws2_32.lib")  // Winsock Library
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#else
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#endif
-
 BaseSocket::BaseSocket()
-    : is_connected(false), isocket(INVALID_SOCKET), ibytes_avbl(0), latency(0) {}
+    : is_connected(false),
+      isocket(INVALID_SOCKET),
+      ibytes_avbl(0),
+      latency(0) {}
 
 /**
  * disconnects the connection and joins all threads
@@ -40,9 +31,9 @@ bool BaseSocket::wsa_result = false;
 bool BaseSocket::initWsa() {
   if (BaseSocket::wsa_initialized) return BaseSocket::wsa_result;
   BaseSocket::wsa_initialized = true;
-  
+
 #ifdef WIN32
-  if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
+  if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
     Log::error("WSAStartup failed");
     return false;
   }
@@ -56,41 +47,41 @@ bool BaseSocket::initWsa() {
  */
 bool BaseSocket::createSocketClient() {
 #ifdef WIN32
-  struct addrinfo *result = NULL,
-                  *ptr = NULL,
-                  hints;
+  struct addrinfo *result = NULL, *ptr = NULL, hints;
 
-  memset( &hints, 0, sizeof(hints) );
+  memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_protocol = IPPROTO_TCP;
-  
-  if (getaddrinfo(this->address.c_str(), std::to_string(this->port).c_str(), &hints, &result) != 0) {
+
+  if (getaddrinfo(this->address.c_str(), std::to_string(this->port).c_str(),
+                  &hints, &result) != 0) {
     Log::error("client socket getaddrinfo failed");
     return false;
   }
-  
-  ptr=result;
+
+  ptr = result;
   this->isocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
   if (this->isock == INVALID_SOCKET) {
     Log::error("client socket creation failed");
     freeaddrinfo(result);
     return false;
   }
-  
-  if (connect( this->isock, ptr->ai_addr, (int)ptr->ai_addrlen) == SOCKET_ERROR) {
+
+  if (connect(this->isock, ptr->ai_addr, (int)ptr->ai_addrlen) ==
+      SOCKET_ERROR) {
     Log::error("client socket connect failed");
     freeaddrinfo(result);
     return false;
   }
-  
+
 #else
-  
+
   if ((this->isocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
     Log::error("client socket creation failed");
     return false;
   }
-  
+
   // setup socket adress
   struct sockaddr_in oaddress;
   oaddress.sin_family = AF_INET;
@@ -102,10 +93,9 @@ bool BaseSocket::createSocketClient() {
     return;
   }
 #endif
-  
+
   return true;
 }
-
 
 /**
  * creates and binds a server socket
@@ -118,36 +108,39 @@ bool BaseSocket::createSocketServer() {
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_protocol = IPPROTO_TCP;
   hints.ai_flags = AI_PASSIVE;
-  
-  if (getaddrinfo(this->address.c_str(), std::to_string(this->port).c_str(), &hints, &result) != 0) {
+
+  if (getaddrinfo(this->address.c_str(), std::to_string(this->port).c_str(),
+                  &hints, &result) != 0) {
     Log::error("server socket getaddrinfo failed");
     return false;
   }
-  
-  this->isock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+
+  this->isock =
+      socket(result->ai_family, result->ai_socktype, result->ai_protocol);
   if (this->isock == INVALID_SOCKET) {
     Log::error("server socket creation failed");
     freeaddrinfo(result);
     return false;
   }
-  
-  if (bind( this->isocket, result->ai_addr, (int)result->ai_addrlen) == SOCKET_ERROR) {
+
+  if (bind(this->isocket, result->ai_addr, (int)result->ai_addrlen) ==
+      SOCKET_ERROR) {
     freeaddrinfo(result);
     Log::error("server socket bind failed");
     return false;
   }
-  
-  if ( listen( this->isocket, 5 ) == SOCKET_ERROR ) {
+
+  if (listen(this->isocket, 5) == SOCKET_ERROR) {
     Log::error("server socket listen failed");
     return false;
   }
-  
+
 #else
   if ((this->isocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
     Log::error("server socket creation failed");
     return false;
   }
-  
+
   // setup socket adress
   struct sockaddr_in oaddress;
   oaddress.sin_family = AF_INET;
@@ -163,7 +156,7 @@ bool BaseSocket::createSocketServer() {
     return false;
   }
 #endif
-  
+
   return true;
 }
 
@@ -184,13 +177,13 @@ void BaseSocket::listener() {
   while (this->isConnected()) {
     size_t free_buffer_size = BS_IBUFFER_SIZE - this->ibytes_avbl;
     void* buffer_start = this->ibuffer + this->ibytes_avbl;
-    
+
 #ifdef WIN32
     size_t bytes = read(this->isocket, buffer_start, free_buffer_size, 0);
 #else
     size_t bytes = read(this->isocket, buffer_start, free_buffer_size);
 #endif
-    
+
     this->ibytes_avbl += bytes;
 
     if (bytes <= 0) {
@@ -203,8 +196,9 @@ void BaseSocket::listener() {
 }
 
 /**
- * parses Messages from the buffer and passes it to the message handler functions handleBaseMsg and handleMsg
- * if both of those functions return true, it will be saved into the queue and handled later
+ * parses Messages from the buffer and passes it to the message handler
+ * functions handleBaseMsg and handleMsg if both of those functions return true,
+ * it will be saved into the queue and handled later
  */
 void BaseSocket::parseiBuffer() {
   while (this->ibytes_avbl >= NETMSG_HEADER_SIZE) {
@@ -246,7 +240,7 @@ void BaseSocket::sendData(void* data, size_t size) {
   send(this->isocket, data, size, 0);
 }
 
-void BaseSocket::sendEmptyMsg(const NetMsgType & t) {
+void BaseSocket::sendEmptyMsg(const NetMsgType& t) {
   NetMsg nmsg(t);
   this->sendData(&nmsg, nmsg.getSize());
 }
@@ -268,8 +262,9 @@ void BaseSocket::disconnect() {
 }
 
 /**
- * handles low level messages like ping, none, defines uniform behaviour for client & servers
- * specific client or server low-level behaviour can be defined in BaseSocket::handleMsg()
+ * handles low level messages like ping, none, defines uniform behaviour for
+ * client & servers specific client or server low-level behaviour can be defined
+ * in BaseSocket::handleMsg()
  */
 bool BaseSocket::handleBaseMsg(std::shared_ptr<NetMsg>& pnmsg) {
   // handle basic behaviour
@@ -315,7 +310,6 @@ std::shared_ptr<NetMsg> BaseSocket::popMessage() {
   return ptr;
 }
 
-
 void BaseSocket::readAddress() {
   struct sockaddr_in address;
   size_t addrlen = sizeof(sockaddr_in);
@@ -324,10 +318,9 @@ void BaseSocket::readAddress() {
   this->port = ntohs(address.sin_port);
 }
 
-
 SOCKET BaseSocket::accept() {
   SOCKET new_socket;
-  
+
 #ifdef WIN32
   new_socket = ::accept(this->isocket, NULL, NULL);
 #else

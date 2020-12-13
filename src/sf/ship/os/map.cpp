@@ -28,8 +28,8 @@ void shipos::Map::render(ConsoleKey key) {
   }
 
   // get ship pos and center pos
-  int cx = round(this->wwidth / 2.0);
-  int cy = round(this->wheight / 2.0);
+  int cx = (int)round(this->wwidth / 2.0);
+  int cy = (int)round(this->wheight / 2.0);
   Vec2 spos = this->ship->getPos();
 
   // draw objects with sensor
@@ -46,8 +46,8 @@ void shipos::Map::render(ConsoleKey key) {
         gpos *= this->zoom;
 
         // calc screen position
-        int spx = round(cx + gpos.getX());
-        int spy = round(cy - gpos.getY());
+        int spx = (int)round(cx + gpos.getX());
+        int spy = (int)round(cy - gpos.getY());
 
         // object is in map screen
         if (spx > 1 && spx < this->wwidth - 2 && spy > 1 &&

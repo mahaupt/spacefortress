@@ -100,24 +100,26 @@ void Helm::render(ConsoleKey key) {
   mvwprintw(this->win, 1, 1, "%.0f", this->rot / 3.1416 * 180.0);
 
   // draw center
-  int cx = round(this->wwidth / 2.0f) - 1;
-  int cy = round(this->wheight / 2.0f) - 2;
+  int cx = (int)round(this->wwidth / 2.0f) - 1;
+  int cy = (int)round(this->wheight / 2.0f) - 2;
   mvwprintw(this->win, cy, cx, "O");
   double r = fmin((this->wwidth - 4) / 2.0, this->wheight - 6) / 2.0;
 
   // draw circle
-  int steps = round(r * 20);
+  int steps = (int)round(r * 20);
   for (int i = 0; i < steps; i++) {
-    int px = round(sin((double)i + 3.1416 * 2 / (double)steps) * r * 2 + cx);
-    int py = round(-cos((double)i + 3.1416 * 2 / (double)steps) * r + cy);
+    int px =
+        (int)round(sin((double)i + 3.1416 * 2 / (double)steps) * r * 2 + cx);
+    int py = (int)round(-cos((double)i + 3.1416 * 2 / (double)steps) * r + cy);
     mvwprintw(this->win, py, px, "X");
   }
   // draw line
-  int stepsl = round(r);
+  int stepsl = (int)round(r);
   for (int i = 0; i < stepsl; i++) {
-    int px =
-        round(sin(this->rot) * r * 2.0 * ((double)i / (double)stepsl) + cx);
-    int py = round(-cos(this->rot) * r * ((double)i / (double)stepsl) + cy);
+    int px = (int)round(
+        sin(this->rot) * r * 2.0 * ((double)i / (double)stepsl) + cx);
+    int py =
+        (int)round(-cos(this->rot) * r * ((double)i / (double)stepsl) + cy);
     mvwprintw(this->win, py, px, "o");
   }
 
@@ -125,8 +127,8 @@ void Helm::render(ConsoleKey key) {
   if (this->ptr_engine != 0) {
     if (this->ptr_engine->isOnline()) {
       std::string pwr = Lang::get("program_helm_eng") + ": [";
-      int nsymb = this->wwidth - 3 - pwr.length();
-      int nsymb_h = round(nsymb * this->engpwr);
+      int nsymb = this->wwidth - 3 - (int)pwr.length();
+      int nsymb_h = (int)round(nsymb * this->engpwr);
       for (int i = 0; i < nsymb_h; i++) {
         pwr += "#";
       }
