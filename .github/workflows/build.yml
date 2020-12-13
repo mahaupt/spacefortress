@@ -14,11 +14,9 @@ jobs:
       uses: actions/checkout@v2
     - name: Checkout submodules
       run: git submodule update --init --recursive
-    - name: Install libcurses-dev
-      run: sudo apt-get update && sudo apt-get install -y libncurses-dev
 
     - name: Configure
-      run: cmake . -DCURSES_INCLUDE_PATH=/usr/include/ncursesw
+      run: cmake . -DCURSES_INCLUDE_PATH=/usr/include/ncursesw -DCURSES_LIBRARIES=/usr/lib/x86_64-linux-gnu/libcursesw.so
     - name: Build
       run: cmake --build . -j4 --config Release
 
