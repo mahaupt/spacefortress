@@ -2,3 +2,7 @@
 	path = yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
 	ignore = dirty
+[submodule "PDCurses"]
+	path = PDCurses
+	url = https://github.com/wmcbrine/PDCurses
+	ignore = dirty

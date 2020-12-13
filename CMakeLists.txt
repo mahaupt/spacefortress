@@ -8,13 +8,23 @@ set (CMAKE_BUILD_TYPE Debug)
 #set (CMAKE_BUILD_TYPE RelWithDebInfo)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-set(CURSES_NEED_NCURSES TRUE)
 set(CURSES_NEED_WIDE TRUE)
 
 #external packages
-find_package(Curses REQUIRED)
+if(MSVC)
+  add_custom_target(
+   PDCurses
+   COMMAND nmake -f Makefile.vc WIDE=Y
+   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/PDCurses/Wincon"
+  )
+  set(CURSES_LIBRARIES "${CMAKE_SOURCE_DIR}/PDCurses/Wincon")
+  set(CURSES_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/PDCurses")
+else()
+  find_package(Curses REQUIRED)
+endif()
+
 find_package(Threads REQUIRED)
-add_subdirectory(yaml-cpp)
+add_subdirectory(yaml-cpp buildycpp)
 include_directories(
   ${CURSES_INCLUDE_DIR}
   "yaml-cpp/include"
