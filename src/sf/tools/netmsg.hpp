@@ -108,7 +108,7 @@ class NetMsg {
   NetMsg(const NetMsgType& type) : NetMsg() { this->setType(type); }
   NetMsg(const char* text) {
     data = new NetMsgText(text);
-    size = data->getSize();
+    size = (uint16_t)data->getSize();
     setType(NetMsgType::TEXT);
   }
 
@@ -118,6 +118,6 @@ class NetMsg {
   void setType(const NetMsgType& t) { this->type = (uint16_t)t; }
 
   // info functions
-  uint16_t getSize() { return this->size + NETMSG_HEADER_SIZE; }
+  size_t getSize() { return this->size + NETMSG_HEADER_SIZE; }
 };
 #pragma pack(pop)

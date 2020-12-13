@@ -1,7 +1,7 @@
 #include "netmsg.hpp"
 
 size_t NetMsg::writeBuffer(char* buffer, size_t buffer_size) {
-  if (buffer_size < this->size + NETMSG_HEADER_SIZE) return 0;
+  if (buffer_size < (size_t)this->size + NETMSG_HEADER_SIZE) return 0;
 
   // header
   memcpy(buffer, this, NETMSG_HEADER_SIZE);
@@ -21,7 +21,7 @@ bool NetMsg::tryReadFromBuffer(char* buffer, size_t buffer_size) {
   memcpy(this, buffer, NETMSG_HEADER_SIZE);
 
   // get body
-  if (buffer_size < this->size + NETMSG_HEADER_SIZE) return false;
+  if (buffer_size < (size_t)this->size + NETMSG_HEADER_SIZE) return false;
   char* dataptr = buffer + NETMSG_HEADER_SIZE;
   switch ((NetMsgType)this->type) {
     case (NetMsgType::INTENTION_JOIN):

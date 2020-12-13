@@ -19,4 +19,4 @@ jobs:
     - name: cmake
       run: cmake .
     - name: cmake --build .
-      run: cmake --build .
+      run: cmake --build . -j4

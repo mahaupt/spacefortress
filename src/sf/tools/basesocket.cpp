@@ -179,7 +179,8 @@ void BaseSocket::listener() {
     void* buffer_start = this->ibuffer + this->ibytes_avbl;
 
 #ifdef WIN32
-    size_t bytes = recv(this->isocket, buffer_start, free_buffer_size, 0);
+    size_t bytes = recv(this->isocket, (const char*)buffer_start,
+                        (int)free_buffer_size, 0);
 #else
     size_t bytes = read(this->isocket, buffer_start, free_buffer_size);
 #endif
@@ -238,7 +239,7 @@ void BaseSocket::parseiBuffer() {
 void BaseSocket::sendData(void* data, size_t size) {
   std::lock_guard<std::mutex> lock_guard(this->mx_socket_tx);
 #ifdef WIN32
-  send(this->isocket, (const char*)data, size, 0);
+  send(this->isocket, (const char*)data, (int)size, 0);
 #else
   send(this->isocket, data, size, 0);
 #endif
