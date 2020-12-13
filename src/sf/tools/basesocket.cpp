@@ -179,8 +179,8 @@ void BaseSocket::listener() {
     void* buffer_start = this->ibuffer + this->ibytes_avbl;
 
 #ifdef WIN32
-    size_t bytes = recv(this->isocket, (const char*)buffer_start,
-                        (int)free_buffer_size, 0);
+    size_t bytes =
+        recv(this->isocket, (char*)buffer_start, (int)free_buffer_size, 0);
 #else
     size_t bytes = read(this->isocket, buffer_start, free_buffer_size);
 #endif
