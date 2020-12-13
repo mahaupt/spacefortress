@@ -115,9 +115,9 @@ bool BaseSocket::createSocketServer() {
     return false;
   }
 
-  this->isock =
+  this->isocket =
       socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-  if (this->isock == INVALID_SOCKET) {
+  if (this->isocket == INVALID_SOCKET) {
     Log::error("server socket creation failed");
     freeaddrinfo(result);
     return false;
