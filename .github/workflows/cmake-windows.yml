@@ -27,8 +27,6 @@ jobs:
       with:
         name: windows-latest
         path: |
-          sf.exe
-          sf_server.exe
-          sf_client_test.exe
-          config.yaml
+          ./*.exe
+          ./*.yaml
           lang/
