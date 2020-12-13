@@ -20,7 +20,7 @@ jobs:
     - name: Configure
       run: cmake .
     - name: Build
-      run: cmake --build . -j4
+      run: cmake --build . -j4 --target ALL_BUILD --config Release
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2

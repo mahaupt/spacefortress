@@ -1,17 +1,23 @@
 cmake_minimum_required(VERSION 3.1.0)
-project (sf)
 
 #set variables
 set (CMAKE_PROJECT_VERSION 0.0.9)
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_BUILD_TYPE Debug)
 #set (CMAKE_BUILD_TYPE RelWithDebInfo)
+
+
+
+
+project (sf)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 if ( CMAKE_COMPILER_IS_GNUCC )
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter")
 endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CURSES_NEED_WIDE TRUE)
+
+
 
 
 #external packages
