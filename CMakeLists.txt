@@ -76,6 +76,10 @@ target_link_libraries(
     Threads::Threads
 )
 
+if(MSVC)
+  add_dependencies(sf_server PDCurses)
+endif()
+
 ##############################
 # SF_CLIENT_TEST
 file(GLOB_RECURSE SF_CLIENT_TEST_SRC
