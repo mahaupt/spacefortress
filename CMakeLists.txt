@@ -6,9 +6,7 @@ set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_BUILD_TYPE Debug)
 #set (CMAKE_BUILD_TYPE RelWithDebInfo)
 
-
-
-
+#set project variables
 project (sf)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 if ( CMAKE_COMPILER_IS_GNUCC )
@@ -16,9 +14,6 @@ if ( CMAKE_COMPILER_IS_GNUCC )
 endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CURSES_NEED_WIDE TRUE)
-
-
-
 
 #external packages
 if(MSVC)
@@ -43,6 +38,10 @@ include_directories(
 #check ncursesw
 message(STATUS "CURSES_LIBRARIES: ${CURSES_LIBRARIES}")
 message(STATUS "CURSES_INCLUDE: ${CURSES_INCLUDE_DIR}")
+
+#tests
+ENABLE_TESTING()
+ADD_SUBDIRECTORY( tests )
 
 ##############################
 # SF
