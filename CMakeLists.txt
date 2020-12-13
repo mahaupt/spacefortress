@@ -24,7 +24,7 @@ set(CURSES_NEED_WIDE TRUE)
 if(MSVC)
   add_custom_target(
    PDCurses
-   COMMAND nmake -f Makefile.vc WIDE=Y
+   COMMAND nmake -f Makefile.vc WIDE=Y UTF8=Y
    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/PDCurses/Wincon"
   )
   set(CURSES_LIBRARIES "${CMAKE_SOURCE_DIR}/PDCurses/Wincon/pdcurses.lib")

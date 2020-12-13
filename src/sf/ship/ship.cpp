@@ -8,7 +8,7 @@ Ship::Ship(const std::string &name, double hull,
   this->max_hull = hull;
   this->max_shield = 10;
 
-  this->symbol = L'\u2206';
+  this->symbol = "\u2206";
 }
 
 Ship::~Ship() {
