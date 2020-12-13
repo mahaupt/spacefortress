@@ -118,6 +118,6 @@ class NetMsg {
   void setType(const NetMsgType& t) { this->type = (uint16_t)t; }
 
   // info functions
-  size_t getSize() { return this->size + NETMSG_HEADER_SIZE; }
+  uint16_t getSize() { return this->size + NETMSG_HEADER_SIZE; }
 };
 #pragma pack(pop)

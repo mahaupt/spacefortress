@@ -1,8 +1,8 @@
 #include "basesocket.hpp"
 
 BaseSocket::BaseSocket()
-    : is_connected(false),
-      isocket(INVALID_SOCKET),
+    : isocket(INVALID_SOCKET),
+      is_connected(false),
       ibytes_avbl(0),
       latency(0) {}
 
@@ -62,13 +62,13 @@ bool BaseSocket::createSocketClient() {
 
   ptr = result;
   this->isocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-  if (this->isock == INVALID_SOCKET) {
+  if (this->isocket == INVALID_SOCKET) {
     Log::error("client socket creation failed");
     freeaddrinfo(result);
     return false;
   }
 
-  if (connect(this->isock, ptr->ai_addr, (int)ptr->ai_addrlen) ==
+  if (connect(this->isocket, ptr->ai_addr, (int)ptr->ai_addrlen) ==
       SOCKET_ERROR) {
     Log::error("client socket connect failed");
     freeaddrinfo(result);
@@ -179,7 +179,7 @@ void BaseSocket::listener() {
     void* buffer_start = this->ibuffer + this->ibytes_avbl;
 
 #ifdef WIN32
-    size_t bytes = read(this->isocket, buffer_start, free_buffer_size, 0);
+    size_t bytes = recv(this->isocket, buffer_start, free_buffer_size, 0);
 #else
     size_t bytes = read(this->isocket, buffer_start, free_buffer_size);
 #endif
@@ -237,7 +237,11 @@ void BaseSocket::parseiBuffer() {
 
 void BaseSocket::sendData(void* data, size_t size) {
   std::lock_guard<std::mutex> lock_guard(this->mx_socket_tx);
+#ifdef WIN32
+  send(this->isocket, (const char*)data, size, 0);
+#else
   send(this->isocket, data, size, 0);
+#endif
 }
 
 void BaseSocket::sendEmptyMsg(const NetMsgType& t) {
