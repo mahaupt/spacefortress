@@ -22,7 +22,7 @@ class GameObject {
   void setName(const std::string &name) { this->name = name; }
   std::string getName() { return this->name; }
   std::string getType() { return this->type; }
-  wchar_t getSymbol() { return this->symbol; }
+  std::string getSymbol() { return this->symbol; }
   bool isDockable() { return this->is_dockable; }
   void setFixed(const bool &f) { this->is_fixed = f; }
 
@@ -55,7 +55,7 @@ class GameObject {
   bool is_dockable;
   std::string name;
   std::string type;
-  wchar_t symbol;
+  std::string symbol;
 
   Vec2 vel;
 

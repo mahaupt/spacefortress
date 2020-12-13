@@ -16,7 +16,7 @@ jobs:
       run: git submodule update --init --recursive
 
     - name: Configure
-      run: cmake . -DCURSES_INCLUDE_PATH=/usr/include/ncursesw -DCURSES_LIBRARIES=/usr/lib/x86_64-linux-gnu/libcursesw.so
+      run: cmake . -DCURSES_INCLUDE_PATH=/usr/include/ncursesw -DCURSES_LIBRARIES=/usr/lib/x86_64-linux-gnu/libncursesw.so
     - name: Build
       run: cmake --build . -j4 --config Release
 
