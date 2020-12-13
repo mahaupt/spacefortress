@@ -16,7 +16,19 @@ jobs:
       uses: actions/checkout@v2
     - name: Checkout submodules
       run: git submodule update --init --recursive
-    - name: cmake
+
+    - name: Configure
       run: cmake .
-    - name: cmake --build .
+    - name: Build
       run: cmake --build . -j4
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-latest
+        path: |
+          sf.exe
+          sf_server.exe
+          sf_client_test.exe
+          config.yaml
+          lang/
