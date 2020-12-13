@@ -57,6 +57,8 @@ target_link_libraries(
 )
 
 set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
+set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG . )
+set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE . )
 
 ##############################
 # SF_SERVER
@@ -83,6 +85,8 @@ if(MSVC)
 endif()
 
 set_target_properties( sf_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
+set_target_properties( sf_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG . )
+set_target_properties( sf_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE . )
 
 ##############################
 # SF_CLIENT_TEST
@@ -106,6 +110,8 @@ target_link_libraries(
 )
 
 set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
+set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG . )
+set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE . )
 
 #copy config and language files
 #file(COPY lang DESTINATION .)
