@@ -28,6 +28,10 @@ jobs:
           ./sf*
           ./*.yaml
           lang/
+          
+    - name: Run Tests
+      run: ctest
+
 
   build_macos:
     runs-on: macos-latest
@@ -50,6 +54,10 @@ jobs:
           ./sf*
           ./*.yaml
           lang/
+          
+    - name: Run Tests
+      run: ctest
+      
 
   build_windows:
     runs-on: windows-latest
@@ -62,7 +70,7 @@ jobs:
     - name: Configure
       run: cmake .
     - name: Build
-      run: cmake --build . -j4 --target ALL_BUILD --config Release
+      run: cmake --build . -j4 --target ALL_BUILD --config Release --utf-8
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
@@ -72,3 +80,6 @@ jobs:
           ./*.exe
           ./*.yaml
           lang/
+          
+    - name: Run Tests
+      run: ctest
