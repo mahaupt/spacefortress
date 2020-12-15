@@ -8,6 +8,10 @@
 #include "ui/menuitem.hpp"
 #include "ui/text.hpp"
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+
 enum MainState { MAIN_MENU, CREW_CREATE, CREW_JOIN, GAME };
 
 Game* pgame = 0;
@@ -34,6 +38,10 @@ void backToMenu(void) { main_state = MAIN_MENU; }
  * @return 0
  */
 int main() {
+#ifdef WIN32
+  SetConsoleOutputCP(CP_UTF8);
+#endif
+
   //////////////////////////////////////////////
   // MODULE LOADING
   Log log("log.txt", LogLevel::LL_ALL);
@@ -45,8 +53,10 @@ int main() {
   //////////////////////////////////////////////
   // MENU SETUP
   Menu main_menu;
-  auto main_menu_1 = MenuItem(0, -1, Lang::get("menu_create_crew"), &startCrewCreate);
-  auto main_menu_2 = MenuItem(0, 0, Lang::get("menu_join_crew"), &startCrewJoin);
+  auto main_menu_1 =
+      MenuItem(0, -1, Lang::get("menu_create_crew"), &startCrewCreate);
+  auto main_menu_2 =
+      MenuItem(0, 0, Lang::get("menu_join_crew"), &startCrewJoin);
   auto main_menu_3 = MenuItem(0, 1, Lang::get("menu_exit"), &endProgram);
   main_menu.addSelectable(&main_menu_1);
   main_menu.addSelectable(&main_menu_2);
@@ -111,8 +121,8 @@ int main() {
       case CREW_CREATE: {
         Console::sclear();
         create_menu.render(key);
-        
-        //save config
+
+        // save config
         if (main_state != CREW_CREATE) {
           Config::setStr("username", input_username.getValue());
           Config::setStr("server", input_server.getValue());
@@ -123,8 +133,8 @@ int main() {
       case CREW_JOIN: {
         Console::sclear();
         join_menu.render(key);
-        
-        //save config
+
+        // save config
         if (main_state != CREW_JOIN) {
           Config::setStr("username", input_username.getValue());
           Config::setStr("server", input_server.getValue());
