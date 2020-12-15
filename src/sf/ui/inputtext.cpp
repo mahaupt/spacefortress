@@ -4,7 +4,7 @@ InputText::InputText(int x, int y, std::string label)
     : UiElement(x, y, MIDDLE, MIDDLE),
       selected(false),
       cursor_pos(0),
-      width(20),
+      width(21),
       label(label),
       filler("_") {}
 

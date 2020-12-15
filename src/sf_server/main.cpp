@@ -5,7 +5,7 @@
 
 int main(void) {
   Log log(LogLevel::LL_ALL);
-  Server s("0.0.0.0", 8123);
+  Server s("0.0.0.0", 7339);
   if (!s.isSocketReady()) return 1;
 
   s.start();
