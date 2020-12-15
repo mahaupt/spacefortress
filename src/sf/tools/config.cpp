@@ -21,6 +21,8 @@ Config::Config() {
   }
 }
 
+Config::~Config() { Config::self = 0; }
+
 bool Config::hasKey(const char* key) {
   if (Config::self == 0) return false;
   return Config::self->config[key].IsDefined();
@@ -45,4 +47,8 @@ void Config::setStr(const char* key, const std::string& val) {
   node = val;
 }
 
-Config::~Config() { Config::self = 0; }
+void Config::save() {
+  if (Config::self == 0) return;
+  std::ofstream fout("config.yaml");
+  fout << Config::self->config; // dump it back into the file
+}
