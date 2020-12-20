@@ -5,7 +5,7 @@
 
 int main(void) {
   Log log(LogLevel::LL_ALL);
-  Client c("127.0.0.1", 7339);
+  Client c("127.0.0.1", 7339, "cbacon");
   if (!c.isConnected()) return 1;
   std::cin.get();
 

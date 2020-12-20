@@ -17,6 +17,9 @@ enum MainState { MAIN_MENU, CREW_CREATE, CREW_JOIN, GAME };
 Game* pgame = 0;
 bool p_running = true;
 MainState main_state = MAIN_MENU;
+std::string main_crew_code;
+std::string main_serverip;
+std::string main_username;
 
 /**
  * Callbacks
@@ -24,14 +27,22 @@ MainState main_state = MAIN_MENU;
 void endProgram(void) { p_running = false; }
 void startCrewCreate(void) { main_state = CREW_CREATE; }
 void startCrewJoin(void) { main_state = CREW_JOIN; }
-void startGame(void) {
-  main_state = GAME;
-  if (pgame != 0) {
+void stopGame(void) { main_state = MAIN_MENU; }
+void backToMenu(void) { main_state = MAIN_MENU; }
+void startGameCreate(void) {
+  if (pgame == 0) return;
+  if (pgame->connect(main_serverip, main_username, "")) {
+    main_state = GAME;
     pgame->start();
   }
 }
-void stopGame(void) { main_state = MAIN_MENU; }
-void backToMenu(void) { main_state = MAIN_MENU; }
+void startGameJoin(void) {
+  if (pgame == 0) return;
+  if (pgame->connect(main_serverip, main_username, main_crew_code)) {
+    main_state = GAME;
+    pgame->start();
+  }
+}
 
 /**
  * This is the main state machine for the program
@@ -66,9 +77,9 @@ int main() {
   auto input_username = InputText(-5, -2, Lang::get("general_username") + ": ");
   input_username.setValue(Config::getStr("username", "Steve"));
   auto input_server = InputText(-5, -1, Lang::get("general_server") + ": ");
-  input_server.setValue(Config::getStr("server", "127.0.0.1:8123"));
+  input_server.setValue(Config::getStr("server", "127.0.0.1:7339"));
   auto create_menu_1 =
-      MenuItem(0, 1, Lang::get("menu_create_crew"), &startGame);
+      MenuItem(0, 1, Lang::get("menu_create_crew"), &startGameCreate);
   auto create_menu_2 =
       MenuItem(0, 2, "<< " + Lang::get("general_back"), &backToMenu);
   create_menu.addSelectable(&input_username);
@@ -79,7 +90,7 @@ int main() {
   Menu join_menu;
   auto join_menu_1 = InputText(-5, 0, Lang::get("general_crew_code") + ": ");
   auto join_menu_2 =
-      MenuItem(0, 2, Lang::get("general_start_game"), &startGame);
+      MenuItem(0, 2, Lang::get("general_start_game"), &startGameJoin);
   auto join_menu_3 =
       MenuItem(0, 3, "<< " + Lang::get("general_back"), &backToMenu);
   join_menu.addSelectable(&input_username);
@@ -97,9 +108,9 @@ int main() {
   sf_banner.addTextLine(
       "/___/ .__\\_,_/\\__/\\__/_/  \\___/_/  \\__/_/  \\__/___/___/");
   sf_banner.addTextLine("   /_/");
-  main_menu.addNonSelectable(&sf_banner);
-  create_menu.addNonSelectable(&sf_banner);
-  join_menu.addNonSelectable(&sf_banner);
+  main_menu.addNonSelectable((UiElement*)&sf_banner);
+  create_menu.addNonSelectable((UiElement*)&sf_banner);
+  join_menu.addNonSelectable((UiElement*)&sf_banner);
 
   //////////////////////////////////////////////
   // GAME SETUP
@@ -122,6 +133,11 @@ int main() {
         Console::sclear();
         create_menu.render(key);
 
+        // save input value entries
+        main_serverip = input_server.getValue();
+        main_username = input_username.getValue();
+        main_crew_code = join_menu_1.getValue();
+
         // save config
         if (main_state != CREW_CREATE) {
           Config::setStr("username", input_username.getValue());
@@ -133,6 +149,11 @@ int main() {
       case CREW_JOIN: {
         Console::sclear();
         join_menu.render(key);
+
+        // save input value entries
+        main_serverip = input_server.getValue();
+        main_username = input_username.getValue();
+        main_crew_code = join_menu_1.getValue();
 
         // save config
         if (main_state != CREW_JOIN) {

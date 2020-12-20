@@ -42,6 +42,7 @@ class BaseSocket {
   // management
   void startListener();
   void disconnect();
+  void close();
 
   // info
   bool isConnected();
@@ -94,8 +95,7 @@ class BaseSocket {
   // functions
   void listener();
   void parseiBuffer();
-  virtual bool handleBaseMsg(std::shared_ptr<NetMsg> &pnmsg);
-  virtual bool handleMsg(std::shared_ptr<NetMsg> &pnmsg) { return true; }
+  virtual bool handleMsg(std::shared_ptr<NetMsg> &pnmsg);
   void readAddress();
   SOCKET accept();
 };

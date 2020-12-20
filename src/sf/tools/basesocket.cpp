@@ -12,15 +12,7 @@ BaseSocket::BaseSocket()
  */
 BaseSocket::~BaseSocket() {
   this->disconnect();
-
-  // join threads
-  if (this->fut_listener.valid()) this->fut_listener.wait();
-
-  // close socket
-  if (this->isocket != INVALID_SOCKET) {
-    close(this->isocket);
-    this->isocket = INVALID_SOCKET;
-  }
+  this->close();
 }
 
 /**
@@ -219,9 +211,8 @@ void BaseSocket::parseiBuffer() {
             bytes_remaining_in_buffer);
     this->ibytes_avbl -= bytes_taken;
 
-    // handle messages directly
-    if (!this->handleBaseMsg(pnmsg)) continue;
-    if (!this->handleMsg(pnmsg)) continue;
+    // handle messages
+    if (this->handleMsg(pnmsg)) continue;
 
     // otherwise, put in queue to handle later
     std::lock_guard<std::mutex> lock_guard(mx_inc_msg);
@@ -260,6 +251,9 @@ void BaseSocket::ping() {
 
 bool BaseSocket::isConnected() { return this->is_connected; }
 
+/**
+ * disconnects client
+ */
 void BaseSocket::disconnect() {
   this->is_connected = false;
 
@@ -270,18 +264,34 @@ void BaseSocket::disconnect() {
 }
 
 /**
- * handles low level messages like ping, none, defines uniform behaviour for
- * client & servers specific client or server low-level behaviour can be defined
- * in BaseSocket::handleMsg()
+ * properly closes socket
  */
-bool BaseSocket::handleBaseMsg(std::shared_ptr<NetMsg>& pnmsg) {
+void BaseSocket::close() {
+  // join threads
+  if (this->fut_listener.valid()) this->fut_listener.wait();
+
+  // close socket
+  if (this->isocket != INVALID_SOCKET) {
+    ::close(this->isocket);
+    this->isocket = INVALID_SOCKET;
+  }
+}
+
+/**
+ * handles messages like ping, none, defines uniform behaviour for
+ * client & servers specific client or server low-level behaviour can be defined
+ * by overriding this method
+ *
+ * @return bool true if msg was handled, false otherwise
+ */
+bool BaseSocket::handleMsg(std::shared_ptr<NetMsg>& pnmsg) {
   // handle basic behaviour
   switch ((NetMsgType)pnmsg->type) {
     case (NetMsgType::PING): {
       NetMsg reply;
       reply.setType(NetMsgType::PONG);
       this->sendData(&reply, reply.getSize());
-      return false;
+      return true;
     }
     case (NetMsgType::PONG): {
       // handle pong
@@ -293,10 +303,10 @@ bool BaseSocket::handleBaseMsg(std::shared_ptr<NetMsg>& pnmsg) {
       if (this->latency > 20) {
         this->latency = 0;
       }
-      return false;
+      return true;
     }
     default:
-      return true;
+      return false;
   }
 }
 

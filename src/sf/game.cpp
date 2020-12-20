@@ -51,6 +51,20 @@ void Game::createGameWorld() {
 }
 
 /**
+ * Connects as client to server
+ * @return bool true if connection successfull
+ */
+bool Game::connect(const std::string &addr, const std::string &username,
+                   const std::string &crewcode) {
+  size_t colpos = addr.find(':');
+  std::string address = addr.substr(0, colpos);
+  uint port = std::stoul(addr.substr(colpos + 1));
+  this->client.connect(address, port, username, crewcode);
+
+  return this->client.isConnected();
+}
+
+/**
  * creating game objects, player ship and startup shipos
  */
 void Game::start() {
@@ -66,6 +80,7 @@ void Game::stop() {
   this->running = false;
   this->pshipos.reset();
   this->game_objects.clear();
+  this->client.disconnect();
   Log::info("game stop");
 }
 
@@ -98,8 +113,9 @@ void Game::renderWin(ConsoleKey key) {
 }
 
 /**
- * calculates the time period since the last time this function was called, or 0 on the first call.
- * used to call once for simulation times, do not call twice per game loop!
+ * calculates the time period since the last time this function was called, or 0
+ * on the first call. used to call once for simulation times, do not call twice
+ * per game loop!
  */
 double Game::calcSimTime() {
   static auto last_start_time = std::chrono::steady_clock::now();

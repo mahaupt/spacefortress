@@ -30,7 +30,7 @@ enum class NetMsgType {
   OBJECT = 101,
 
   // errors
-  ERR = 200,
+  ERR_ = 200,
   ERR_REQ = 201,
   ERR_FULL = 202,
   ERR_CREWNOTFOUND = 203,
