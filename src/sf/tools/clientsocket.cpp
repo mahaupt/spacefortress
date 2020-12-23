@@ -45,15 +45,12 @@ void ClientSocket::disconnect() {
  */
 void ClientSocket::authenticate(const std::string& username,
                                 const std::string& crewcode) {
-  NetMsg auth(username.c_str());
-  auth.setType(NetMsgType::AUTH);
+  NetMsg auth(username.c_str(), NetMsgType::AUTH);
 
   // create create / join msg depending on crewcode content
-  NetMsg intent = (crewcode.length() > 0) ? NetMsg(crewcode.c_str()) : NetMsg();
-  intent.setType(NetMsgType::CREW_CREATE);
-  if (crewcode.length() > 0) {
-    intent.setType(NetMsgType::CREW_JOIN);
-  }
+  NetMsg intent = (crewcode.length() > 0)
+                      ? NetMsg(crewcode.c_str(), NetMsgType::CREW_JOIN)
+                      : NetMsg(NetMsgType::CREW_CREATE);
 
   size_t bytes = auth.writeBuffer(this->obuffer, BS_OBUFFER_SIZE);
   bytes += intent.writeBuffer(this->obuffer + bytes, BS_OBUFFER_SIZE - bytes);

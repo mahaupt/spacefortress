@@ -55,7 +55,7 @@ void Server::newClientAcceptor() {
     if (!this->is_running) break;
     if (newclient) {
       {
-        if (clients.size() >= SERVER_MAX_CLIENTS) {
+        if ((int)clients.size() >= Config::get<int>("max_clients", 128)) {
           newclient->sendEmptyMsg(NetMsgType::ERR_FULL);
           continue;  // destructs client object
         }
@@ -125,16 +125,15 @@ void Server::msgHandler(const std::shared_ptr<ServerClient> &client,
   switch ((NetMsgType)pnmsg->type) {
     case (NetMsgType::CREW_CREATE): {
       // create new crew and add first crew member
-      std::string crew_code;
+      std::string crewcode;
       do {
-        crew_code = Crew::genCrewCode();
-      } while (this->findCrewByCode(crew_code) != nullptr);
-      this->crews.push_back(Crew(crew_code, client));
-      Log::info(client->getAddress() + ": creates crew " + crew_code);
+        crewcode = Crew::genCrewCode();
+      } while (this->findCrewByCode(crewcode) != nullptr);
+      this->crews.push_back(Crew(crewcode, client));
+      Log::info(client->getAddress() + ": creates crew " + crewcode);
 
       // notify client
-      NetMsg reply(crew_code.c_str());
-      reply.setType(NetMsgType::CREW_ACCEPT);
+      NetMsg reply(crewcode.c_str(), NetMsgType::CREW_ACCEPT);
       client->sendMsg(reply);
       break;
     }
@@ -151,8 +150,7 @@ void Server::msgHandler(const std::shared_ptr<ServerClient> &client,
       Log::info(client->getAddress() + ": joins crew");
 
       // notify client
-      NetMsg reply(crewcode.c_str());
-      reply.setType(NetMsgType::CREW_ACCEPT);
+      NetMsg reply(crewcode.c_str(), NetMsgType::CREW_ACCEPT);
       client->sendMsg(reply);
       break;
     }

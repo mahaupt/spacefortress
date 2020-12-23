@@ -115,6 +115,9 @@ void Game::render(ConsoleKey key) {
     this->game_objects[i]->simulate(sim_time);
   }
 
+  // ship network sync
+  this->client.syncMyShip(this->pship.lock());
+
   // render
   this->pshipos->render(key);
 }

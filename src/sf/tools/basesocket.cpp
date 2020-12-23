@@ -297,9 +297,7 @@ bool BaseSocket::handleMsg(std::shared_ptr<NetMsg>& pnmsg) {
   // handle basic behaviour
   switch ((NetMsgType)pnmsg->type) {
     case (NetMsgType::PING): {
-      NetMsg reply;
-      reply.setType(NetMsgType::PONG);
-      this->sendData(&reply, reply.getSize());
+      this->sendEmptyMsg(NetMsgType::PONG);
       return true;
     }
     case (NetMsgType::PONG): {

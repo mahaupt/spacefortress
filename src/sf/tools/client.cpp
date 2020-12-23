@@ -51,3 +51,13 @@ bool Client::waitForHandshake() {
   }
   return false;
 }
+
+/**
+ * Function to sync ship
+ * @param ship shared_ptr<Ship>
+ */
+void Client::syncMyShip(std::shared_ptr<GameObject> ship) {
+  if (!ship) return;
+  NetMsg msg(ship.get());
+  this->socket.sendMsg(msg);
+}

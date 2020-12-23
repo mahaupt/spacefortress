@@ -79,6 +79,8 @@ add_executable(
     "src/sf/tools/clientsocket.cpp"
     "src/sf/tools/basesocket.cpp"
     "src/sf/tools/netmsg.cpp"
+    "src/sf/tools/vec2.cpp"
+    "src/sf/gameobject.cpp"
 )
 
 target_link_libraries(
@@ -109,6 +111,8 @@ add_executable(
     "src/sf/tools/clientsocket.cpp"
     "src/sf/tools/basesocket.cpp"
     "src/sf/tools/netmsg.cpp"
+    "src/sf/tools/vec2.cpp"
+    "src/sf/gameobject.cpp"
 )
 
 target_link_libraries(

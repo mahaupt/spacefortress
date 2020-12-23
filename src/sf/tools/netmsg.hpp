@@ -5,6 +5,8 @@
 #include <cstring>
 #include <string>
 
+#include "../gameobject.hpp"
+
 #define NETMSG_HEADER_SIZE 4
 
 enum class NetMsgType {
@@ -49,16 +51,23 @@ class NetMsgData {
 class NetMsgObject : public NetMsgData {
  public:
   uint16_t type;
-  double x;
-  double y;
-  double vel_x;
-  double vel_y;
+  Vec2 pos;
+  Vec2 vel;
   double hull;
   double shield;
   char name[32];
 
-  size_t getSize() { return 81; }
+  size_t getSize() { return sizeof(NetMsgObject); }
   void* getDataPtr() { return this; }
+  NetMsgObject(GameObject* go) {
+    if (go == nullptr) return;
+    type = 0x10;
+    pos = go->getPos();
+    vel = go->getVel();
+    hull = 0;
+    shield = 0;
+    strncpy(name, go->getName().c_str(), 32);
+  }
 };
 
 // variable size
@@ -107,10 +116,15 @@ class NetMsg {
 
   // msg types
   NetMsg(const NetMsgType& type) : NetMsg() { this->setType(type); }
-  NetMsg(const char* text) {
+  NetMsg(const char* text, const NetMsgType& type = NetMsgType::TEXT) {
     data = new NetMsgText(text);
     size = (uint16_t)data->getSize();
-    setType(NetMsgType::TEXT);
+    setType(type);
+  }
+  NetMsg(GameObject* go) {
+    data = new NetMsgObject(go);
+    size = (uint16_t)data->getSize();
+    setType(NetMsgType::OBJECT);
   }
 
   // management functions
