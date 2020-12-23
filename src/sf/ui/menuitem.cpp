@@ -14,7 +14,7 @@ void MenuItem::render(ConsoleKey key) {
     attrset(A_BOLD);
   }
 
-  int dx = floor(this->text.length() / 2.0f);
+  int dx = (int)floor(this->text.length() / 2.0f);
   mvprintw(start_y, start_x - dx, this->text.c_str());
 
   if (this->selected) {

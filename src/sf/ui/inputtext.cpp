@@ -12,14 +12,14 @@ void InputText::render(ConsoleKey key) {
   // calc start positions
   int start_x, start_y;
   this->calcDrawOffset(start_x, start_y);
-  start_x -= this->label.length();
+  start_x -= (int)this->label.length();
 
   // interactions
   if (this->selected) {
     this->processInput(key);
     // move cursor
-    Console::setCursorPos(start_y,
-                          start_x + this->label.length() + this->cursor_pos);
+    Console::setCursorPos(
+        start_y, start_x + (int)this->label.length() + this->cursor_pos);
   }
 
   // format output str
@@ -83,5 +83,5 @@ void InputText::processInput(ConsoleKey key) {
 
 void InputText::setValue(std::string s) {
   this->value = s;
-  this->cursor_pos = s.length();
+  this->cursor_pos = (int)s.length();
 }

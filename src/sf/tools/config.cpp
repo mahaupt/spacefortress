@@ -40,9 +40,9 @@ T Config::get(const char* key, const T default_val) {
 
   return node.as<T>();
 }
-template int Config::get<int>(const char* key, const int default_val = 0);
-template std::string Config::get<std::string>(
-    const char* key, const std::string default_val = "");
+template int Config::get<int>(const char* key, const int default_val);
+template std::string Config::get<std::string>(const char* key,
+                                              const std::string default_val);
 
 std::string Config::getStr(const char* key, const std::string& default_val) {
   return Config::get<std::string>(key, default_val);

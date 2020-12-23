@@ -12,7 +12,7 @@ class Config {
 
   static bool hasKey(const char* key);
   template <typename T>
-  static T get(const char* key, const T default_val = T());
+  static T get(const char* key, const T default_val);
   static std::string getStr(const char* key,
                             const std::string& default_val = "");
   static void setStr(const char* key, const std::string& val);
