@@ -1,0 +1,3 @@
+ip: 0.0.0.0
+port: 7339
+max_clients: 128

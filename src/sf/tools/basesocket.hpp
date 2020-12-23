@@ -54,6 +54,7 @@ class BaseSocket {
   // rx tx
   void sendData(void *data, size_t size);
   void sendEmptyMsg(const NetMsgType &t);
+  void sendMsg(const NetMsg &msg);
   void ping();
 
   // win32 extra

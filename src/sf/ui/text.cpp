@@ -17,6 +17,10 @@ void Text::addTextLine(const std::string& line) {
   this->text_size = fmax(line.length(), this->text_size);
 }
 
+void Text::setTextLine(size_t i, const std::string& line) {
+  this->textlines[i] = line;
+}
+
 void Text::render(ConsoleKey key) {
   int start_x, start_y;
   this->calcDrawOffset(start_x, start_y);

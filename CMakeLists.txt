@@ -75,6 +75,7 @@ add_executable(
     sf_server
     ${SF_SERVER_SRC}
     "src/sf/tools/log.cpp"
+    "src/sf/tools/config.cpp"
     "src/sf/tools/clientsocket.cpp"
     "src/sf/tools/basesocket.cpp"
     "src/sf/tools/netmsg.cpp"
@@ -82,6 +83,7 @@ add_executable(
 
 target_link_libraries(
     sf_server
+    yaml-cpp
     Threads::Threads
 )
 
@@ -123,3 +125,4 @@ set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEAS
 configure_file(lang/en.yaml lang/en.yaml COPYONLY)
 configure_file(lang/de.yaml lang/de.yaml COPYONLY)
 configure_file(config.yaml config.yaml COPYONLY)
+configure_file(server.yaml server.yaml COPYONLY)

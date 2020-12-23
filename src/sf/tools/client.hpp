@@ -16,6 +16,8 @@ class Client {
 
   // info functions
   bool isConnected() { return socket.isConnected(); }
+  bool isAuthenticated() { return socket.isAuthenticated(); }
+  bool waitForHandshake();
 
  private:
   ClientSocket socket;

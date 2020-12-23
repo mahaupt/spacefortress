@@ -9,31 +9,32 @@
 
 enum class NetMsgType {
   // basic
-  NONE = 0,
-  PING = 1,
-  PONG = 2,
-
-  // join type
-  INTENTION_CREATE = 40,
-  INTENTION_JOIN = 41,
+  NONE = 0x00,
+  PING = 0x01,
+  PONG = 0x02,
 
   // AUTH & User Management
-  AUTH = 50,
-  AUTHREQUEST = 51,  // reserved for token based auth
-  AUTHACCEPT = 52,
-  AUTHDENY = 53,
-  KICK = 60,
-  BAN = 61,
+  AUTH = 0x10,
+  AUTHREQUEST = 0x11,  // reserved for token based auth
+  AUTHACCEPT = 0x12,
+  AUTHDENY = 0x13,
+  KICK = 0x20,
+  BAN = 0x21,
+
+  // join type
+  CREW_CREATE = 0x31,
+  CREW_JOIN = 0x32,    // text contains crew code
+  CREW_ACCEPT = 0x33,  // text contains crew code
 
   // objects
-  TEXT = 100,
-  OBJECT = 101,
+  TEXT = 0x80,
+  OBJECT = 0x81,
 
   // errors
-  ERR_ = 200,
-  ERR_REQ = 201,
-  ERR_FULL = 202,
-  ERR_CREWNOTFOUND = 203,
+  ERR_ = 0xE0,
+  ERR_REQ = 0xE1,
+  ERR_FULL = 0xE2,
+  ERR_CREWNOTFOUND = 0xE3,
 };
 
 #pragma pack(push, 1)
@@ -113,11 +114,11 @@ class NetMsg {
   }
 
   // management functions
-  size_t writeBuffer(char* buffer, size_t buffer_size);
+  size_t writeBuffer(char* buffer, size_t buffer_size) const;
   bool tryReadFromBuffer(char* buffer, size_t buffer_size);
   void setType(const NetMsgType& t) { this->type = (uint16_t)t; }
 
   // info functions
-  size_t getSize() { return this->size + NETMSG_HEADER_SIZE; }
+  size_t getSize() const { return this->size + NETMSG_HEADER_SIZE; }
 };
 #pragma pack(pop)

@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+#include "main.hpp"
+
 Game::Game() : running(false) { Log::info("game module loaded"); }
 
 /**
@@ -58,10 +60,26 @@ bool Game::connect(const std::string &addr, const std::string &username,
                    const std::string &crewcode) {
   size_t colpos = addr.find(':');
   std::string address = addr.substr(0, colpos);
-  uint port = std::stoul(addr.substr(colpos + 1));
+  unsigned int port = std::stoul(addr.substr(colpos + 1));
   this->client.connect(address, port, username, crewcode);
 
-  return this->client.isConnected();
+  if (!this->client.isConnected()) {
+    main_setError("Connection failed");
+    return false;
+  }
+
+  if (this->client.waitForHandshake()) {
+    return true;
+  } else {
+    if (!this->client.isAuthenticated()) {
+      main_setError("Authentification Failed");
+    } else {
+      // this could actually be any timeout or handshake error
+      main_setError("Crew code invalid (Handshake)");
+    }
+    this->client.disconnect();
+    return false;
+  }
 }
 
 /**
@@ -110,6 +128,12 @@ void Game::renderWin(ConsoleKey key) {
 
   // garbage collector
   this->garbageCollector();
+
+  // check client connection
+  if (!this->client.isConnected()) {
+    main_setError("Connection lost");
+    main_stopGame();
+  }
 }
 
 /**

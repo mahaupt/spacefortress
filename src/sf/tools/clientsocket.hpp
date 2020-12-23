@@ -17,11 +17,16 @@ class ClientSocket : public BaseSocket {
   void connect(const std::string& address, const unsigned int& port);
   void authenticate(const std::string& username,
                     const std::string& crewcode = "");
+  void disconnect();
 
+  // info
   bool isAuthenticated() { return this->is_authenticated; }
+  std::future<bool> getReadyForGameFuture();
 
  private:
   std::atomic<bool> is_authenticated;
+  std::atomic<bool> is_crewmember;
+  std::promise<bool> prom_ready_for_game;
 
-  bool handleMsg(std::shared_ptr<NetMsg>& pnmsg);
+  bool handleMsg(std::shared_ptr<NetMsg>& pnmsg) override;
 };

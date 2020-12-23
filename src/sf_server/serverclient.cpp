@@ -32,11 +32,12 @@ bool ServerClient::handleMsg(std::shared_ptr<NetMsg>& pnmsg) {
       NetMsgText* txt = (NetMsgText*)pnmsg->data;
       this->name = std::string(txt->text, pnmsg->size);
       this->is_authenticated = true;
+      this->sendEmptyMsg(NetMsgType::AUTHACCEPT);
       Log::info(this->address + ": authenticates as " + this->name);
       return true;
     }
     case (NetMsgType::TEXT): {
-      NetMsgText* txt = (NetMsgText*)pnmsg->data;
+      // NetMsgText* txt = (NetMsgText*)pnmsg->data;
       return true;
     }
     default:

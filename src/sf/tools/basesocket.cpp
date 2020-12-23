@@ -182,7 +182,7 @@ void BaseSocket::listener() {
 
     this->ibytes_avbl += bytes;
 
-    if (bytes <= 0) {
+    if (bytes <= 0 || bytes > free_buffer_size) {
       this->disconnect();
       break;
     }
@@ -242,6 +242,15 @@ void BaseSocket::sendData(void* data, size_t size) {
 void BaseSocket::sendEmptyMsg(const NetMsgType& t) {
   NetMsg nmsg(t);
   this->sendData(&nmsg, nmsg.getSize());
+}
+
+void BaseSocket::sendMsg(const NetMsg& msg) {
+  size_t bytes = 0;
+  {
+    std::lock_guard<std::mutex> lock_guard(this->mx_socket_tx);
+    bytes = msg.writeBuffer(this->obuffer, BS_OBUFFER_SIZE);
+  }
+  this->sendData(this->obuffer, bytes);
 }
 
 void BaseSocket::ping() {

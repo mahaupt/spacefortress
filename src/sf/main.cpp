@@ -1,48 +1,41 @@
-#include "game.hpp"
-#include "tools/config.hpp"
-#include "tools/console.hpp"
-#include "tools/lang.hpp"
-#include "tools/log.hpp"
-#include "ui/inputtext.hpp"
-#include "ui/menu.hpp"
-#include "ui/menuitem.hpp"
-#include "ui/text.hpp"
+#include "main.hpp"
 
-#ifdef WIN32
-#include <Windows.h>
-#endif
-
-enum MainState { MAIN_MENU, CREW_CREATE, CREW_JOIN, GAME };
-
-Game* pgame = 0;
-bool p_running = true;
+Game* main_pgame = 0;
+bool main_running = true;
 MainState main_state = MAIN_MENU;
-std::string main_crew_code;
-std::string main_serverip;
-std::string main_username;
+std::string main_crew_code = std::string();
+std::string main_serverip = std::string();
+std::string main_username = std::string();
+std::string main_error = std::string();
 
 /**
  * Callbacks
  */
-void endProgram(void) { p_running = false; }
-void startCrewCreate(void) { main_state = CREW_CREATE; }
-void startCrewJoin(void) { main_state = CREW_JOIN; }
-void stopGame(void) { main_state = MAIN_MENU; }
-void backToMenu(void) { main_state = MAIN_MENU; }
-void startGameCreate(void) {
-  if (pgame == 0) return;
-  if (pgame->connect(main_serverip, main_username, "")) {
+void main_endProgram(void) { main_running = false; }
+void main_startCrewCreate(void) { main_state = CREW_CREATE; }
+void main_startCrewJoin(void) { main_state = CREW_JOIN; }
+void main_stopGame(void) { main_state = MAIN_MENU; }
+void main_backToMenu(void) {
+  main_state = MAIN_MENU;
+  main_setError("");
+}
+void main_startGameCreate(void) {
+  main_setError("");
+  if (main_pgame == 0) return;
+  if (main_pgame->connect(main_serverip, main_username, "")) {
     main_state = GAME;
-    pgame->start();
+    main_pgame->start();
   }
 }
-void startGameJoin(void) {
-  if (pgame == 0) return;
-  if (pgame->connect(main_serverip, main_username, main_crew_code)) {
+void main_startGameJoin(void) {
+  main_setError("");
+  if (main_pgame == 0) return;
+  if (main_pgame->connect(main_serverip, main_username, main_crew_code)) {
     main_state = GAME;
-    pgame->start();
+    main_pgame->start();
   }
 }
+void main_setError(const char* error) { main_error = error; }
 
 /**
  * This is the main state machine for the program
@@ -57,7 +50,7 @@ int main() {
   // MODULE LOADING
   Log log("log.txt", LogLevel::LL_ALL);
   Log::info("start");
-  Config config;
+  Config config("config.yaml");
   Lang lang;
   Console console;
 
@@ -65,10 +58,10 @@ int main() {
   // MENU SETUP
   Menu main_menu;
   auto main_menu_1 =
-      MenuItem(0, -1, Lang::get("menu_create_crew"), &startCrewCreate);
+      MenuItem(0, -1, Lang::get("menu_create_crew"), &main_startCrewCreate);
   auto main_menu_2 =
-      MenuItem(0, 0, Lang::get("menu_join_crew"), &startCrewJoin);
-  auto main_menu_3 = MenuItem(0, 1, Lang::get("menu_exit"), &endProgram);
+      MenuItem(0, 0, Lang::get("menu_join_crew"), &main_startCrewJoin);
+  auto main_menu_3 = MenuItem(0, 1, Lang::get("menu_exit"), &main_endProgram);
   main_menu.addSelectable(&main_menu_1);
   main_menu.addSelectable(&main_menu_2);
   main_menu.addSelectable(&main_menu_3);
@@ -79,9 +72,9 @@ int main() {
   auto input_server = InputText(-5, -1, Lang::get("general_server") + ": ");
   input_server.setValue(Config::getStr("server", "127.0.0.1:7339"));
   auto create_menu_1 =
-      MenuItem(0, 1, Lang::get("menu_create_crew"), &startGameCreate);
+      MenuItem(0, 1, Lang::get("menu_create_crew"), &main_startGameCreate);
   auto create_menu_2 =
-      MenuItem(0, 2, "<< " + Lang::get("general_back"), &backToMenu);
+      MenuItem(0, 2, "<< " + Lang::get("general_back"), &main_backToMenu);
   create_menu.addSelectable(&input_username);
   create_menu.addSelectable(&input_server);
   create_menu.addSelectable(&create_menu_1);
@@ -90,9 +83,9 @@ int main() {
   Menu join_menu;
   auto join_menu_1 = InputText(-5, 0, Lang::get("general_crew_code") + ": ");
   auto join_menu_2 =
-      MenuItem(0, 2, Lang::get("general_start_game"), &startGameJoin);
+      MenuItem(0, 2, Lang::get("general_start_game"), &main_startGameJoin);
   auto join_menu_3 =
-      MenuItem(0, 3, "<< " + Lang::get("general_back"), &backToMenu);
+      MenuItem(0, 3, "<< " + Lang::get("general_back"), &main_backToMenu);
   join_menu.addSelectable(&input_username);
   join_menu.addSelectable(&input_server);
   join_menu.addSelectable(&join_menu_1);
@@ -112,16 +105,25 @@ int main() {
   create_menu.addNonSelectable((UiElement*)&sf_banner);
   join_menu.addNonSelectable((UiElement*)&sf_banner);
 
+  Text text_error(-2, -2, MIDDLE, BOTTOM, LEFT);
+  text_error.addTextLine("Error: test error");
+  main_menu.addNonSelectable((UiElement*)&text_error);
+  create_menu.addNonSelectable((UiElement*)&text_error);
+  join_menu.addNonSelectable((UiElement*)&text_error);
+
   //////////////////////////////////////////////
   // GAME SETUP
   Game game;
-  pgame = &game;
+  main_pgame = &game;
 
   //////////////////////////////////////////////
   // MAIN RENDERING LOOP
   ConsoleKey key = ConsoleKey::NONE;
   Console::sclear();
-  while (p_running) {
+  while (main_running) {
+    // update error
+    text_error.setTextLine(0, main_error);
+
     // render main console
     switch (main_state) {
       case MAIN_MENU: {

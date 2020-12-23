@@ -8,6 +8,13 @@ Client::Client(const std::string& address, const unsigned int& port,
   this->connect(address, port, username, crewcode);
 }
 
+Client::~Client() {
+#ifdef WIN32
+  // windows cleanup
+  WSACleanup();
+#endif
+}
+
 /**
  * Connects client to server
  * @param address Server IP
@@ -31,9 +38,16 @@ void Client::disconnect() {
   this->socket.close();
 }
 
-Client::~Client() {
-#ifdef WIN32
-  // windows cleanup
-  WSACleanup();
-#endif
+/**
+ * Waits for authentication process to finish or timeout, returns result of auth
+ * Should only be called once per connect
+ * @return bool true if auth was successful
+ */
+bool Client::waitForHandshake() {
+  auto fut = socket.getReadyForGameFuture();
+  if (fut.wait_for(std::chrono::milliseconds(1000)) !=
+      std::future_status::timeout) {
+    return fut.get();
+  }
+  return false;
 }

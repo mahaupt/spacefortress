@@ -1,6 +1,6 @@
 #include "clientsocket.hpp"
 
-ClientSocket::ClientSocket() : is_authenticated(false) {}
+ClientSocket::ClientSocket() : is_authenticated(false), is_crewmember(false) {}
 
 ClientSocket::ClientSocket(const std::string& address, const unsigned int& port)
     : ClientSocket() {
@@ -29,6 +29,16 @@ void ClientSocket::connect(const std::string& address,
 }
 
 /**
+ * Disconnect override extending for resetting authentication behaviour
+ */
+void ClientSocket::disconnect() {
+  BaseSocket::disconnect();
+  this->is_authenticated = false;
+  this->is_crewmember = false;
+  this->prom_ready_for_game = std::promise<bool>();
+}
+
+/**
  * Creates Authentification Handshake to server
  * @param username [description]
  * @param crewcode Optional. = "" for creating a crew
@@ -40,14 +50,15 @@ void ClientSocket::authenticate(const std::string& username,
 
   // create create / join msg depending on crewcode content
   NetMsg intent = (crewcode.length() > 0) ? NetMsg(crewcode.c_str()) : NetMsg();
-  intent.setType(NetMsgType::INTENTION_CREATE);
+  intent.setType(NetMsgType::CREW_CREATE);
   if (crewcode.length() > 0) {
-    intent.setType(NetMsgType::INTENTION_JOIN);
+    intent.setType(NetMsgType::CREW_JOIN);
   }
 
   size_t bytes = auth.writeBuffer(this->obuffer, BS_OBUFFER_SIZE);
   bytes += intent.writeBuffer(this->obuffer + bytes, BS_OBUFFER_SIZE - bytes);
   this->sendData(this->obuffer, bytes);
+  Log::debug("client auth request sent");
 }
 
 bool ClientSocket::handleMsg(std::shared_ptr<NetMsg>& pnmsg) {
@@ -56,18 +67,46 @@ bool ClientSocket::handleMsg(std::shared_ptr<NetMsg>& pnmsg) {
     case (NetMsgType::AUTHACCEPT): {
       if (!this->is_authenticated) {
         this->is_authenticated = true;
+        Log::debug("client authenticated");
       }
-      break;
+      return true;
     }
     case (NetMsgType::AUTHDENY): {
-      this->disconnect();
       this->is_authenticated = false;
-      break;
+      this->prom_ready_for_game.set_value(false);
+      this->disconnect();
+      Log::debug("client auth failed");
+      return true;
+    }
+    case (NetMsgType::ERR_FULL): {
+      this->prom_ready_for_game.set_value(false);
+      this->disconnect();
+      Log::debug("server full");
+      return true;
+    }
+    case (NetMsgType::ERR_CREWNOTFOUND): {
+      this->prom_ready_for_game.set_value(false);
+      this->disconnect();
+      Log::debug("crew code not found");
+      return true;
+    }
+    case (NetMsgType::CREW_ACCEPT): {
+      this->is_crewmember = true;
+      this->prom_ready_for_game.set_value(true);
+      Log::debug("joined crew");
+      return true;
     }
     default:
       // nothing
       break;
   }
-
   return false;
+}
+
+/**
+ * Get Future from authentication process
+ * @return std::future<bool> future authentication result
+ */
+std::future<bool> ClientSocket::getReadyForGameFuture() {
+  return this->prom_ready_for_game.get_future();
 }

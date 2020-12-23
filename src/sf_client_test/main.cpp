@@ -6,8 +6,11 @@
 int main(void) {
   Log log(LogLevel::LL_ALL);
   Client c("127.0.0.1", 7339, "cbacon");
+  // c.connect("127.0.0.1", 7339, "cbacon");
   if (!c.isConnected()) return 1;
-  std::cin.get();
+  if (c.waitForHandshake()) {
+    std::cin.get();
+  }
 
   return 0;
 }

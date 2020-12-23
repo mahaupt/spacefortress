@@ -1,6 +1,6 @@
 #include "server.hpp"
 
-Server::Server(const std::string& address, const unsigned int& port)
+Server::Server(const std::string &address, const unsigned int &port)
     : socket(address, port), is_running(false) {}
 
 Server::~Server() {
@@ -8,12 +8,12 @@ Server::~Server() {
   if (this->is_running) {
     this->stop();
   }
-  
+
   // disconnect all clients
   this->clients.clear();
-  
+
 #ifdef WIN32
-  //windows cleanup
+  // windows cleanup
   WSACleanup();
 #endif
 
@@ -36,7 +36,7 @@ void Server::start() {
  */
 void Server::stop() {
   Log::info("stopping server");
-  
+
   // stopping threads
   this->is_running = false;
   this->socket.unblock();
@@ -55,11 +55,11 @@ void Server::newClientAcceptor() {
     if (!this->is_running) break;
     if (newclient) {
       {
-        if (clients.size() >= SERVER_MAX_CLIENTS){
+        if (clients.size() >= SERVER_MAX_CLIENTS) {
           newclient->sendEmptyMsg(NetMsgType::ERR_FULL);
-          continue; // destructs client object
+          continue;  // destructs client object
         }
-        
+
         std::lock_guard<std::mutex> guard(this->mx_clients);
         clients.push_back(newclient);
       }
@@ -77,13 +77,15 @@ void Server::clientUpdater() {
     this->garbageCollector();
     {
       std::lock_guard<std::mutex> guard(this->mx_clients);
-      for (const auto & client : this->clients) {
-        //update client latency
-        //client->ping();
-        
-        //parse messages
-        while(client->isMsgAvailable())
+      for (const auto &client : this->clients) {
+        // update client latency
+        // client->ping();
+
+        // parse messages
+        while (client->isMsgAvailable())
           msgHandler(client, client->popMessage());
+
+        // todo: do crew updates
       }
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -107,57 +109,69 @@ void Server::garbageCollector() {
   }
 }
 
-
 /**
  * handles client messages on a server level
  * Mostly game and update messages
  */
-void Server::msgHandler(const std::shared_ptr<ServerClient> & client, const std::shared_ptr<NetMsg> & pnmsg) {
+void Server::msgHandler(const std::shared_ptr<ServerClient> &client,
+                        const std::shared_ptr<NetMsg> &pnmsg) {
   if (!client->isAuthenticated()) {
     Log::warn(client->getAddress() + ": client not authenticated!");
     client->sendEmptyMsg(NetMsgType::ERR_REQ);
     client->disconnect();
     return;
   }
-  
-  switch((NetMsgType)pnmsg->type)
-  {
-    case(NetMsgType::INTENTION_CREATE): {
-      //create new crew
-      this->crews.push_back(Crew());
-      Log::info(client->getAddress() + ": creates crew");
-      client->setCrewmenber(true);
+
+  switch ((NetMsgType)pnmsg->type) {
+    case (NetMsgType::CREW_CREATE): {
+      // create new crew and add first crew member
+      std::string crew_code;
+      do {
+        crew_code = Crew::genCrewCode();
+      } while (this->findCrewByCode(crew_code) != nullptr);
+      this->crews.push_back(Crew(crew_code, client));
+      Log::info(client->getAddress() + ": creates crew " + crew_code);
+
+      // notify client
+      NetMsg reply(crew_code.c_str());
+      reply.setType(NetMsgType::CREW_ACCEPT);
+      client->sendMsg(reply);
       break;
     }
-    case(NetMsgType::INTENTION_JOIN): {
-      //join crew
-      NetMsgText *text = (NetMsgText*)pnmsg->data;
+    case (NetMsgType::CREW_JOIN): {
+      // join crew
+      NetMsgText *text = (NetMsgText *)pnmsg->data;
       std::string crewcode(text->text, pnmsg->size);
       if (!this->tryAddCrewMember(client, crewcode)) {
+        Log::info(client->getAddress() + ": invalid crew code");
         client->sendEmptyMsg(NetMsgType::ERR_CREWNOTFOUND);
         client->disconnect();
         break;
       }
       Log::info(client->getAddress() + ": joins crew");
-      client->setCrewmenber(true);
+
+      // notify client
+      NetMsg reply(crewcode.c_str());
+      reply.setType(NetMsgType::CREW_ACCEPT);
+      client->sendMsg(reply);
       break;
     }
     default:
-      //drop message
+      // drop message
       break;
   }
 }
-
 
 /**
  * try and add the crewmember to a crew by crew code
  * @return bool true on success, otherwise false
  */
-bool Server::tryAddCrewMember(const std::shared_ptr<ServerClient> & client, const std::string &crewcode) {
+bool Server::tryAddCrewMember(const std::shared_ptr<ServerClient> &client,
+                              const std::string &crewcode) {
   Crew *c = findCrewByCode(crewcode);
   if (c == nullptr) return false;
-  
-  c->crew_members.push_back(client);
+
+  c->addCrewMember(client);
   return true;
 }
 
@@ -165,8 +179,8 @@ bool Server::tryAddCrewMember(const std::shared_ptr<ServerClient> & client, cons
  * searches for crew by crew code
  * @return Crew* the found crew or nullptr
  */
-Crew * Server::findCrewByCode(const std::string &code) {
-  for(auto &crew : this->crews) {
+Crew *Server::findCrewByCode(const std::string &code) {
+  for (auto &crew : this->crews) {
     if (crew.crew_code == code) {
       return &crew;
     }
