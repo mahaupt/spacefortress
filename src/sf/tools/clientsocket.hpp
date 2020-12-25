@@ -22,8 +22,10 @@ class ClientSocket : public BaseSocket {
   // info
   bool isAuthenticated() { return this->is_authenticated; }
   std::future<bool> getReadyForGameFuture();
+  std::string getCrewCode() { return this->crew_code; }
 
  private:
+  std::string crew_code;
   std::atomic<bool> is_authenticated;
   std::atomic<bool> is_crewmember;
   std::promise<bool> prom_ready_for_game;

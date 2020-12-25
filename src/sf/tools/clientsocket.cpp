@@ -88,9 +88,11 @@ bool ClientSocket::handleMsg(std::shared_ptr<NetMsg>& pnmsg) {
       return true;
     }
     case (NetMsgType::CREW_ACCEPT): {
+      NetMsgText* txt = (NetMsgText*)pnmsg->data;
+      this->crew_code = std::string(txt->text, pnmsg->size);
       this->is_crewmember = true;
       this->prom_ready_for_game.set_value(true);
-      Log::debug("joined crew");
+      Log::debug("joined crew: " + this->crew_code);
       return true;
     }
     default:

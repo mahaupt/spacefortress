@@ -117,6 +117,8 @@ void Game::render(ConsoleKey key) {
 
   // ship network sync
   this->client.syncMyShip(this->pship.lock());
+  // ship network update
+  this->client.updateMyShip(this->pship.lock());
 
   // render
   this->pshipos->render(key);

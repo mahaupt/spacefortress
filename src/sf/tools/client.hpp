@@ -18,11 +18,13 @@ class Client {
                const std::string& username, const std::string& crewcode = "");
   void disconnect();
   void syncMyShip(std::shared_ptr<GameObject> ship);
+  void updateMyShip(std::shared_ptr<GameObject> ship);
 
   // info functions
   bool isConnected() { return socket.isConnected(); }
   bool isAuthenticated() { return socket.isAuthenticated(); }
   bool waitForHandshake();
+  std::string getCrewCode() { return socket.getCrewCode(); }
 
  private:
   ClientSocket socket;

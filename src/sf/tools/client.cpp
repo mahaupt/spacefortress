@@ -61,3 +61,25 @@ void Client::syncMyShip(std::shared_ptr<GameObject> ship) {
   NetMsg msg(ship.get());
   this->socket.sendMsg(msg);
 }
+
+/**
+ * [Client::updateMyShip description]
+ * @param ship [description]
+ */
+void Client::updateMyShip(std::shared_ptr<GameObject> ship) {
+  if (!ship) return;
+
+  while (this->socket.isMsgAvailable()) {
+    auto msg = this->socket.popMessage();
+    switch ((NetMsgType)msg->type) {
+      case (NetMsgType::OBJECT): {
+        NetMsgObject* o = (NetMsgObject*)msg->data;
+        ship->setPos(o->pos);
+        ship->setVel(o->vel);
+      }
+      default:
+        // nothing
+        break;
+    }
+  }
+}
