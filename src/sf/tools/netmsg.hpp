@@ -57,8 +57,8 @@ class NetMsgObject : public NetMsgData {
   double shield;
   char name[32];
 
-  size_t getSize() { return sizeof(NetMsgObject); }
-  void* getDataPtr() { return this; }
+  size_t getSize() { return 82; }
+  void* getDataPtr() { return &(this->type); }
   NetMsgObject(GameObject* go) {
     if (go == nullptr) return;
     type = 0x10;
