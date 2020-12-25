@@ -6,9 +6,7 @@ set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_BUILD_TYPE Debug)
 #set (CMAKE_BUILD_TYPE RelWithDebInfo)
 
-
-
-
+#set project variables
 project (sf)
 set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 if ( CMAKE_COMPILER_IS_GNUCC )
@@ -16,9 +14,6 @@ if ( CMAKE_COMPILER_IS_GNUCC )
 endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CURSES_NEED_WIDE TRUE)
-
-
-
 
 #external packages
 if(MSVC)
@@ -43,6 +38,10 @@ include_directories(
 #check ncursesw
 message(STATUS "CURSES_LIBRARIES: ${CURSES_LIBRARIES}")
 message(STATUS "CURSES_INCLUDE: ${CURSES_INCLUDE_DIR}")
+
+#tests
+ENABLE_TESTING()
+ADD_SUBDIRECTORY( tests )
 
 ##############################
 # SF
@@ -76,13 +75,17 @@ add_executable(
     sf_server
     ${SF_SERVER_SRC}
     "src/sf/tools/log.cpp"
+    "src/sf/tools/config.cpp"
     "src/sf/tools/clientsocket.cpp"
     "src/sf/tools/basesocket.cpp"
     "src/sf/tools/netmsg.cpp"
+    "src/sf/tools/vec2.cpp"
+    "src/sf/gameobject.cpp"
 )
 
 target_link_libraries(
     sf_server
+    yaml-cpp
     Threads::Threads
 )
 
@@ -108,6 +111,8 @@ add_executable(
     "src/sf/tools/clientsocket.cpp"
     "src/sf/tools/basesocket.cpp"
     "src/sf/tools/netmsg.cpp"
+    "src/sf/tools/vec2.cpp"
+    "src/sf/gameobject.cpp"
 )
 
 target_link_libraries(
@@ -124,3 +129,4 @@ set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEAS
 configure_file(lang/en.yaml lang/en.yaml COPYONLY)
 configure_file(lang/de.yaml lang/de.yaml COPYONLY)
 configure_file(config.yaml config.yaml COPYONLY)
+configure_file(server.yaml server.yaml COPYONLY)

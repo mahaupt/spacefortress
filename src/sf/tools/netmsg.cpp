@@ -1,6 +1,6 @@
 #include "netmsg.hpp"
 
-size_t NetMsg::writeBuffer(char* buffer, size_t buffer_size) {
+size_t NetMsg::writeBuffer(char* buffer, size_t buffer_size) const {
   if (buffer_size < (size_t)this->size + NETMSG_HEADER_SIZE) return 0;
 
   // header
@@ -24,10 +24,14 @@ bool NetMsg::tryReadFromBuffer(char* buffer, size_t buffer_size) {
   if (buffer_size < (size_t)this->size + NETMSG_HEADER_SIZE) return false;
   char* dataptr = buffer + NETMSG_HEADER_SIZE;
   switch ((NetMsgType)this->type) {
-    case (NetMsgType::INTENTION_JOIN):
+    case (NetMsgType::CREW_JOIN):
+    case (NetMsgType::CREW_ACCEPT):
     case (NetMsgType::AUTH):
     case (NetMsgType::TEXT):
       this->data = new NetMsgText(dataptr, this->size);
+      break;
+    case (NetMsgType::OBJECT):
+      this->data = new NetMsgObject(dataptr);
       break;
     default:
       // nothing

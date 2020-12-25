@@ -21,13 +21,13 @@ void UiElement::calcDrawOffset(int& dx, int& dy) {
   dx = this->x;
   switch (this->align_x) {
     case (MIDDLE):
-      dx = round(COLS / 2.0f) + this->x;
+      dx = (int)round(COLS / 2.0f) + this->x;
       break;
     case (RIGHT):
       dx = COLS;
       break;
     default:
-      //nothing
+      // nothing
       break;
   }
 
@@ -35,7 +35,7 @@ void UiElement::calcDrawOffset(int& dx, int& dy) {
   dy = this->y;
   switch (this->align_y) {
     case (MIDDLE):
-      dy = round(LINES / 2.0f) + this->y;
+      dy = (int)round(LINES / 2.0f) + this->y;
       break;
     case (BOTTOM):
       dy = LINES + this->y;

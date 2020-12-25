@@ -12,15 +12,7 @@ BaseSocket::BaseSocket()
  */
 BaseSocket::~BaseSocket() {
   this->disconnect();
-
-  // join threads
-  if (this->fut_listener.valid()) this->fut_listener.wait();
-
-  // close socket
-  if (this->isocket != INVALID_SOCKET) {
-    close(this->isocket);
-    this->isocket = INVALID_SOCKET;
-  }
+  this->close();
 }
 
 /**
@@ -190,7 +182,7 @@ void BaseSocket::listener() {
 
     this->ibytes_avbl += bytes;
 
-    if (bytes <= 0) {
+    if (bytes <= 0 || bytes > free_buffer_size) {
       this->disconnect();
       break;
     }
@@ -219,9 +211,8 @@ void BaseSocket::parseiBuffer() {
             bytes_remaining_in_buffer);
     this->ibytes_avbl -= bytes_taken;
 
-    // handle messages directly
-    if (!this->handleBaseMsg(pnmsg)) continue;
-    if (!this->handleMsg(pnmsg)) continue;
+    // handle messages
+    if (this->handleMsg(pnmsg)) continue;
 
     // otherwise, put in queue to handle later
     std::lock_guard<std::mutex> lock_guard(mx_inc_msg);
@@ -253,6 +244,15 @@ void BaseSocket::sendEmptyMsg(const NetMsgType& t) {
   this->sendData(&nmsg, nmsg.getSize());
 }
 
+void BaseSocket::sendMsg(const NetMsg& msg) {
+  size_t bytes = 0;
+  {
+    std::lock_guard<std::mutex> lock_guard(this->mx_socket_tx);
+    bytes = msg.writeBuffer(this->obuffer, BS_OBUFFER_SIZE);
+  }
+  this->sendData(this->obuffer, bytes);
+}
+
 void BaseSocket::ping() {
   last_ping_sendtime = std::chrono::steady_clock::now();
   this->sendEmptyMsg(NetMsgType::PING);
@@ -260,6 +260,9 @@ void BaseSocket::ping() {
 
 bool BaseSocket::isConnected() { return this->is_connected; }
 
+/**
+ * disconnects client
+ */
 void BaseSocket::disconnect() {
   this->is_connected = false;
 
@@ -270,18 +273,32 @@ void BaseSocket::disconnect() {
 }
 
 /**
- * handles low level messages like ping, none, defines uniform behaviour for
- * client & servers specific client or server low-level behaviour can be defined
- * in BaseSocket::handleMsg()
+ * properly closes socket
  */
-bool BaseSocket::handleBaseMsg(std::shared_ptr<NetMsg>& pnmsg) {
+void BaseSocket::close() {
+  // join threads
+  if (this->fut_listener.valid()) this->fut_listener.wait();
+
+  // close socket
+  if (this->isocket != INVALID_SOCKET) {
+    ::close(this->isocket);
+    this->isocket = INVALID_SOCKET;
+  }
+}
+
+/**
+ * handles messages like ping, none, defines uniform behaviour for
+ * client & servers specific client or server low-level behaviour can be defined
+ * by overriding this method
+ *
+ * @return bool true if msg was handled, false otherwise
+ */
+bool BaseSocket::handleMsg(std::shared_ptr<NetMsg>& pnmsg) {
   // handle basic behaviour
   switch ((NetMsgType)pnmsg->type) {
     case (NetMsgType::PING): {
-      NetMsg reply;
-      reply.setType(NetMsgType::PONG);
-      this->sendData(&reply, reply.getSize());
-      return false;
+      this->sendEmptyMsg(NetMsgType::PONG);
+      return true;
     }
     case (NetMsgType::PONG): {
       // handle pong
@@ -293,10 +310,10 @@ bool BaseSocket::handleBaseMsg(std::shared_ptr<NetMsg>& pnmsg) {
       if (this->latency > 20) {
         this->latency = 0;
       }
-      return false;
+      return true;
     }
     default:
-      return true;
+      return false;
   }
 }
 

@@ -42,6 +42,7 @@ class BaseSocket {
   // management
   void startListener();
   void disconnect();
+  void close();
 
   // info
   bool isConnected();
@@ -53,6 +54,7 @@ class BaseSocket {
   // rx tx
   void sendData(void *data, size_t size);
   void sendEmptyMsg(const NetMsgType &t);
+  void sendMsg(const NetMsg &msg);
   void ping();
 
   // win32 extra
@@ -94,8 +96,7 @@ class BaseSocket {
   // functions
   void listener();
   void parseiBuffer();
-  virtual bool handleBaseMsg(std::shared_ptr<NetMsg> &pnmsg);
-  virtual bool handleMsg(std::shared_ptr<NetMsg> &pnmsg) { return true; }
+  virtual bool handleMsg(std::shared_ptr<NetMsg> &pnmsg);
   void readAddress();
   SOCKET accept();
 };

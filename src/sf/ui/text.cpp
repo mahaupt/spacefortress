@@ -14,7 +14,11 @@ void Text::setPosition(int x, int y, UiAlignment align_x, UiAlignment align_y,
 
 void Text::addTextLine(const std::string& line) {
   textlines.push_back(line);
-  this->text_size = fmax(line.length(), this->text_size);
+  this->text_size = (int)fmax(line.length(), this->text_size);
+}
+
+void Text::setTextLine(size_t i, const std::string& line) {
+  this->textlines[i] = line;
 }
 
 void Text::render(ConsoleKey key) {
@@ -23,18 +27,18 @@ void Text::render(ConsoleKey key) {
 
   // center middle alignment of y axis with element size
   if (this->align_y == MIDDLE) {
-    start_y -= round(this->textlines.size() / 2.0f);
+    start_y -= (int)round(this->textlines.size() / 2.0f);
   }
 
   // render each line
   for (int i = 0; i < (int)this->textlines.size(); i++) {
-    int dx = -floor(this->text_size / 2.0f);
+    int dx = (int)-floor(this->text_size / 2.0f);
     switch (this->align_text) {
       case (MIDDLE):
-        dx = -floor(this->textlines[i].length() / 2.0f);
+        dx = (int)-floor(this->textlines[i].length() / 2.0f);
         break;
       case (RIGHT):
-        dx = -this->textlines[i].length();
+        dx = -(int)this->textlines[i].length();
         break;
       default:
         // do nothing

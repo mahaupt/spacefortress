@@ -9,10 +9,10 @@ ServerSocket::ServerSocket(const std::string& address, const unsigned int& port)
     : is_ready(false) {
   this->port = port;
   this->address = address;
-      
+
   // Winsock WSA init
   if (!BaseSocket::initWsa()) return;
-      
+
   // create socket
   if (!this->createSocketServer()) {
     return;
