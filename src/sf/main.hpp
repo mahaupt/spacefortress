@@ -12,6 +12,7 @@
 
 #ifdef WIN32
 #include <Windows.h>
+#pragma execution_character_set("utf-8")
 #endif
 
 enum MainState { MAIN_MENU, CREW_CREATE, CREW_JOIN, GAME };

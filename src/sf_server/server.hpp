@@ -34,7 +34,7 @@ class Server {
 
   std::mutex mx_clients;
   std::vector<std::shared_ptr<ServerClient>> clients;
-  std::vector<Crew> crews;
+  std::vector<std::shared_ptr<Crew>> crews;
 
   void newClientAcceptor();
   void clientUpdater();
@@ -43,5 +43,5 @@ class Server {
                   const std::shared_ptr<NetMsg>& pnmsg);
   bool tryAddCrewMember(const std::shared_ptr<ServerClient>& client,
                         const std::string& crewcode);
-  Crew* findCrewByCode(const std::string& code);
+  std::shared_ptr<Crew> findCrewByCode(const std::string& code);
 };

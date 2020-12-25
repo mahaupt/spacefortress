@@ -68,6 +68,9 @@ class NetMsgObject : public NetMsgData {
     shield = 0;
     strncpy(name, go->getName().c_str(), 32);
   }
+  NetMsgObject(char* dataptr) {
+    memcpy(&(this->type), dataptr, this->getSize());
+  }
 };
 
 // variable size

@@ -84,8 +84,16 @@ void Server::clientUpdater() {
         // parse messages
         while (client->isMsgAvailable())
           msgHandler(client, client->popMessage());
+      }
 
-        // todo: do crew updates
+      // do crew updates
+      for (const auto &crew : this->crews) {
+        if (!crew->ship_object) continue;
+        for (const auto &cmember : crew->crew_members) {
+          auto crew_member = cmember.lock();
+          if (!crew_member) continue;
+          crew_member->sendMsg((*crew->ship_object.get()));
+        }
       }
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -129,7 +137,9 @@ void Server::msgHandler(const std::shared_ptr<ServerClient> &client,
       do {
         crewcode = Crew::genCrewCode();
       } while (this->findCrewByCode(crewcode) != nullptr);
-      this->crews.push_back(Crew(crewcode, client));
+      auto crew = std::make_shared<Crew>(Crew(crewcode, client));
+      this->crews.push_back(crew);
+      client->setCrew(crew);
       Log::info(client->getAddress() + ": creates crew " + crewcode);
 
       // notify client
@@ -154,6 +164,12 @@ void Server::msgHandler(const std::shared_ptr<ServerClient> &client,
       client->sendMsg(reply);
       break;
     }
+    case (NetMsgType::OBJECT): {
+      // save netmsg
+      auto crew = client->getCrew();
+      if (!crew) break;
+      crew->ship_object = pnmsg;
+    }
     default:
       // drop message
       break;
@@ -166,10 +182,11 @@ void Server::msgHandler(const std::shared_ptr<ServerClient> &client,
  */
 bool Server::tryAddCrewMember(const std::shared_ptr<ServerClient> &client,
                               const std::string &crewcode) {
-  Crew *c = findCrewByCode(crewcode);
-  if (c == nullptr) return false;
+  std::shared_ptr<Crew> c = findCrewByCode(crewcode);
+  if (!c) return false;
 
   c->addCrewMember(client);
+  client->setCrew(c);
   return true;
 }
 
@@ -177,11 +194,11 @@ bool Server::tryAddCrewMember(const std::shared_ptr<ServerClient> &client,
  * searches for crew by crew code
  * @return Crew* the found crew or nullptr
  */
-Crew *Server::findCrewByCode(const std::string &code) {
+std::shared_ptr<Crew> Server::findCrewByCode(const std::string &code) {
   for (auto &crew : this->crews) {
-    if (crew.crew_code == code) {
-      return &crew;
+    if (crew->crew_code == code) {
+      return crew;
     }
   }
-  return nullptr;
+  return std::shared_ptr<Crew>();
 }

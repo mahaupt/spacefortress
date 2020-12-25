@@ -8,6 +8,10 @@ Crew::Crew(const std::string &crew_code,
   this->addCrewMember(client);
 }
 
+/**
+ * Generates a crew code (does not set it)
+ * @return string the crew code
+ */
 std::string Crew::genCrewCode() {
   const char chars[] = "abcdefghijklmnopqrstuvwxyz";
   std::string code(6, ' ');

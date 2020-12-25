@@ -30,6 +30,9 @@ bool NetMsg::tryReadFromBuffer(char* buffer, size_t buffer_size) {
     case (NetMsgType::TEXT):
       this->data = new NetMsgText(dataptr, this->size);
       break;
+    case (NetMsgType::OBJECT):
+      this->data = new NetMsgObject(dataptr);
+      break;
     default:
       // nothing
       break;

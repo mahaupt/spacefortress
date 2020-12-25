@@ -9,8 +9,8 @@
 class Crew {
  public:
   std::string crew_code;
-
   std::vector<std::weak_ptr<ServerClient>> crew_members;
+  std::shared_ptr<NetMsg> ship_object;
 
   Crew(const std::string &crew_code) : crew_code(crew_code) {}
   Crew(const std::string &crew_code,
