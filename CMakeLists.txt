@@ -65,64 +65,6 @@ set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
 set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG . )
 set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE . )
 
-##############################
-# SF_SERVER
-file(GLOB_RECURSE SF_SERVER_SRC
-    "src/sf_server/*.cpp"
-)
-
-add_executable(
-    sf_server
-    ${SF_SERVER_SRC}
-    "src/sf/tools/log.cpp"
-    "src/sf/tools/config.cpp"
-    "src/sf/tools/clientsocket.cpp"
-    "src/sf/tools/basesocket.cpp"
-    "src/sf/tools/netmsg.cpp"
-    "src/sf/tools/vec2.cpp"
-    "src/sf/gameobject.cpp"
-)
-
-target_link_libraries(
-    sf_server
-    yaml-cpp
-    Threads::Threads
-)
-
-if(MSVC)
-  add_dependencies(sf_server PDCurses)
-endif()
-
-set_target_properties( sf_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
-set_target_properties( sf_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG . )
-set_target_properties( sf_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE . )
-
-##############################
-# SF_CLIENT_TEST
-file(GLOB_RECURSE SF_CLIENT_TEST_SRC
-    "src/sf_client_test/*.cpp"
-)
-
-add_executable(
-    sf_client_test
-    ${SF_CLIENT_TEST_SRC}
-    "src/sf/tools/log.cpp"
-    "src/sf/tools/client.cpp"
-    "src/sf/tools/clientsocket.cpp"
-    "src/sf/tools/basesocket.cpp"
-    "src/sf/tools/netmsg.cpp"
-    "src/sf/tools/vec2.cpp"
-    "src/sf/gameobject.cpp"
-)
-
-target_link_libraries(
-    sf_client_test
-    Threads::Threads
-)
-
-set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
-set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG . )
-set_target_properties( sf_client_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE . )
 
 #copy config and language files
 #file(COPY lang DESTINATION .)
