@@ -37,12 +37,9 @@ int main() {
   Menu main_menu;
   auto main_menu_1 =
       MenuItem(0, -1, Lang::get("general_start_game"), &main_startGame);
-  auto main_menu_2 =
-      MenuItem(0, 0, Lang::get("general_start_game"), &main_startGame);
-  auto main_menu_3 = MenuItem(0, 1, Lang::get("menu_exit"), &main_endProgram);
+  auto main_menu_2 = MenuItem(0, 1, Lang::get("menu_exit"), &main_endProgram);
   main_menu.addSelectable(&main_menu_1);
   main_menu.addSelectable(&main_menu_2);
-  main_menu.addSelectable(&main_menu_3);
 
   Text sf_banner(0, 2, MIDDLE, TOP, LEFT);
   sf_banner.addTextLine("   ____                 ____         __");
@@ -56,7 +53,7 @@ int main() {
   main_menu.addNonSelectable((UiElement*)&sf_banner);
 
   Text greeting_text(-2, -2, MIDDLE, BOTTOM, LEFT);
-  greeting_text.addTextLine("Error: test error");
+  greeting_text.addTextLine("Now with colors");
   main_menu.addNonSelectable((UiElement*)&greeting_text);
 
   //////////////////////////////////////////////
