@@ -5,8 +5,9 @@ gbuild
 xcode
 
 #binaries
-./spacefortress
-./sf
+**/spacefortress
+**/sf
+**/test_*
 
 #os specific
 .DS_Store

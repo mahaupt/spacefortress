@@ -24,6 +24,9 @@ sudo pacman -S base-devel cmake ncurses
 xcode-select --install
 brew install cmake
 
+#if cmake can't find ncurses, try setting
+export CMAKE_INCLUDE_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+
 # Windows 
 # make sure you have your favourite build tools installed
 # you need: compiler(gcc, vs), cmake, ncurses, git

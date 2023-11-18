@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.5.0)
 
 #set variables
 set (CMAKE_PROJECT_VERSION 0.0.9)
@@ -71,4 +71,3 @@ set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE . )
 configure_file(lang/en.yaml lang/en.yaml COPYONLY)
 configure_file(lang/de.yaml lang/de.yaml COPYONLY)
 configure_file(config.yaml config.yaml COPYONLY)
-configure_file(server.yaml server.yaml COPYONLY)
