@@ -58,6 +58,7 @@ void Game::createGameWorld() {
 void Game::start() {
   this->createGameWorld();
   this->pshipos->boot();
+  (void)this->calcSimTime(); //call once to init timer
   Log::info("game start");
 }
 

@@ -129,6 +129,13 @@ void ShipOs::renderBoot(ConsoleKey key) {
   double uptime = this->getUptime();
   static size_t drawline = 0;
   static double lastuptime = uptime;
+  
+  // reset statics
+  if (uptime - lastuptime < 0) {
+    lastuptime = uptime;
+    drawline = 0;
+  }
+  
   if (uptime - lastuptime >= 0.1 || key == ConsoleKey::SPACE) {
     drawline++;
     lastuptime = uptime;

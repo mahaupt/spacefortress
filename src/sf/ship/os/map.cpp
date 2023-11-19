@@ -23,7 +23,7 @@ void shipos::Map::render(ConsoleKey key) {
   if ((char)key == '-' && zoom > 1) {
     zoom--;
   }
-  if ((char)key == '+' && zoom < 20) {
+  if ((char)key == '+' && zoom < 40) {
     zoom++;
   }
 
