@@ -40,13 +40,26 @@ if(MSVC)
 else()
   find_package(PkgConfig QUIET)
   if(PkgConfig_FOUND)
-    pkg_check_modules(NCURSESW QUIET ncursesw)
+    pkg_check_modules(NCURSESW QUIET IMPORTED_TARGET ncursesw)
   endif()
 
   if(NCURSESW_FOUND)
-    set(CURSES_LIBRARIES ${NCURSESW_LIBRARIES})
-    set(CURSES_INCLUDE_DIR ${NCURSESW_INCLUDE_DIRS})
-    set(CURSES_CFLAGS_OTHER ${NCURSESW_CFLAGS_OTHER})
+    find_library(
+      NCURSESW_LIBRARY
+      NAMES ncursesw ncurses
+      HINTS
+        ${NCURSESW_LIBRARY_DIRS}
+        /opt/homebrew/opt/ncurses/lib
+        /usr/local/opt/ncurses/lib
+    )
+
+    if(NCURSESW_LIBRARY)
+      set(CURSES_LIBRARIES ${NCURSESW_LIBRARY})
+      set(CURSES_INCLUDE_DIR ${NCURSESW_INCLUDE_DIRS})
+      set(CURSES_CFLAGS_OTHER ${NCURSESW_CFLAGS_OTHER})
+    else()
+      set(CURSES_LIBRARIES PkgConfig::NCURSESW)
+    endif()
   else()
     find_package(Curses REQUIRED)
   endif()
