@@ -14,7 +14,7 @@ The main inspiration for this project comes from the dwarf fortress game.
 make sure you have the requirements installed:
 ```
 # Ubuntu/Debian only:
-sudo apt install build-essentials cmake libncurses-dev
+sudo apt install build-essential cmake libncurses-dev pkg-config
 
 # Arch only:
 sudo pacman -S base-devel cmake ncurses
@@ -22,10 +22,7 @@ sudo pacman -S base-devel cmake ncurses
 # MacOS
 # install command line tools and cmake (via brew or directly)
 xcode-select --install
-brew install cmake
-
-#if cmake can't find ncurses, try setting
-export CMAKE_INCLUDE_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+brew install cmake ncurses pkg-config
 
 # Windows 
 # make sure you have your favourite build tools installed
@@ -36,12 +33,11 @@ clone the repository:
 ```
 git clone https://github.com/cbacon93/spacefortress.git
 cd spacefortress
-git submodule  update --init --recursive
 ```
 build the project:
 ```
-cmake .
-make
+cmake -S . -B build
+cmake --build build
 ```  
 
 

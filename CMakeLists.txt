@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.14.0)
 
 #set variables
 set (CMAKE_PROJECT_VERSION 0.0.9)
 set (CMAKE_CXX_STANDARD 17)
-set (CMAKE_BUILD_TYPE Debug)
-#set (CMAKE_BUILD_TYPE RelWithDebInfo)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
 
 #set project variables
 project (sf)
@@ -16,23 +17,67 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CURSES_NEED_WIDE TRUE)
 
 #external packages
+include(FetchContent)
+
 if(MSVC)
+  FetchContent_Declare(
+    pdcurses
+    GIT_REPOSITORY https://github.com/wmcbrine/PDCurses.git
+    GIT_TAG 618e0aaa31b4728eb4df78ec4de6c2b873908eda
+  )
+  FetchContent_GetProperties(pdcurses)
+  if(NOT pdcurses_POPULATED)
+    FetchContent_Populate(pdcurses)
+  endif()
+
   add_custom_target(
    PDCurses
    COMMAND nmake -f Makefile.vc WIDE=Y UTF8=Y
-   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/PDCurses/Wincon"
+   WORKING_DIRECTORY "${pdcurses_SOURCE_DIR}/Wincon"
   )
-  set(CURSES_LIBRARIES "${CMAKE_SOURCE_DIR}/PDCurses/Wincon/pdcurses.lib")
-  set(CURSES_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/PDCurses")
+  set(CURSES_LIBRARIES "${pdcurses_SOURCE_DIR}/Wincon/pdcurses.lib")
+  set(CURSES_INCLUDE_DIR "${pdcurses_SOURCE_DIR}")
 else()
-  find_package(Curses REQUIRED)
+  find_package(PkgConfig QUIET)
+  if(PkgConfig_FOUND)
+    pkg_check_modules(NCURSESW QUIET ncursesw)
+  endif()
+
+  if(NCURSESW_FOUND)
+    set(CURSES_LIBRARIES ${NCURSESW_LIBRARIES})
+    set(CURSES_INCLUDE_DIR ${NCURSESW_INCLUDE_DIRS})
+    set(CURSES_CFLAGS_OTHER ${NCURSESW_CFLAGS_OTHER})
+  else()
+    find_package(Curses REQUIRED)
+  endif()
 endif()
 
 find_package(Threads REQUIRED)
-add_subdirectory(yaml-cpp buildycpp)
+find_package(yaml-cpp QUIET CONFIG)
+if(TARGET yaml-cpp::yaml-cpp)
+  set(YAML_CPP_TARGET yaml-cpp::yaml-cpp)
+elseif(TARGET yaml-cpp)
+  set(YAML_CPP_TARGET yaml-cpp)
+else()
+  set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+  set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "" FORCE)
+  FetchContent_Declare(
+    yaml-cpp
+    GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+    GIT_TAG yaml-cpp-0.9.0
+  )
+  FetchContent_MakeAvailable(yaml-cpp)
+
+  if(TARGET yaml-cpp::yaml-cpp)
+    set(YAML_CPP_TARGET yaml-cpp::yaml-cpp)
+  else()
+    set(YAML_CPP_TARGET yaml-cpp)
+  endif()
+endif()
+
 include_directories(
   ${CURSES_INCLUDE_DIR}
-  "yaml-cpp/include"
 )
 
 #check ncursesw
@@ -53,13 +98,17 @@ add_executable(
     sf
     ${SF_SRC}
 )
+if(TARGET PDCurses)
+  add_dependencies(sf PDCurses)
+endif()
 
 target_link_libraries(
     sf
     ${CURSES_LIBRARIES}
-    yaml-cpp
+    ${YAML_CPP_TARGET}
     Threads::Threads
 )
+target_compile_options(sf PRIVATE ${CURSES_CFLAGS_OTHER})
 
 set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY . )
 set_target_properties( sf PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG . )
